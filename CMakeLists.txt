@@ -1,6 +1,8 @@
 cmake_minimum_required( VERSION 3.0 )
 
 
+add_subdirectory(src)
+
 ##################################################################################
 # Project
 ##################################################################################
@@ -15,8 +17,6 @@ project( TurtleSDK )
 find_package( OpenGL REQUIRED )
 find_package( GLUT REQUIRED )
 find_package( GLEW REQUIRED )
-
-add_subdirectory(src)
 
 ##################################################################################
 # Include directories
@@ -53,9 +53,9 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src" )
 ##################################################################################
 
 # Retrieve source files
-file( GLOB incList "${CMAKE_CURRENT_SOURCE_DIR}/*.h" )
-file( GLOB inlList "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp" )
-file( GLOB srcList "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" )
+file( GLOB incList "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" )
+file( GLOB inlList "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp" )
+file( GLOB srcList "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" )
 
 # Target program
 set( resList ${resList} ${inlList} )
