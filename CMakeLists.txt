@@ -1,5 +1,6 @@
 cmake_minimum_required( VERSION 3.0 )
 
+
 ##################################################################################
 # Project
 ##################################################################################
@@ -14,6 +15,8 @@ project( TurtleSDK )
 find_package( OpenGL REQUIRED )
 find_package( GLUT REQUIRED )
 find_package( GLEW REQUIRED )
+
+add_subdirectory(src)
 
 ##################################################################################
 # Include directories
@@ -40,6 +43,10 @@ endif()
 
 # glm
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/libs/glm" )
+
+# src 
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src" )
+
 
 ##################################################################################
 # Program
@@ -76,4 +83,7 @@ if(NOT ${GLUT_FOUND})
     target_link_libraries( ${PROJECT_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/libs/glew/lib64" )
 else()
     target_link_libraries( ${PROJECT_NAME} ${GLEW_LIBRARIES} )
-endif()
+endif() 
+
+# Model
+target_link_libraries( ${PROJECT_NAME} Model )

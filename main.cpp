@@ -30,7 +30,7 @@
 
 // Custom
 
-#include "model.h"
+#include "model/model.h"
 
 /******************************************************************************
  ****************************** NAMESPACE SECTION *****************************
@@ -70,7 +70,7 @@ float _cameraZFar;
 // Mesh parameters
 glm::vec3 _meshColor;
 
-std::vector<Model> models;
+std::vector<model::Model> models;
 
 /******************************************************************************
  ***************************** TYPE DEFINITION ********************************
@@ -214,7 +214,7 @@ bool initialize()
 	}
 
 	initializeCamera();
-        Model triangle_model(GL_TRIANGLES);
+        model::Model triangle_model(GL_TRIANGLES);
         models.push_back(triangle_model);
 
 	return statusOK;

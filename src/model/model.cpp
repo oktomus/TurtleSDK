@@ -17,6 +17,8 @@
 
  */
 
+using namespace model;
+
 Model::Model(GLenum mode) : _mode(mode), vboPosition(0), vaoPosition(0)
 {
     data = {
