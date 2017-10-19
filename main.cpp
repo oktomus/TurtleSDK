@@ -3,9 +3,6 @@
  ******************************* INCLUDE SECTION ******************************
  ******************************************************************************/
 
-// Custom
-
-#include "model.h"
 
 // STL
 #include <iostream>
@@ -30,6 +27,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+// Custom
+
+#include "model.h"
 
 /******************************************************************************
  ****************************** NAMESPACE SECTION *****************************
@@ -68,6 +69,8 @@ float _cameraZFar;
 
 // Mesh parameters
 glm::vec3 _meshColor;
+
+std::vector<Model> models;
 
 /******************************************************************************
  ***************************** TYPE DEFINITION ********************************
@@ -211,6 +214,8 @@ bool initialize()
 	}
 
 	initializeCamera();
+        Model triangle_model(GL_TRIANGLES);
+        models.push_back(triangle_model);
 
 	return statusOK;
 }
@@ -529,7 +534,8 @@ void display( void )
 	// Render scene
 	//--------------------
 	// Set GL state(s) (fixed pipeline)
-	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+#if 0
+	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 	// - bind VAO as current vertex array (in OpenGL state machine)
 	glBindVertexArray( vertexArray );
 	// - draw command
@@ -543,6 +549,10 @@ void display( void )
 	glBindVertexArray( 0 );
 	// Reset GL state(s) (fixed pipeline)
 	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+#else
+	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+        models.at(0).draw();
+#endif
 
 	// Deactivate current shader program
 	glUseProgram( 0 );
