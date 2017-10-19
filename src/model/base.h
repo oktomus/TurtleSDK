@@ -28,16 +28,38 @@ namespace model{
         public:
 
             /**
-             * Creer un objet 3D avec son VBO et VAO
-             *
-             * @param mode     Le type d'objet (triangle, quad, etc)
-             */
-            Base(GLenum mode);
-
-            /**
              * Dessine l'objet dans la fenetre
              */
             void draw();
+
+        protected:
+
+            /**
+             * Creer un objet 3D avec son VBO et VAO
+             *
+             * @param mode     Le type d'objet (triangle, quad, etc)
+             * @param points   Nombre de points
+             */
+            Base(GLenum mode, size_t points);
+
+            /**
+              *
+              */
+            Base() = default;
+
+            /**
+             * Donnees du model.
+             * Peut contenir des vertices
+             */
+            std::vector<float> data;
+
+            /**
+              * Prepare le model pour etre utilise avec GL.
+              *
+              * Appel initVBO et VBA
+              */
+            void prepare();
+
 
         private:
 
@@ -57,10 +79,9 @@ namespace model{
             GLuint vaoPosition;
 
             /**
-             * Donnees du model.
-             * Peut contenir des vertices
-             */
-            std::vector<float> data;
+              * Nombre de points dans le model
+              */
+            size_t _nb_points;
 
             /**
              * Initialise le buffer

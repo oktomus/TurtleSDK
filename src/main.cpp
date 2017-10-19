@@ -30,7 +30,7 @@
 
 // Custom
 
-#include "model/base.h"
+#include "model/primitive.h"
 
 /******************************************************************************
  ****************************** NAMESPACE SECTION *****************************
@@ -214,8 +214,18 @@ bool initialize()
 	}
 
 	initializeCamera();
-        model::Base triangle_model(GL_TRIANGLES);
-        models.push_back(triangle_model);
+
+        models.push_back(model::Triangle(
+                -.3f, -.3f, 0.f, 
+                .3f, -.3f, 0.f, 
+                .15f, .15f, 0.f)
+                );
+
+        models.push_back(model::Triangle(
+                .5f, -.3f, 0.f, 
+                .9f, .3f, 0.f, 
+                .7f, .0f, 0.f)
+                );
 
 	return statusOK;
 }

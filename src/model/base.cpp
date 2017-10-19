@@ -3,6 +3,7 @@
 
 // System
 #include <iostream>
+#include <stdexcept>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -18,14 +19,23 @@
 
 using namespace model;
 
-Base::Base(GLenum mode) : _mode(mode), vboPosition(0), vaoPosition(0)
+Base::Base(GLenum mode, size_t points) : 
+    _mode(mode), 
+    vboPosition(0), 
+    vaoPosition(0), 
+    _nb_points(points)
 {
-    data = {
-        -1.f, -1.f, 0.f,
-        1.f, -1.f, 0.f,
-        0.f,  1.f, 0.f
-    };
+}
 
+void Base::draw()
+{
+    glBindVertexArray(vaoPosition);
+    glDrawArrays(_mode, 0, _nb_points);
+    glBindVertexArray( 0 );
+}
+
+void Base::prepare()
+{
     int code;
 
     code = initArrayBuffer();
@@ -35,13 +45,6 @@ Base::Base(GLenum mode) : _mode(mode), vboPosition(0), vaoPosition(0)
     code = initArrayObject();
     if(code != 0) throw std::runtime_error(
                 "Impossibile d'initialiser le VAO");
-}
-
-void Base::draw()
-{
-    glBindVertexArray(vaoPosition);
-    glDrawArrays(_mode, 0, 3);
-    glBindVertexArray( 0 );
 }
 
 int Base::initArrayBuffer()
@@ -73,7 +76,7 @@ int Base::initArrayObject()
     glBindVertexArray( vaoPosition );
     // bind VBO
     glBindBuffer( GL_ARRAY_BUFFER, vboPosition );
-    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, 0 );
+    glVertexAttribPointer( 0, _nb_points, GL_FLOAT, GL_FALSE, 0, 0 );
     // Enable access to attribute 0
     glEnableVertexAttribArray(0);
 
