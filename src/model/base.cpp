@@ -1,5 +1,5 @@
 // Class
-#include "model.h"
+#include "base.h"
 
 // System
 #include <iostream>
@@ -9,17 +9,16 @@
 #include <GL/glut.h>
 
 /*
-                   █         ▀▀█   
- ▄▄▄▄▄   ▄▄▄    ▄▄▄█   ▄▄▄     █   
- █ █ █  █▀ ▀█  █▀ ▀█  █▀  █    █   
- █ █ █  █   █  █   █  █▀▀▀▀    █   
- █ █ █  ▀█▄█▀  ▀█▄██  ▀█▄▄▀    ▀▄▄ 
-
+ █                          
+ █▄▄▄    ▄▄▄    ▄▄▄    ▄▄▄  
+ █▀ ▀█  ▀   █  █   ▀  █▀  █ 
+ █   █  ▄▀▀▀█   ▀▀▀▄  █▀▀▀▀ 
+ ██▄█▀  ▀▄▄▀█  ▀▄▄▄▀  ▀█▄▄▀ 
  */
 
 using namespace model;
 
-Model::Model(GLenum mode) : _mode(mode), vboPosition(0), vaoPosition(0)
+Base::Base(GLenum mode) : _mode(mode), vboPosition(0), vaoPosition(0)
 {
     data = {
         -1.f, -1.f, 0.f,
@@ -38,14 +37,14 @@ Model::Model(GLenum mode) : _mode(mode), vboPosition(0), vaoPosition(0)
                 "Impossibile d'initialiser le VAO");
 }
 
-void Model::draw()
+void Base::draw()
 {
     glBindVertexArray(vaoPosition);
     glDrawArrays(_mode, 0, 3);
     glBindVertexArray( 0 );
 }
 
-int Model::initArrayBuffer()
+int Base::initArrayBuffer()
 {
     std::cout << "Initialisation du VBO\n";
 
@@ -65,7 +64,7 @@ int Model::initArrayBuffer()
     return 0;
 }
 
-int Model::initArrayObject()
+int Base::initArrayObject()
 {
     std::cout << "Initialisation du VAO\n";
 

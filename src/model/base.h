@@ -1,5 +1,5 @@
-#ifndef __MODEL__
-#define __MODEL__
+#ifndef __BASE__
+#define __BASE__
 
 // System
 #include <vector>
@@ -10,12 +10,12 @@
 #include <GL/glut.h>
 
 /*
-                   █         ▀▀█   
- ▄▄▄▄▄   ▄▄▄    ▄▄▄█   ▄▄▄     █   
- █ █ █  █▀ ▀█  █▀ ▀█  █▀  █    █   
- █ █ █  █   █  █   █  █▀▀▀▀    █   
- █ █ █  ▀█▄█▀  ▀█▄██  ▀█▄▄▀    ▀▄▄ 
-
+ █                          
+ █▄▄▄    ▄▄▄    ▄▄▄    ▄▄▄  
+ █▀ ▀█  ▀   █  █   ▀  █▀  █ 
+ █   █  ▄▀▀▀█   ▀▀▀▄  █▀▀▀▀ 
+ ██▄█▀  ▀▄▄▀█  ▀▄▄▄▀  ▀█▄▄▀ 
+                            
  */
 
 namespace model{
@@ -23,7 +23,7 @@ namespace model{
     /**
      * Represente un model 3D
      */
-    class Model
+    class Base
     {
         public:
 
@@ -32,7 +32,7 @@ namespace model{
              *
              * @param mode     Le type d'objet (triangle, quad, etc)
              */
-            Model(GLenum mode);
+            Base(GLenum mode);
 
             /**
              * Dessine l'objet dans la fenetre
