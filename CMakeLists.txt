@@ -1,6 +1,7 @@
 cmake_minimum_required( VERSION 3.0 )
 
 
+add_subdirectory(distant)
 add_subdirectory(src)
 
 ##################################################################################
@@ -28,7 +29,7 @@ include_directories( ${OPENGL_INCLUDE_DIRS} )
 # freeglut
 if(NOT ${GLUT_FOUND})
     message("GLUT not found, using local includes")
-    include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/libs/freeglut/include" )
+    include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/freeglut/include" )
 else()
     include_directories( ${GLUT_INCLUDE_DIRS} )
 endif()
@@ -36,16 +37,19 @@ endif()
 # glew
 if(NOT ${GLEW_FOUND})
     message("GLEW not found, using local includes")
-    include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/libs/glew/include" )
+    include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/glew/include" )
 else() 
     include_directories( ${GLEW_INCLUDE_DIRS} )
 endif()
 
 # glm
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/libs/glm" )
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/glm" )
 
 # src 
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src" )
+
+# imgui
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/imgui" )
 
 
 ##################################################################################
@@ -87,3 +91,4 @@ endif()
 
 # Model
 target_link_libraries( ${PROJECT_NAME} Model )
+target_link_libraries( ${PROJECT_NAME} imgui )

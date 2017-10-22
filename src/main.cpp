@@ -4,6 +4,7 @@
  ******************************************************************************/
 
 
+#include <imgui.h>
 // STL
 #include <iostream>
 #include <vector>
@@ -497,6 +498,7 @@ void display( void )
 	const int currentTime = glutGet( GLUT_ELAPSED_TIME );
 
         std::cout << "Display\n";
+        //ImGui::Text("Hello, world!");
 
 	//--------------------
 	// START frame
