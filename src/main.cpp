@@ -606,7 +606,7 @@ int main( int argc, char** argv )
 	glutInitWindowSize( 640, 480 );
 	glutInitWindowPosition( 50, 50 );
 	// - create the window
-	glutCreateWindow( "TP3 - Transform" );
+	glutCreateWindow( "TurtleSDK" );
 
 	// Callbacks
 	// - callback called when displaying window (user custom fonction pointer: "void f( void )")
