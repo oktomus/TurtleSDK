@@ -33,6 +33,11 @@ namespace model{
              */
             void draw();
 
+            /**
+              * Dessine les points de l'objet
+              */
+            void draw_points();
+
             friend std::ostream& operator<<(std::ostream &os, const Base& obj)
             {
                 os << obj.modelType() << "[v:" << obj.nb_points() << "]";

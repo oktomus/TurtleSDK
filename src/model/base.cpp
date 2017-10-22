@@ -34,6 +34,13 @@ void Base::draw()
     glBindVertexArray( 0 );
 }
 
+void Base::draw_points()
+{
+    glBindVertexArray(vaoPosition);
+    glDrawArrays(GL_POINTS, 0, _nb_points);
+    glBindVertexArray( 0 );
+}
+
 void Base::prepare()
 {
     int code;
@@ -63,6 +70,7 @@ int Base::initArrayBuffer()
     // unbind
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
+
     return 0;
 }
 
@@ -75,7 +83,7 @@ int Base::initArrayObject()
     glBindVertexArray( vaoPosition );
     // bind VBO
     glBindBuffer( GL_ARRAY_BUFFER, vboPosition );
-    glVertexAttribPointer( 0, _nb_points, GL_FLOAT, GL_FALSE, 0, 0 );
+    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, 0 );
     // Enable access to attribute 0
     glEnableVertexAttribArray(0);
 

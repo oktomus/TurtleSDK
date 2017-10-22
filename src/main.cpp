@@ -216,7 +216,6 @@ bool initialize()
 	}
 
 	initializeCamera();
-        /*
 
         models.push_back(std::make_unique<model::Triangle>(
                 -.3f, -.3f, 0.f, 
@@ -227,15 +226,14 @@ bool initialize()
         models.push_back(std::make_unique<model::Triangle>(
                 .5f, -.3f, 0.f, 
                 .9f, .0f, 0.f, 
-                .7f, .3f, 0.f)
-                );
-        */
+                .7f, .3f, 0.f
+                ));
 
         models.push_back(std::make_unique<model::Quad>(
                 -.5f, -.5f, 0.f,
-                -.5f, .5f, 0.f,
+                .5f, -.5f, 0.f,
                 .5f, .5f, 0.f,
-                .5f, -.5f, 0.f
+                -.5f, .5f, 0.f
                 ));
 
         /*
@@ -405,6 +403,7 @@ bool initializeShaderProgram()
 		" // MAIN                                      \n"
 	    "void main( void )                             \n"
 	    "{                                             \n"
+            "    gl_PointSize = 10.0; \n"
 		"#if 1                                                                                  \n"
 		"    // Use animation                                                                   \n"
 		"    float amplitude = 1.0;                                                             \n"
@@ -497,7 +496,6 @@ void display( void )
 	// Timer info
 	const int currentTime = glutGet( GLUT_ELAPSED_TIME );
 
-        std::cout << "Display\n";
         //ImGui::Text("Hello, world!");
 
 	//--------------------
@@ -582,11 +580,11 @@ void display( void )
 	// Reset GL state(s) (fixed pipeline)
 	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 #else
-	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
         for (std::unique_ptr<model::Base>& mod: models)
         {
-            std::cout << "Drawing model " << (*mod) << "\n";
             mod->draw();
+            mod->draw_points();
         }
 #endif
 
