@@ -23,7 +23,6 @@ Base::Base(GLenum mode, size_t points) :
     _mode(mode), 
     vboPosition(0), 
     vaoPosition(0), 
-    nb_points(_nb_points),
     _nb_points(points)
 {
 }
@@ -54,7 +53,6 @@ int Base::initArrayBuffer()
 
     // VBO ID
     std::cout << "Gen Buffer...\n";
-    std::cout << "VBO " << vboPosition << "\n";
     glGenBuffers( 1, &vboPosition);
     // bind VBO
     std::cout << "Bind Buffer...\n";

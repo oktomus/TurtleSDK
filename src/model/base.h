@@ -35,10 +35,15 @@ namespace model{
 
             friend std::ostream& operator<<(std::ostream &os, const Base& obj)
             {
-                os << "Model[v:" << obj.nb_points << "]";
+                os << obj.modelType() << "[v:" << obj.nb_points() << "]";
             }
 
-            const size_t & nb_points;
+            size_t nb_points() const
+            {
+                return _nb_points;
+            }
+
+            virtual const char* modelType() const = 0;
 
         protected:
 
@@ -107,5 +112,6 @@ namespace model{
 
 
     };
+
 }
 #endif

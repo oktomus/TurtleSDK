@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <memory>
 
 // System
 #include <cstdio>
@@ -70,7 +71,7 @@ float _cameraZFar;
 // Mesh parameters
 glm::vec3 _meshColor;
 
-std::vector<model::Base> models;
+std::vector<std::unique_ptr<model::Base>> models;
 
 /******************************************************************************
  ***************************** TYPE DEFINITION ********************************
@@ -214,18 +215,35 @@ bool initialize()
 	}
 
 	initializeCamera();
+        /*
 
-        models.push_back(model::Triangle(
+        models.push_back(std::make_unique<model::Triangle>(
                 -.3f, -.3f, 0.f, 
                 .3f, -.3f, 0.f, 
                 .15f, .15f, 0.f)
                 );
 
-        models.push_back(model::Triangle(
+        models.push_back(std::make_unique<model::Triangle>(
                 .5f, -.3f, 0.f, 
                 .9f, .0f, 0.f, 
                 .7f, .3f, 0.f)
                 );
+        */
+
+        models.push_back(std::make_unique<model::Quad>(
+                -.5f, -.5f, 0.f,
+                -.5f, .5f, 0.f,
+                .5f, .5f, 0.f,
+                .5f, -.5f, 0.f
+                ));
+
+        /*
+        models.push_back(std::make_unique<model::Triangle>(
+                .45f, -.45f, 0.f ,
+                -.45f, -.55f, 0.f,
+                .55f, .55f, 0.f
+                ));
+                */
 
 	return statusOK;
 }
@@ -563,10 +581,10 @@ void display( void )
 	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 #else
 	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-        for (model::Base mod: models)
+        for (std::unique_ptr<model::Base>& mod: models)
         {
-            std::cout << "Drawing model " << mod << "\n";
-            mod.draw();
+            std::cout << "Drawing model " << (*mod) << "\n";
+            mod->draw();
         }
 #endif
 
