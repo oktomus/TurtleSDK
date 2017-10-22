@@ -223,8 +223,8 @@ bool initialize()
 
         models.push_back(model::Triangle(
                 .5f, -.3f, 0.f, 
-                .9f, .3f, 0.f, 
-                .7f, .0f, 0.f)
+                .9f, .0f, 0.f, 
+                .7f, .3f, 0.f)
                 );
 
 	return statusOK;
@@ -478,6 +478,8 @@ void display( void )
 	// Timer info
 	const int currentTime = glutGet( GLUT_ELAPSED_TIME );
 
+        std::cout << "Display\n";
+
 	//--------------------
 	// START frame
 	//--------------------
@@ -561,7 +563,11 @@ void display( void )
 	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 #else
 	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-        models.at(0).draw();
+        for (model::Base mod: models)
+        {
+            std::cout << "Drawing model " << mod << "\n";
+            mod.draw();
+        }
 #endif
 
 	// Deactivate current shader program

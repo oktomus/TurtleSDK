@@ -3,6 +3,7 @@
 
 // System
 #include <vector>
+#include <iostream>
 
 // Graphics Libs
 #include <GL/glew.h>
@@ -31,6 +32,13 @@ namespace model{
              * Dessine l'objet dans la fenetre
              */
             void draw();
+
+            friend std::ostream& operator<<(std::ostream &os, const Base& obj)
+            {
+                os << "Model[v:" << obj.nb_points << "]";
+            }
+
+            const size_t & nb_points;
 
         protected:
 
