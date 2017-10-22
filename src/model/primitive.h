@@ -60,6 +60,27 @@ namespace model{
                 return "Quad";
             }
     };
+
+    /**
+     * Represente un Cube
+     */
+    class Cube : public Base
+    {
+        public:
+
+            /**
+             * Creer un cube
+             *
+             * @param center    La position centrale du cube
+             * @param size      La taille du cube
+             */
+            Cube(float x, float y, float z, float size);
+
+            const char* modelType() const
+            {
+                return "Cube";
+            }
+    };
 }
 
 #endif

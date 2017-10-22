@@ -65,7 +65,7 @@ int Base::initArrayBuffer()
     std::cout << "Bind Buffer...\n";
     glBindBuffer( GL_ARRAY_BUFFER, vboPosition );
     // CPU to host
-    std::cout << "Buffer Data...\n";
+    std::cout << "Buffer Data for " << data.size() << " values...\n";
     glBufferData( GL_ARRAY_BUFFER, data.size() * sizeof( float ), data.data(), GL_STATIC_DRAW );
     // unbind
     glBindBuffer( GL_ARRAY_BUFFER, 0 );

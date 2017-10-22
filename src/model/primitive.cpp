@@ -29,7 +29,7 @@ Quad::Quad(
         float xa, float ya, float za,
         float xb, float yb, float zb,
         float xc, float yc, float zc,
-        float xd, float yd, float zd) : Base(GL_POLYGON, 4)
+        float xd, float yd, float zd) : Base(GL_QUADS, 4)
 {
     data = {
         xa, ya, za,
@@ -41,3 +41,45 @@ Quad::Quad(
     prepare();
 }
 
+Cube::Cube(float x, float y, float z, float size) :
+    Base(GL_QUADS, 24)
+{
+    data = {
+        // Front
+        x - size, y - size, z + size,
+        x + size, y - size, z + size,
+        x + size, y + size, z + size,
+        x - size, y + size, z + size,
+
+        // Back
+        x + size, y - size, z - size,
+        x - size, y - size, z - size,
+        x - size, y + size, z - size,
+        x + size, y + size, z - size,
+
+        // Right
+        x + size, y - size, z + size,
+        x + size, y - size, z - size,
+        x + size, y + size, z - size,
+        x + size, y + size, z + size,
+
+        x - size, y - size, z - size,
+        x - size, y - size, z + size,
+        x - size, y + size, z + size,
+        x - size, y + size, z - size,
+
+        x - size, y + size, z - size,
+        x - size, y + size, z + size,
+        x + size, y + size, z + size,
+        x + size, y + size, z - size,
+
+        x - size, y - size, z + size,
+        x - size, y - size, z - size,
+        x + size, y - size, z - size,
+        x + size, y - size, z + size
+    };
+
+    prepare();
+
+
+}
