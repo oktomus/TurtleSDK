@@ -1,5 +1,5 @@
-#ifndef __BASE__
-#define __BASE__
+#ifndef __BASE_MODEL_
+#define __BASE_MODEL_
 
 // System
 #include <vector>
