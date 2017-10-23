@@ -1,6 +1,7 @@
 TurtleSDK
 
 # CPP
+*.cbp
 
 CMakeCache.txt
 CMakeFiles

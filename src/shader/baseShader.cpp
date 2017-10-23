@@ -14,7 +14,7 @@
 
  */
 
-const char * shader::readFile(const std::string & path)
+const std::string shader::readFile(const std::string & path)
 {
     std::ifstream txtFile(path);
 
@@ -28,6 +28,7 @@ const char * shader::readFile(const std::string & path)
             (std::istreambuf_iterator<char>()) 
             );
 
+
     txtFile.close();
-    return txtContent.c_str();
+    return txtContent;
 }

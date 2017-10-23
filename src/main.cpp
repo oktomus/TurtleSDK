@@ -217,7 +217,7 @@ bool initializeShaderProgram()
 
     bool statusOK = true;
 
-    std::cout << "Initialize shader program..." << std::endl;
+    std::cout << "Initialize shader program...\n" << std::endl;
 
     shaderProgram = glCreateProgram();
 
@@ -225,33 +225,17 @@ bool initializeShaderProgram()
     GLuint fragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
 
     // Vertex shader
-    const char* vertexShaderSource = shader::readFile("shaders/animated.vert");
-    std::cout << vertexShaderSource << "\n";
-
+    const std::string animatedVert = shader::readFile("shaders/animated.vert");
+    const char* animatedVertC = animatedVert.c_str();
     // Fragment shader
-    const char* fragmentShaderSource[] = {
-        "#version 130                                  \n"
-            "                                              \n"
-            " // INPUT                                     \n"
-            "                                              \n"
-            " // UNIFORM                                   \n"
-            " uniform vec3 meshColor;                      \n"
-            "                                              \n"
-            " // OUTPUT                                    \n"
-            " out vec4 fragmentColor;                      \n"
-            "                                              \n"
-            " // MAIN                                      \n"
-            "void main( void )                             \n"
-            "{                                             \n"
-            "    fragmentColor = vec4( meshColor, 0.1 );   \n"
-            "}                                             \n"
-    };
+    const std::string  animatedFrag = shader::readFile("shaders/animated.frag");
+    const char* animatedFragC = animatedFrag.c_str();
 
     // Load shader source
 #if 1
     // Load from string
-    glShaderSource( vertexShader, 1, &vertexShaderSource, nullptr );
-    glShaderSource( fragmentShader, 1, fragmentShaderSource, nullptr );
+    glShaderSource( vertexShader, 1, &animatedVertC, nullptr );
+    glShaderSource( fragmentShader, 1, &animatedFragC, nullptr );
 #else
     // TEST
     // Load from files
@@ -287,6 +271,15 @@ bool initializeShaderProgram()
     if ( compileStatus == GL_FALSE )
     {
         std::cout << "Error: fragment shader "<< std::endl;
+        GLint logInfoLength = 0;
+        glGetShaderiv( fragmentShader, GL_INFO_LOG_LENGTH, &logInfoLength );
+        if ( logInfoLength > 0 )
+        {
+            GLchar* infoLog = new GLchar[ logInfoLength ];
+            GLsizei length = 0;
+            glGetShaderInfoLog( fragmentShader, logInfoLength, &length, infoLog );
+            std::cout << infoLog << std::endl;
+        }
     }
 
     glAttachShader( shaderProgram, vertexShader );
