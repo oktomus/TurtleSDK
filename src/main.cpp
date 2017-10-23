@@ -4,7 +4,7 @@
  ******************************************************************************/
 
 
-#include <imgui.h>
+//#include <imgui.h>
 // STL
 #include <iostream>
 #include <vector>
@@ -32,6 +32,7 @@
 
 // Custom
 #include "model/primitive.h"
+#include "baseShader.h"
 
 /******************************************************************************
  ****************************** NAMESPACE SECTION *****************************
@@ -213,6 +214,7 @@ bool checkExtensions()
  ******************************************************************************/
 bool initializeShaderProgram()
 {
+
     bool statusOK = true;
 
     std::cout << "Initialize shader program..." << std::endl;
@@ -223,42 +225,8 @@ bool initializeShaderProgram()
     GLuint fragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
 
     // Vertex shader
-    const char* vertexShaderSource[] = {
-        //	    "#version 330 core                             \n"
-        "#version 130                                  \n"
-            "                                              \n"
-            " // INPUT                                     \n"
-            " in vec3 position;                            \n"
-            "                                              \n"
-            " // UNIFORM                                   \n"
-            " // - camera                                  \n"
-            " uniform mat4 viewMatrix;                     \n"
-            " uniform mat4 projectionMatrix;               \n"
-            " // - 3D model                                \n"
-            " uniform mat4 modelMatrix;                    \n"
-            " // - animation                               \n"
-            " uniform float time;                          \n"
-            "                                              \n"
-            " // OUTPUT                                    \n"
-            "                                              \n"
-            " // MAIN                                      \n"
-            "void main( void )                             \n"
-            "{                                             \n"
-            "    gl_PointSize = 10.0; \n"
-            "#if 1                                                                                  \n"
-            "    // Use animation                                                                   \n"
-            "    float amplitude = 1.0;                                                             \n"
-            "    float frequency = 0.5;                                                             \n"
-            "    float height = amplitude * sin( 2.0 * 3.141592 * frequency * ( time * 0.001 ) );   \n"
-            "    vec3 pos = vec3( position.x, position.y + height, position.z );                    \n"
-            "    // Send position to Clip-space                                                     \n"
-            "    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( pos, 1.0 );      \n"
-            "#else                                                                                  \n"
-            "    // Send position to Clip-space                                                     \n"
-            "    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 ); \n"
-            "#endif                                                                                 \n"
-            "}                                                                                      \n"
-    };
+    const char* vertexShaderSource = shader::readFile("shaders/animated.vert").c_str();
+    std::cout << vertexShaderSource << "\n";
 
     // Fragment shader
     const char* fragmentShaderSource[] = {
@@ -282,7 +250,7 @@ bool initializeShaderProgram()
     // Load shader source
 #if 1
     // Load from string
-    glShaderSource( vertexShader, 1, vertexShaderSource, nullptr );
+    glShaderSource( vertexShader, 1, &vertexShaderSource, nullptr );
     glShaderSource( fragmentShader, 1, fragmentShaderSource, nullptr );
 #else
     // TEST

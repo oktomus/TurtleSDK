@@ -1,7 +1,7 @@
 #ifndef __PRIMITIVE__
 #define __PRIMITIVE__
 
-#include "base.h"
+#include "baseModel.h"
 
 /*
                  ▀             ▀      ▄      ▀                 

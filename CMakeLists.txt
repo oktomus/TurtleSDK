@@ -1,7 +1,7 @@
 cmake_minimum_required( VERSION 3.0 )
 
 
-add_subdirectory(distant)
+#add_subdirectory(distant)
 add_subdirectory(src)
 
 ##################################################################################
@@ -46,10 +46,11 @@ endif()
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/glm" )
 
 # src 
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src" )
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src/model" )
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src/shader" )
 
 # imgui
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/imgui" )
+#include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/imgui" )
 
 
 ##################################################################################
@@ -89,6 +90,6 @@ else()
     target_link_libraries( ${PROJECT_NAME} ${GLEW_LIBRARIES} )
 endif() 
 
-# Model
-target_link_libraries( ${PROJECT_NAME} Model )
-target_link_libraries( ${PROJECT_NAME} imgui )
+target_link_libraries( ${PROJECT_NAME} shader)
+target_link_libraries( ${PROJECT_NAME} model)
+#target_link_libraries( ${PROJECT_NAME} imgui )

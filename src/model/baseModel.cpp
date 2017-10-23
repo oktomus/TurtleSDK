@@ -1,5 +1,5 @@
 // Class
-#include "base.h"
+#include "baseModel.h"
 
 // System
 #include <iostream>
@@ -10,11 +10,12 @@
 #include <GL/glut.h>
 
 /*
- █                          
- █▄▄▄    ▄▄▄    ▄▄▄    ▄▄▄  
- █▀ ▀█  ▀   █  █   ▀  █▀  █ 
- █   █  ▄▀▀▀█   ▀▀▀▄  █▀▀▀▀ 
- ██▄█▀  ▀▄▄▀█  ▀▄▄▄▀  ▀█▄▄▀ 
+                   █         ▀▀█   
+ ▄▄▄▄▄   ▄▄▄    ▄▄▄█   ▄▄▄     █   
+ █ █ █  █▀ ▀█  █▀ ▀█  █▀  █    █   
+ █ █ █  █   █  █   █  █▀▀▀▀    █   
+ █ █ █  ▀█▄█▀  ▀█▄██  ▀█▄▄▀    ▀▄▄ 
+
  */
 
 using namespace model;
