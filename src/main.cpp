@@ -225,7 +225,7 @@ bool initializeShaderProgram()
     GLuint fragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
 
     // Vertex shader
-    const char* vertexShaderSource = shader::readFile("shaders/animated.vert").c_str();
+    const char* vertexShaderSource = shader::readFile("shaders/animated.vert");
     std::cout << vertexShaderSource << "\n";
 
     // Fragment shader

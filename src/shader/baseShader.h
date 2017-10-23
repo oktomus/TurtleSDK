@@ -15,7 +15,7 @@
 namespace shader{
 
 
-    const std::string readFile(const std::string & path);
+    const char * readFile(const std::string & path);
 
 
 
