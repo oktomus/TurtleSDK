@@ -31,7 +31,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 // Custom
-
 #include "model/primitive.h"
 
 /******************************************************************************
