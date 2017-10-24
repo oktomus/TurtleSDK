@@ -5,7 +5,7 @@
 		<Option title="shader"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\src\;CMake Files\src\model\;CMake Files\src\shader\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\src\;CMake Files\src\model\;CMake Files\src\shader\;CMake Files\src\camera\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/home/oktomus/Work/M1LMG_Projet/src/shader"/>
@@ -93,6 +93,15 @@
 		</Unit>
 		<Unit filename="/home/oktomus/Work/M1LMG_Projet/src/shader/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\src\shader\"/>
+		</Unit>
+		<Unit filename="/home/oktomus/Work/M1LMG_Projet/src/camera/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\camera\"/>
+		</Unit>
+		<Unit filename="/home/oktomus/Work/M1LMG_Projet/src/camera/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\camera\"/>
+		</Unit>
+		<Unit filename="/home/oktomus/Work/M1LMG_Projet/src/camera/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\camera\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>

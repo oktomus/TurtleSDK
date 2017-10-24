@@ -32,7 +32,8 @@
 
 // Custom
 #include "model/primitive.h"
-#include "baseShader.h"
+#include "shader/baseShader.h"
+#include "camera/baseCamera.h"
 
 /******************************************************************************
  ****************************** NAMESPACE SECTION *****************************
@@ -45,21 +46,13 @@
 // Shader program
 std::vector<shader::Base> materials;
 
-// Camera parameters
-// - view
-glm::vec3 _cameraEye;
-glm::vec3 _cameraCenter;
-glm::vec3 _cameraUp;
-// - projection
-float _cameraFovY;
-float _cameraAspect;
-float _cameraZNear;
-float _cameraZFar;
-
 // Mesh parameters
 glm::vec3 _meshColor;
 
 std::vector<std::unique_ptr<model::Base>> models;
+
+camera::Camera cam;
+
 
 /******************************************************************************
  ***************************** TYPE DEFINITION ********************************
@@ -76,7 +69,6 @@ std::vector<std::unique_ptr<model::Base>> models;
 bool initialize();
 bool checkExtensions();
 bool initializeShaderProgram();
-void initializeCamera();
 bool finalize();
 
 /******************************************************************************
@@ -98,7 +90,6 @@ bool initialize()
         statusOK = initializeShaderProgram();
     }
 
-    initializeCamera();
 
     _meshColor = glm::vec3(0.f, 1.f, 0.f);
 
@@ -132,23 +123,6 @@ bool initialize()
      */
 
     return statusOK;
-}
-
-/******************************************************************************
- * Initialize the camera
- ******************************************************************************/
-void initializeCamera()
-{
-    // User parameters
-    // - view
-    _cameraEye = glm::vec3( 0.f, 2.f, 3.f );
-    _cameraCenter = glm::vec3( 0.f, 0.f, 0.f );
-    _cameraUp = glm::vec3( 0.f, 1.f, 0.f );
-    // - projection
-    _cameraFovY = 45.f;
-    _cameraAspect = 1.f;
-    _cameraZNear = 0.1f;
-    _cameraZFar = 100.f;
 }
 
 /******************************************************************************
@@ -223,8 +197,6 @@ void display( void )
     //--------------------
     GLint uniformLocation;
     // Retrieve camera parameters
-    const glm::mat4 viewMatrix = glm::lookAt( _cameraEye, _cameraCenter, _cameraUp );
-    const glm::mat4 projectionMatrix = glm::perspective( _cameraFovY, _cameraAspect, _cameraZNear, _cameraZFar );
     // Retrieve 3D model / scene parameters
     glm::mat4 modelMatrix;
     const bool useMeshAnimation = true; // TODO: use keyboard to activate/deactivate
@@ -237,13 +209,13 @@ void display( void )
     uniformLocation = glGetUniformLocation( mat.id(), "viewMatrix" );
     if ( uniformLocation >= 0 )
     {
-        glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr( viewMatrix ) );
+        glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr(cam.viewMatrix() ) );
     }
     // - projection matrix
     uniformLocation = glGetUniformLocation( mat.id(), "projectionMatrix" );
     if ( uniformLocation >= 0 )
     {
-        glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr( projectionMatrix ) );
+        glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr( cam.projectionMatrix() ) );
     }
     // Mesh
     // - model matrix

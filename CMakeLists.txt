@@ -92,4 +92,5 @@ endif()
 
 target_link_libraries( ${PROJECT_NAME} shader)
 target_link_libraries( ${PROJECT_NAME} model)
+target_link_libraries( ${PROJECT_NAME} camera)
 #target_link_libraries( ${PROJECT_NAME} imgui )
