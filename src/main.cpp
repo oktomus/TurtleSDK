@@ -43,7 +43,7 @@
  ******************************************************************************/
 
 // Shader program
-GLuint shaderProgram;
+std::vector<shader::Base> materials;
 
 // Camera parameters
 // - view
@@ -185,16 +185,7 @@ bool initializeShaderProgram()
 
     std::cout << "Initialize shader program...\n" << std::endl;
 
-    shaderProgram = glCreateProgram();
-
-    GLuint vertexShader = shader::compileShader("shaders/animated.vert", GL_VERTEX_SHADER);
-    GLuint fragmentShader = shader::compileShader("shaders/animated.frag", GL_FRAGMENT_SHADER );
-
-
-    glAttachShader( shaderProgram, vertexShader );
-    glAttachShader( shaderProgram, fragmentShader );
-
-    glLinkProgram( shaderProgram );
+    materials.push_back(shader::Base("shaders/animated"));
 
     return statusOK;
 }
@@ -224,7 +215,8 @@ void display( void )
     //--------------------
     // Activate shader program
     //--------------------
-    glUseProgram( shaderProgram );
+    shader::Base& mat = materials.at(0);
+    mat.use();
 
     //--------------------
     // Send uniforms to GPU
@@ -242,32 +234,32 @@ void display( void )
     }
     // Camera
     // - view matrix
-    uniformLocation = glGetUniformLocation( shaderProgram, "viewMatrix" );
+    uniformLocation = glGetUniformLocation( mat.id(), "viewMatrix" );
     if ( uniformLocation >= 0 )
     {
         glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr( viewMatrix ) );
     }
     // - projection matrix
-    uniformLocation = glGetUniformLocation( shaderProgram, "projectionMatrix" );
+    uniformLocation = glGetUniformLocation( mat.id(), "projectionMatrix" );
     if ( uniformLocation >= 0 )
     {
         glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr( projectionMatrix ) );
     }
     // Mesh
     // - model matrix
-    uniformLocation = glGetUniformLocation( shaderProgram, "modelMatrix" );
+    uniformLocation = glGetUniformLocation( mat.id(), "modelMatrix" );
     if ( uniformLocation >= 0 )
     {
         glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr( modelMatrix ) );
     }
     // - mesh color
-    uniformLocation = glGetUniformLocation( shaderProgram, "meshColor" );
+    uniformLocation = glGetUniformLocation( mat.id(), "meshColor" );
     if ( uniformLocation >= 0 )
     {
         glUniform3fv( uniformLocation, 1, glm::value_ptr( _meshColor ) );
     }
     // Animation
-    uniformLocation = glGetUniformLocation( shaderProgram, "time" );
+    uniformLocation = glGetUniformLocation( mat.id(), "time" );
     if ( uniformLocation >= 0 )
     {
         glUniform1f( uniformLocation, static_cast< float >( currentTime ) );

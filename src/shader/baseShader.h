@@ -23,6 +23,24 @@ namespace shader{
             const std::string & sourcePath,
             const GLenum & shaderType);
 
+    class Base
+    {
+
+    public:
+
+        Base(const std::string& path);
+
+        void use() const;
+        const GLuint & id() const;
+
+    private:
+
+        GLuint programId;
+        GLuint vertexId;
+        GLuint fragId;
+
+    };
+
 }
 
 #endif

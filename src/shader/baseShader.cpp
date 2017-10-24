@@ -87,3 +87,33 @@ GLuint shader::compileShader(
     return index;
 
 }
+
+shader::Base::Base(const std::string& path)
+{
+
+    programId = glCreateProgram();
+
+    if (programId == 0)
+    {
+        throw std::runtime_error("Unable to create the program object for the material");
+    }
+
+    vertexId = shader::compileShader(path + ".vert", GL_VERTEX_SHADER);
+    fragId = shader::compileShader(path + ".frag", GL_FRAGMENT_SHADER );
+
+    glAttachShader( programId, vertexId );
+    glAttachShader( programId, fragId );
+
+    glLinkProgram( programId );
+
+}
+
+void shader::Base::use() const
+{
+    glUseProgram( programId );
+}
+
+const GLuint & shader::Base::id() const
+{
+    return programId;
+}
