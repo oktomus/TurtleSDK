@@ -80,40 +80,6 @@ void initializeCamera();
 bool finalize();
 
 /******************************************************************************
- * Helper function used to load shader source code from files
- *
- * @param pFilename ...
- *
- * @return ...
- ******************************************************************************/
-bool getFileContent( const std::string& pFilename, std::string& pFileContent )
-{
-    std::ifstream file( pFilename.c_str(), std::ios::in );
-    if ( file )
-    {
-        // Initialize a string to store file content
-        file.seekg( 0, std::ios::end );
-        pFileContent.resize( file.tellg() );
-        file.seekg( 0, std::ios::beg );
-
-        // Read file content
-        file.read( &pFileContent[ 0 ], pFileContent.size() );
-
-        // Close file
-        file.close();
-
-        return true;
-    }
-    else
-    {
-        // LOG
-        // ...
-    }
-
-    return false;
-}
-
-/******************************************************************************
  * Initialize all
  ******************************************************************************/
 bool initialize()
