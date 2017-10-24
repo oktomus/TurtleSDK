@@ -1,6 +1,5 @@
 #include <vector>
 
-#include "model/primitive.h"
 #include "shader/baseShader.h"
 
 /*
