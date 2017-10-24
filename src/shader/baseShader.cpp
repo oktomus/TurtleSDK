@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <map>
 #include <string>
 
 #include <GL/gl.h>
@@ -89,6 +90,7 @@ GLuint shader::compileShader(
 }
 
 shader::Base::Base(const std::string& path)
+    : _cam(0)
 {
 
     programId = glCreateProgram();
@@ -111,9 +113,51 @@ shader::Base::Base(const std::string& path)
 void shader::Base::use() const
 {
     glUseProgram( programId );
+
+    // Camera Uniforms
+    // View matrix
+    std::cout << U_viewMat << "\n";
+    /*
+    if (_uniformsLocation.count(U_viewMat) < 1){
+
+        _uniformsLocation.insert(
+                std::make_pair<std::string, GLuint>(
+                    "something", glGetUniformLocation(programId, U_viewMat)
+                    )
+                );
+    }
+
+    if ( _uniformsLocation.at(U_viewMat) >= 0 )
+    {
+        glUniformMatrix4fv(
+                _uniformsLocation.at(U_viewMat), 1, GL_FALSE, 
+                glm::value_ptr(_cam->viewMatrix() ) 
+                );
+    }
+    */
+
+    /*
+    // Projection matrix
+    if (_uniformsLocation.count(U_viewMat) < 1){
+        _uniformsLocation[U_projMat] = glGetUniformLocation(programId, U_projMat);
+    }
+
+    if ( _uniformsLocation.at(U_projMat) >= 0 )
+    {
+        glUniformMatrix4fv(
+                _uniformsLocation.at(U_projMat), 1, GL_FALSE, 
+                glm::value_ptr(_cam->projectionMatrix()) 
+                );
+    }
+    */
 }
 
 const GLuint & shader::Base::id() const
 {
     return programId;
+}
+
+void shader::Base::setCamera(const camera::Camera& cam)
+{
+    _cam = &cam;
 }

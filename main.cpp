@@ -163,6 +163,7 @@ bool initializeShaderProgram()
     std::cout << "Initialize shader program...\n" << std::endl;
 
     materials.push_back(shader::Base("shaders/animated"));
+    materials.at(0).setCamera(globalWorld.currentCamera());
 
     return statusOK;
 }
@@ -209,20 +210,7 @@ void display( void )
     {
         modelMatrix = glm::rotate( modelMatrix, static_cast< float >( currentTime ) * 0.001f, glm::vec3( 0.0f, 1.f, 0.f ) );
     }
-
     // Camera
-    // - view matrix
-    uniformLocation = glGetUniformLocation( mat.id(), "viewMatrix" );
-    if ( uniformLocation >= 0 )
-    {
-        glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr(globalWorld.currentCamera().viewMatrix() ) );
-    }
-    // - projection matrix
-    uniformLocation = glGetUniformLocation( mat.id(), "projectionMatrix" );
-    if ( uniformLocation >= 0 )
-    {
-        glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr(globalWorld.currentCamera().projectionMatrix() ) );
-    }
     // Mesh
     // - model matrix
     uniformLocation = glGetUniformLocation( mat.id(), "modelMatrix" );

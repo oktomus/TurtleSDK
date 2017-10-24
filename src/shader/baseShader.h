@@ -2,10 +2,15 @@
 #define __BASE_SHADER_
 
 #include <string>
+#include <map>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
-#include "world.h"
+#include "camera/baseCamera.h"
+
+
+#define U_viewMat "viewMatrix"
+#define U_projMat "projectionMatrix"
 
 /*
         █                 █               
@@ -34,11 +39,17 @@ namespace shader{
         void use() const;
         const GLuint & id() const;
 
+        void setCamera(const camera::Camera& cam);
+
     private:
 
         GLuint programId;
         GLuint vertexId;
         GLuint fragId;
+
+        std::map<std::string, GLuint> _uniformsLocation;
+
+        const camera::Camera* _cam;
 
     };
 
