@@ -184,6 +184,7 @@ void display( void )
     // - clear the "color" framebuffer
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     glEnable(GL_BLEND);
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
     //--------------------

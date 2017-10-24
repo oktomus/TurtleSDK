@@ -17,7 +17,7 @@ uniform float time;
 // MAIN                                      
 void main( void )                             
 {                                             
-    gl_PointSize = 10.0; 
+    gl_PointSize = 20.0; 
 #if 1                                                                                 
         // Use animation                                                                  
         float amplitude = 1.0;                                                            
