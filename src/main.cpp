@@ -187,66 +187,9 @@ bool initializeShaderProgram()
 
     shaderProgram = glCreateProgram();
 
-    GLuint vertexShader = glCreateShader( GL_VERTEX_SHADER );
-    GLuint fragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
+    GLuint vertexShader = shader::compileShader("shaders/animated.vert", GL_VERTEX_SHADER);
+    GLuint fragmentShader = shader::compileShader("shaders/animated.frag", GL_FRAGMENT_SHADER );
 
-    // Vertex shader
-    const std::string animatedVert = shader::readFile("shaders/animated.vert");
-    const char* animatedVertC = animatedVert.c_str();
-    // Fragment shader
-    const std::string  animatedFrag = shader::readFile("shaders/animated.frag");
-    const char* animatedFragC = animatedFrag.c_str();
-
-    // Load shader source
-#if 1
-    // Load from string
-    glShaderSource( vertexShader, 1, &animatedVertC, nullptr );
-    glShaderSource( fragmentShader, 1, &animatedFragC, nullptr );
-#else
-    // TEST
-    // Load from files
-    const std::string vertexShaderFilename = "vertexShader.vert";
-    std::string vertexShaderFileContent;
-    getFileContent( vertexShaderFilename, vertexShaderFileContent );
-    const char* sourceCode = vertexShaderFileContent.c_str();
-    glShaderSource( vertexShader, 1, &sourceCode, nullptr );
-    glShaderSource( fragmentShader, 1, fragmentShaderSource, nullptr );
-#endif
-
-    glCompileShader( vertexShader );
-    glCompileShader( fragmentShader );
-
-    GLint compileStatus;
-    glGetShaderiv( vertexShader, GL_COMPILE_STATUS, &compileStatus );
-    if ( compileStatus == GL_FALSE )
-    {
-        std::cout << "Error: vertex shader "<< std::endl;
-
-        GLint logInfoLength = 0;
-        glGetShaderiv( vertexShader, GL_INFO_LOG_LENGTH, &logInfoLength );
-        if ( logInfoLength > 0 )
-        {
-            GLchar* infoLog = new GLchar[ logInfoLength ];
-            GLsizei length = 0;
-            glGetShaderInfoLog( vertexShader, logInfoLength, &length, infoLog );
-            std::cout << infoLog << std::endl;
-        }
-    }
-
-    glGetShaderiv( fragmentShader, GL_COMPILE_STATUS, &compileStatus );
-    if ( compileStatus == GL_FALSE )
-    {
-        std::cout << "Error: fragment shader "<< std::endl;
-        GLint logInfoLength = 0;
-        glGetShaderiv( fragmentShader, GL_INFO_LOG_LENGTH, &logInfoLength );
-        if ( logInfoLength > 0 )
-        {
-            GLchar* infoLog = new GLchar[ logInfoLength ];
-            GLsizei length = 0;
-            glGetShaderInfoLog( fragmentShader, logInfoLength, &length, infoLog );
-            std::cout << infoLog << std::endl;
-        }
-    }
 
     glAttachShader( shaderProgram, vertexShader );
     glAttachShader( shaderProgram, fragmentShader );
