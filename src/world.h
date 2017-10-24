@@ -2,10 +2,17 @@
 #define __WORLD__
 
 #include <vector>
+#include <memory>
 
-#include "model/primitive.h"
-#include "shader/baseShader.h"
 #include "camera/baseCamera.h"
+
+namespace shader{
+    class Base;
+}
+
+namespace model{
+    class Base;
+}
 
 /*
                       ▀▀█        █ 
@@ -21,20 +28,11 @@ namespace world{
     class World{
 
     public:
-        World()
-        {
-        }
+        World();
 
-        void init(){
+        void init();
 
-            _cameras.push_back(camera::Camera());
-            _currentCamera = 0;
-
-        }
-
-        const camera::Camera& currentCamera() const{
-            return _cameras.at(_currentCamera);
-        }
+        const camera::Camera& currentCamera() const;
 
     private:
 

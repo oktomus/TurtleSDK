@@ -1,6 +1,5 @@
 cmake_minimum_required( VERSION 3.0 )
 
-
 #add_subdirectory(distant)
 add_subdirectory(src)
 
@@ -46,8 +45,9 @@ endif()
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/glm" )
 
 # src 
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src/model" )
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src/shader" )
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src" )
+
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" )
 
 # imgui
 #include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/imgui" )
@@ -58,9 +58,9 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src/shader" )
 ##################################################################################
 
 # Retrieve source files
-file( GLOB incList "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" )
-file( GLOB inlList "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp" )
-file( GLOB srcList "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" )
+file( GLOB incList "${CMAKE_CURRENT_SOURCE_DIR}/*.h" )
+file( GLOB inlList "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp" )
+file( GLOB srcList "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" )
 
 # Target program
 set( resList ${resList} ${inlList} )
@@ -90,7 +90,5 @@ else()
     target_link_libraries( ${PROJECT_NAME} ${GLEW_LIBRARIES} )
 endif() 
 
-target_link_libraries( ${PROJECT_NAME} shader)
-target_link_libraries( ${PROJECT_NAME} model)
-target_link_libraries( ${PROJECT_NAME} camera)
+target_link_libraries( ${PROJECT_NAME} turtle)
 #target_link_libraries( ${PROJECT_NAME} imgui )
