@@ -32,8 +32,8 @@
 
 // Custom
 #include "model/primitive.h"
+#include "world.h"
 #include "shader/baseShader.h"
-#include "camera/baseCamera.h"
 
 /******************************************************************************
  ****************************** NAMESPACE SECTION *****************************
@@ -43,6 +43,9 @@
  ************************* DEFINE AND CONSTANT SECTION ************************
  ******************************************************************************/
 
+
+world::World globalWorld;
+
 // Shader program
 std::vector<shader::Base> materials;
 
@@ -50,8 +53,6 @@ std::vector<shader::Base> materials;
 glm::vec3 _meshColor;
 
 std::vector<std::unique_ptr<model::Base>> models;
-
-camera::Camera cam;
 
 
 /******************************************************************************
@@ -89,6 +90,8 @@ bool initialize()
     {
         statusOK = initializeShaderProgram();
     }
+
+    globalWorld.init();
 
 
     _meshColor = glm::vec3(0.f, 1.f, 0.f);
@@ -201,22 +204,24 @@ void display( void )
     // Retrieve 3D model / scene parameters
     glm::mat4 modelMatrix;
     const bool useMeshAnimation = true; // TODO: use keyboard to activate/deactivate
+
     if ( useMeshAnimation )
     {
         modelMatrix = glm::rotate( modelMatrix, static_cast< float >( currentTime ) * 0.001f, glm::vec3( 0.0f, 1.f, 0.f ) );
     }
+
     // Camera
     // - view matrix
     uniformLocation = glGetUniformLocation( mat.id(), "viewMatrix" );
     if ( uniformLocation >= 0 )
     {
-        glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr(cam.viewMatrix() ) );
+        glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr(globalWorld.currentCamera().viewMatrix() ) );
     }
     // - projection matrix
     uniformLocation = glGetUniformLocation( mat.id(), "projectionMatrix" );
     if ( uniformLocation >= 0 )
     {
-        glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr( cam.projectionMatrix() ) );
+        glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr(globalWorld.currentCamera().projectionMatrix() ) );
     }
     // Mesh
     // - model matrix
