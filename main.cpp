@@ -10,6 +10,7 @@
 #include <vector>
 #include <fstream>
 #include <memory>
+#include <functional>
 
 // System
 #include <cstdio>
@@ -52,7 +53,7 @@ std::vector<shader::Base> materials;
 // Mesh parameters
 glm::vec3 _meshColor;
 
-std::vector<std::unique_ptr<model::Base>> models;
+std::vector<std::shared_ptr<model::Base>> models;
 
 
 /******************************************************************************
@@ -95,33 +96,36 @@ bool initialize()
 
 
 
-    _meshColor = glm::vec3(0.f, 1.f, 0.f);
+    _meshColor = glm::vec3(0.1f, 1.f, 0.1f);
 
-
-    models.push_back(std::make_unique<model::Triangle>(
+    models.push_back(std::make_shared<model::Triangle>(
                 -.3f, -.3f, 0.f, 
                 .3f, -.3f, 0.f, 
-                .15f, .15f, 0.f)
-            );
+                .15f, .15f, 0.f
+                ));
+    models.at(0)->setColor(1.f, 0.1f, 0.1f);
 
-    models.at(0)->setColor(1.f, 0.f, 0.f);
-
-    models.push_back(std::make_unique<model::Triangle>(
+    models.push_back(std::make_shared<model::Triangle>(
                 .5f, -.3f, 0.f, 
                 .9f, .0f, 0.f, 
                 .7f, .3f, 0.f
                 ));
-    models.at(1)->setColor(0.f, 1.f, 0.f);
 
-    models.push_back(std::make_unique<model::Quad>(
+    models.at(1)->setColor(0.1f, 1.f, 0.1f);
+
+    models.push_back(std::make_shared<model::Quad>(
                 -.5f, -.5f, 0.f,
                 .5f, -.5f, 0.f,
                 .5f, .5f, 0.f,
                 -.5f, .5f, 0.f
                 ));
-    models.at(2)->setColor(0.f, 0.f, 1.f);
+    models.at(2)->setColor(0.1f, 0.1f, 1.f);
 
-    models.push_back(std::make_unique<model::Cube>(0.f, 0.f, 0.f, .4f));
+    models.push_back(std::make_shared<model::Cube>(0.f, 0.f, 0.f, .4f));
+    models.at(3)->setColor(0.1f, 1.f, 1.f);
+
+    models.push_back(std::make_shared<model::Cube>(0.f, 0.f, -1.6f, .8f));
+    models.at(3)->setColor(0.1f, .1f, .5f);
 
     return statusOK;
 }
@@ -196,6 +200,10 @@ void display( void )
     //--------------------
     shader::Base& mat = materials.at(0);
     uniformLocation = glGetUniformLocation( mat.id(), "modelMatrix" );
+    for (std::shared_ptr<model::Base> mod: models)
+    {
+        mat.addModelBuffer(mod);
+    }
     mat.use();
 
     //--------------------
@@ -219,11 +227,6 @@ void display( void )
         glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr( modelMatrix ) );
     }
     // - mesh color
-    uniformLocation = glGetUniformLocation( mat.id(), "meshColor" );
-    if ( uniformLocation >= 0 )
-    {
-        glUniform3fv( uniformLocation, 1, glm::value_ptr( _meshColor ) );
-    }
     // Animation
     uniformLocation = glGetUniformLocation( mat.id(), "time" );
     if ( uniformLocation >= 0 )
@@ -232,12 +235,12 @@ void display( void )
     }
 
     glPolygonMode( GL_FRONT, GL_FILL );
-
-    for (std::unique_ptr<model::Base>& mod: models)
+    mat.drawBuffer();
+    /*for (std::shared_ptr<model::Base> mod: models)
     {
         mod->draw();
-        mod->draw_points();
-    }
+    }*/
+
 
     // Deactivate current shader program
     glUseProgram( 0 );

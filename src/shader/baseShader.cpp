@@ -139,6 +139,7 @@ void shader::Base::use() const
         }
         
     }
+
 }
 
 const GLuint & shader::Base::id() const
@@ -164,4 +165,28 @@ void shader::Base::updateUniforms()
 
 
     glUseProgram( 0 );
+}
+void shader::Base::addModelBuffer(std::shared_ptr<model::Base> m)
+{
+    _modelBuffer.push_back(m);
+}
+
+void shader::Base::drawBuffer()
+{
+    GLuint uniformLocation;
+    use();
+    for(std::shared_ptr<model::Base> m : _modelBuffer)
+    {
+        uniformLocation = glGetUniformLocation( id(), U_names[U_meshColor]);
+        if ( uniformLocation >= 0 )
+        {
+            glUniform3fv( uniformLocation, 1, glm::value_ptr( m->color() ) );
+        }
+        m->draw();
+    }
+}
+
+void shader::Base::clearBuffer()
+{
+    _modelBuffer.clear();
 }
