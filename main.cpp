@@ -191,9 +191,6 @@ void display( void )
     //--------------------
     shader::Base& mat = materials.at(0);
     mat.use();
-    std::cout << "Camera Main " << &(globalWorld.currentCamera()) << "\n";
-
-    std::cout << glm::value_ptr(globalWorld.currentCamera().viewMatrix()) << "\n";
 
     //--------------------
     // Send uniforms to GPU

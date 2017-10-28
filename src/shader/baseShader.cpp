@@ -117,12 +117,10 @@ void shader::Base::use() const
     glUseProgram( programId );
     GLuint uniformLocation;
 
-    std::cout << "Camera " << _cam << "\n";
 
     // Camera Uniforms
     if(_cam)
     {
-        std::cout << glm::value_ptr(_cam->viewMatrix()) << "\n";
         uniformLocation = glGetUniformLocation(programId, U_names[U_viewMat] );
 
         if ( uniformLocation >= 0 )
@@ -131,7 +129,6 @@ void shader::Base::use() const
                     GL_FALSE, glm::value_ptr(_cam->viewMatrix()));
         }
 
-        std::cout << "View Mat location " << uniformLocation << "\n";
 
         uniformLocation = glGetUniformLocation(programId, U_names[U_projMat] );
 
@@ -141,7 +138,6 @@ void shader::Base::use() const
                     GL_FALSE, glm::value_ptr(_cam->projectionMatrix()));
         }
         
-        std::cout << "Proj Mat location " << uniformLocation << "\n";
     }
 }
 
@@ -159,10 +155,12 @@ void shader::Base::updateUniforms()
 {
     glUseProgram( programId );
     throw std::runtime_error("Not implemented");
+    /*
     // View matrix
     _uniformsLocation[U_viewMat] = glGetUniformLocation(programId, shader::U_names[U_viewMat]);
     // Projection matrix
     _uniformsLocation[U_projMat] = glGetUniformLocation(programId, shader::U_names[U_projMat]);
+    */
 
 
     glUseProgram( 0 );
