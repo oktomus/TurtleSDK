@@ -104,11 +104,14 @@ bool initialize()
                 .15f, .15f, 0.f)
             );
 
+    models.at(0)->setColor(1.f, 0.f, 0.f);
+
     models.push_back(std::make_unique<model::Triangle>(
                 .5f, -.3f, 0.f, 
                 .9f, .0f, 0.f, 
                 .7f, .3f, 0.f
                 ));
+    models.at(1)->setColor(0.f, 1.f, 0.f);
 
     models.push_back(std::make_unique<model::Quad>(
                 -.5f, -.5f, 0.f,
@@ -116,6 +119,7 @@ bool initialize()
                 .5f, .5f, 0.f,
                 -.5f, .5f, 0.f
                 ));
+    models.at(2)->setColor(0.f, 0.f, 1.f);
 
     models.push_back(std::make_unique<model::Cube>(0.f, 0.f, 0.f, .4f));
 
@@ -185,17 +189,18 @@ void display( void )
     glEnable(GL_BLEND);
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    GLint uniformLocation;
 
     //--------------------
     // Activate shader program
     //--------------------
     shader::Base& mat = materials.at(0);
+    uniformLocation = glGetUniformLocation( mat.id(), "modelMatrix" );
     mat.use();
 
     //--------------------
     // Send uniforms to GPU
     //--------------------
-    GLint uniformLocation;
     // Retrieve camera parameters
     // Retrieve 3D model / scene parameters
     glm::mat4 modelMatrix;

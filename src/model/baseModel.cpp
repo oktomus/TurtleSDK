@@ -42,6 +42,18 @@ void Base::draw_points()
     glBindVertexArray( 0 );
 }
 
+void Base::setColor(const float& r, const float& g, const float& b)
+{
+    _meshColor[0] = r;
+    _meshColor[1] = g;
+    _meshColor[2] = b;
+}
+
+const glm::vec3&  Base::color() const
+{
+    return _meshColor;
+}
+
 void Base::prepare()
 {
     int code;

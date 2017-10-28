@@ -10,6 +10,10 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 
+// GLM
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 /*
                    █         ▀▀█   
  ▄▄▄▄▄   ▄▄▄    ▄▄▄█   ▄▄▄     █   
@@ -47,6 +51,10 @@ namespace model{
                 return _nb_points;
             }
 
+            void setColor(const float& r, const float& g, const float& b);
+
+            const glm::vec3&  color() const;
+
             virtual const char* modelType() const = 0;
 
         protected:
@@ -63,6 +71,8 @@ namespace model{
               *
               */
             Base() = default;
+
+            glm::vec3 _meshColor;
 
             /**
              * Donnees du model.
