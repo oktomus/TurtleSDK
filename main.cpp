@@ -78,6 +78,8 @@ bool finalize();
 bool initialize()
 {
     std::cout << "Initialize all..." << std::endl;
+    std::cout << "Initializing world object..\n";
+    globalWorld.init();
 
     bool statusOK = true;
 
@@ -91,7 +93,6 @@ bool initialize()
         statusOK = initializeShaderProgram();
     }
 
-    globalWorld.init();
 
 
     _meshColor = glm::vec3(0.f, 1.f, 0.f);
@@ -157,6 +158,7 @@ bool initializeShaderProgram()
 
     materials.push_back(shader::Base("shaders/animated"));
     materials.at(0).setCamera(globalWorld.currentCamera());
+    std::cout << "End Initialize shader program.\n" << std::endl;
 
     return statusOK;
 }
@@ -189,6 +191,9 @@ void display( void )
     //--------------------
     shader::Base& mat = materials.at(0);
     mat.use();
+    std::cout << "Camera Main " << &(globalWorld.currentCamera()) << "\n";
+
+    std::cout << glm::value_ptr(globalWorld.currentCamera().viewMatrix()) << "\n";
 
     //--------------------
     // Send uniforms to GPU

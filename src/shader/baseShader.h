@@ -9,8 +9,9 @@
 #include "camera/baseCamera.h"
 
 
-#define U_viewMat "viewMatrix"
-#define U_projMat "projectionMatrix"
+#define U_count 2
+#define U_viewMat 0
+#define U_projMat 1
 
 /*
         █                 █               
@@ -23,6 +24,10 @@
 
 namespace shader{
 
+    const std::array<const GLchar *, U_count> U_names = {
+        "viewMatrix",
+        "projectionMatrix"
+    };
 
     const std::string readFile(const std::string & path);
     GLuint compileShader(
@@ -40,6 +45,7 @@ namespace shader{
         const GLuint & id() const;
 
         void setCamera(const camera::Camera& cam);
+        void updateUniforms();
 
     private:
 
@@ -47,9 +53,10 @@ namespace shader{
         GLuint vertexId;
         GLuint fragId;
 
-        std::map<std::string, GLuint> _uniformsLocation;
+        std::map<int8_t, GLuint> _uniformsLocation;
 
         const camera::Camera* _cam;
+
 
     };
 

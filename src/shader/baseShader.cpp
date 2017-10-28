@@ -84,6 +84,7 @@ GLuint shader::compileShader(
         throw std::runtime_error("Unable to compile " + sourcePath);
     }
 
+
     // Success
     return index;
 
@@ -108,48 +109,40 @@ shader::Base::Base(const std::string& path)
 
     glLinkProgram( programId );
 
+
 }
 
 void shader::Base::use() const
 {
     glUseProgram( programId );
+    GLuint uniformLocation;
+
+    std::cout << "Camera " << _cam << "\n";
 
     // Camera Uniforms
-    // View matrix
-    std::cout << U_viewMat << "\n";
-    /*
-    if (_uniformsLocation.count(U_viewMat) < 1){
-
-        _uniformsLocation.insert(
-                std::make_pair<std::string, GLuint>(
-                    "something", glGetUniformLocation(programId, U_viewMat)
-                    )
-                );
-    }
-
-    if ( _uniformsLocation.at(U_viewMat) >= 0 )
+    if(_cam)
     {
-        glUniformMatrix4fv(
-                _uniformsLocation.at(U_viewMat), 1, GL_FALSE, 
-                glm::value_ptr(_cam->viewMatrix() ) 
-                );
-    }
-    */
+        std::cout << glm::value_ptr(_cam->viewMatrix()) << "\n";
+        uniformLocation = glGetUniformLocation(programId, U_names[U_viewMat] );
 
-    /*
-    // Projection matrix
-    if (_uniformsLocation.count(U_viewMat) < 1){
-        _uniformsLocation[U_projMat] = glGetUniformLocation(programId, U_projMat);
-    }
+        if ( uniformLocation >= 0 )
+        {
+            glUniformMatrix4fv(uniformLocation, 1, 
+                    GL_FALSE, glm::value_ptr(_cam->viewMatrix()));
+        }
 
-    if ( _uniformsLocation.at(U_projMat) >= 0 )
-    {
-        glUniformMatrix4fv(
-                _uniformsLocation.at(U_projMat), 1, GL_FALSE, 
-                glm::value_ptr(_cam->projectionMatrix()) 
-                );
+        std::cout << "View Mat location " << uniformLocation << "\n";
+
+        uniformLocation = glGetUniformLocation(programId, U_names[U_projMat] );
+
+        if ( uniformLocation >= 0 )
+        {
+            glUniformMatrix4fv(uniformLocation, 1, 
+                    GL_FALSE, glm::value_ptr(_cam->projectionMatrix()));
+        }
+        
+        std::cout << "Proj Mat location " << uniformLocation << "\n";
     }
-    */
 }
 
 const GLuint & shader::Base::id() const
@@ -160,4 +153,17 @@ const GLuint & shader::Base::id() const
 void shader::Base::setCamera(const camera::Camera& cam)
 {
     _cam = &cam;
+}
+
+void shader::Base::updateUniforms()
+{
+    glUseProgram( programId );
+    throw std::runtime_error("Not implemented");
+    // View matrix
+    _uniformsLocation[U_viewMat] = glGetUniformLocation(programId, shader::U_names[U_viewMat]);
+    // Projection matrix
+    _uniformsLocation[U_projMat] = glGetUniformLocation(programId, shader::U_names[U_projMat]);
+
+
+    glUseProgram( 0 );
 }
