@@ -117,6 +117,12 @@ void shader::Base::use() const
     glUseProgram( programId );
     GLuint uniformLocation;
 
+    uniformLocation = glGetUniformLocation( id(), U_names[U_time] );
+    if ( uniformLocation >= 0 )
+    {
+        glUniform1f( uniformLocation, 
+                static_cast< float >(glutGet(GLUT_ELAPSED_TIME)));
+    }
 
     // Camera Uniforms
     if(_cam)
@@ -181,6 +187,11 @@ void shader::Base::drawBuffer()
         if ( uniformLocation >= 0 )
         {
             glUniform3fv( uniformLocation, 1, glm::value_ptr( m->color() ) );
+        }
+        uniformLocation = glGetUniformLocation(id(), U_names[U_meshMat]);
+        if ( uniformLocation >= 0 )
+        {
+            glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr( m->matrix() ) );
         }
         m->draw();
     }

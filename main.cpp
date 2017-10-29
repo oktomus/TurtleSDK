@@ -50,11 +50,7 @@ world::World globalWorld;
 // Shader program
 std::vector<shader::Base> materials;
 
-// Mesh parameters
-glm::vec3 _meshColor;
-
 std::vector<std::shared_ptr<model::Base>> models;
-
 
 /******************************************************************************
  ***************************** TYPE DEFINITION ********************************
@@ -93,10 +89,6 @@ bool initialize()
     {
         statusOK = initializeShaderProgram();
     }
-
-
-
-    _meshColor = glm::vec3(0.1f, 1.f, 0.1f);
 
     models.push_back(std::make_shared<model::Triangle>(
                 -.3f, -.3f, 0.f, 
@@ -176,9 +168,6 @@ bool initializeShaderProgram()
  ******************************************************************************/
 void display( void )
 {
-    // Timer info
-    const int currentTime = glutGet( GLUT_ELAPSED_TIME );
-
     //ImGui::Text("Hello, world!");
 
     //--------------------
@@ -199,7 +188,6 @@ void display( void )
     // Activate shader program
     //--------------------
     shader::Base& mat = materials.at(0);
-    uniformLocation = glGetUniformLocation( mat.id(), "modelMatrix" );
     for (std::shared_ptr<model::Base> mod: models)
     {
         mat.addModelBuffer(mod);
@@ -209,30 +197,6 @@ void display( void )
     //--------------------
     // Send uniforms to GPU
     //--------------------
-    // Retrieve camera parameters
-    // Retrieve 3D model / scene parameters
-    glm::mat4 modelMatrix;
-    const bool useMeshAnimation = true; // TODO: use keyboard to activate/deactivate
-
-    if ( useMeshAnimation )
-    {
-        modelMatrix = glm::rotate( modelMatrix, static_cast< float >( currentTime ) * 0.001f, glm::vec3( 0.0f, 1.f, 0.f ) );
-    }
-    // Camera
-    // Mesh
-    // - model matrix
-    uniformLocation = glGetUniformLocation( mat.id(), "modelMatrix" );
-    if ( uniformLocation >= 0 )
-    {
-        glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr( modelMatrix ) );
-    }
-    // - mesh color
-    // Animation
-    uniformLocation = glGetUniformLocation( mat.id(), "time" );
-    if ( uniformLocation >= 0 )
-    {
-        glUniform1f( uniformLocation, static_cast< float >( currentTime ) );
-    }
 
     glPolygonMode( GL_FRONT, GL_FILL );
     mat.drawBuffer();

@@ -55,6 +55,8 @@ namespace model{
 
             const glm::vec3&  color() const;
 
+            const glm::mat4& matrix();
+
             virtual const char* modelType() const = 0;
 
         protected:
@@ -73,6 +75,8 @@ namespace model{
             Base() = default;
 
             glm::vec3 _meshColor;
+
+            glm::mat4 _meshMatrix;
 
             /**
              * Donnees du model.

@@ -11,10 +11,12 @@
 #include "camera/baseCamera.h"
 
 
-#define U_count 3
+#define U_count 5
 #define U_viewMat 0
 #define U_projMat 1
 #define U_meshColor 2
+#define U_meshMat 3
+#define U_time 4
 
 /*
         █                 █               
@@ -30,7 +32,9 @@ namespace shader{
     const std::array<const GLchar *, U_count> U_names = {
         "viewMatrix",
         "projectionMatrix",
-        "meshColor"
+        "meshColor",
+        "modelMatrix",
+        "time",
     };
 
     const std::string readFile(const std::string & path);

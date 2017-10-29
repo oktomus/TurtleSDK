@@ -54,6 +54,16 @@ const glm::vec3&  Base::color() const
     return _meshColor;
 }
 
+const glm::mat4& Base::matrix()
+{
+    this->_meshMatrix = glm::rotate( 
+            glm::mat4(),
+            static_cast< float >(glutGet( GLUT_ELAPSED_TIME )) * 0.001f, 
+            glm::vec3( 0.0f, 1.f, 0.f ) );
+    return this->_meshMatrix;
+
+}
+
 void Base::prepare()
 {
     int code;
