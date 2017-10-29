@@ -7,7 +7,6 @@
 #include "model/baseModel.h"
 
 #include <GL/glew.h>
-#include <GL/gl.h>
 #include "camera/baseCamera.h"
 
 

@@ -22,7 +22,6 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
-#include <GL/gl.h>
 // - GLUT
 #include <GL/glut.h>
 

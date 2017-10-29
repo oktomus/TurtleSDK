@@ -6,8 +6,6 @@
 #include <map>
 #include <string>
 
-#include <GL/gl.h>
-
 /*
         █                 █               
   ▄▄▄   █ ▄▄    ▄▄▄    ▄▄▄█   ▄▄▄    ▄ ▄▄ 
