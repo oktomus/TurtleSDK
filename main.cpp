@@ -268,11 +268,6 @@ int main( int argc, char** argv )
     // - configure the main framebuffer to store rgba colors,
     //   and activate double buffering (for fluid/smooth visualization)
     //glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );
-    // - window size and position
-    //glutInitWindowSize( 640, 480 );
-    //glutInitWindowPosition( 50, 50 );
-    // - create the window
-    //glutCreateWindow( "TurtleSDK" );
 
     // Callbacks
     // - callback called when displaying window (user custom fonction pointer: "void f( void )")
@@ -285,5 +280,7 @@ int main( int argc, char** argv )
     //    glutMainLoop();
 
     // Clean all
+
+    glfwTerminate();
     //finalize();
 }
