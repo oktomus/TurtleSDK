@@ -18,6 +18,7 @@
 // Graphics
 // - GLEW (always before "gl.h")
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 // - GL
 #ifdef _WIN32
 #include <windows.h>
