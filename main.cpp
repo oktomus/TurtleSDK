@@ -168,7 +168,6 @@ bool initializeShaderProgram()
 void display( void )
 {
     //ImGui::Text("Hello, world!");
-    glfwPollEvents();
 
     //--------------------
     // START frame
@@ -216,6 +215,7 @@ void display( void )
     glFlush();
     // Swap buffers for "double buffering" display mode (=> swap "back" and "front" framebuffers)
     glfwSwapBuffers(window);
+    glfwPollEvents();
 }
 
 /******************************************************************************
