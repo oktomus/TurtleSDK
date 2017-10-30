@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.0 )
 
-#add_subdirectory(distant)
+add_subdirectory(distant)
 add_subdirectory(src)
 
 ##################################################################################
@@ -51,6 +51,7 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" )
 
 # imgui
 #include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/imgui" )
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/glfw/include" )
 
 
 ##################################################################################
@@ -90,5 +91,6 @@ else()
     target_link_libraries( ${PROJECT_NAME} ${GLEW_LIBRARIES} )
 endif() 
 
+target_link_libraries( ${PROJECT_NAME} glfw)
 target_link_libraries( ${PROJECT_NAME} turtle)
 #target_link_libraries( ${PROJECT_NAME} imgui )
