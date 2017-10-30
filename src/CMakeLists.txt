@@ -25,7 +25,9 @@ set( sources ${sources} ${cfiles} )
 
 
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/../distant/glfw/include")
 add_library(${PROJECT_NAME} ${headers} ${sources})
+target_link_libraries( ${PROJECT_NAME} glfw)
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR})

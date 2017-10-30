@@ -119,7 +119,8 @@ void shader::Base::use() const
     if ( uniformLocation >= 0 )
     {
         glUniform1f( uniformLocation, 
-                static_cast< float >(glutGet(GLUT_ELAPSED_TIME)));
+                static_cast< float >(glfwGetTime())
+                );
     }
 
     // Camera Uniforms

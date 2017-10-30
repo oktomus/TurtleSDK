@@ -7,7 +7,7 @@
 
 // Graphics Libs
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GLFW/glfw3.h>
 
 // GLM
 #include <glm/glm.hpp>

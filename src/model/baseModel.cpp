@@ -5,8 +5,6 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <GL/glew.h>
-
 /*
                    █         ▀▀█   
  ▄▄▄▄▄   ▄▄▄    ▄▄▄█   ▄▄▄     █   
@@ -56,7 +54,7 @@ const glm::mat4& Base::matrix()
 {
     this->_meshMatrix = glm::rotate( 
             glm::mat4(),
-            static_cast< float >(glutGet( GLUT_ELAPSED_TIME )) * 0.001f, 
+            static_cast< float >(glfwGetTime()), 
             glm::vec3( 0.0f, 1.f, 0.f ) );
     return this->_meshMatrix;
 

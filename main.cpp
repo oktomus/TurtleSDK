@@ -23,8 +23,6 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
-// - GLUT
-#include <GL/glut.h>
 
 // glm
 #include <glm/glm.hpp>
@@ -47,6 +45,7 @@
 
 world::World globalWorld;
 
+GLFWwindow* window;
 // Shader program
 std::vector<shader::Base> materials;
 
@@ -169,6 +168,7 @@ bool initializeShaderProgram()
 void display( void )
 {
     //ImGui::Text("Hello, world!");
+    glfwPollEvents();
 
     //--------------------
     // START frame
@@ -215,7 +215,7 @@ void display( void )
     // OpenGL commands are not synchrone, but asynchrone (stored in a "command buffer")
     glFlush();
     // Swap buffers for "double buffering" display mode (=> swap "back" and "front" framebuffers)
-    glutSwapBuffers();
+    glfwSwapBuffers(window);
 }
 
 /******************************************************************************
@@ -224,7 +224,11 @@ void display( void )
 void idle( void )
 {
     // Mark current window as needing to be redisplayed
-    glutPostRedisplay();
+}
+
+static void error_callback(int error, const char* description)
+{
+    fprintf(stderr, "Error %d: %s\n", error, description);
 }
 
 /******************************************************************************
@@ -232,34 +236,19 @@ void idle( void )
  ******************************************************************************/
 int main( int argc, char** argv )
 {
-    std::cout << "TP3 - Transform" << std::endl;
+    glfwSetErrorCallback(error_callback);
+    if (!glfwInit())
+        return 1;
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    // Initialize the GLUT library
-    glutInit( &argc, argv );
 
-    //glutInitContextVersion( 3, 3 );
-    //glutInitContextProfile( GLUT_COMPATIBILITY_PROFILE );
+    window = glfwCreateWindow(
+            1280, 720, "TurtleSDK", NULL, NULL);
+    glfwMakeContextCurrent(window);
+    glfwSwapInterval(1); // Enable vsync
 
-    // Grahics window
-    // - configure the main framebuffer to store rgba colors,
-    //   and activate double buffering (for fluid/smooth visualization)
-    glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );
-    // - window size and position
-    glutInitWindowSize( 640, 480 );
-    glutInitWindowPosition( 50, 50 );
-    // - create the window
-    glutCreateWindow( "TurtleSDK" );
-
-    // Callbacks
-    // - callback called when displaying window (user custom fonction pointer: "void f( void )")
-    glutDisplayFunc( display );
-    // - callback continuously called when events are not being received
-    glutIdleFunc( idle );
-
-    // Initialize the GLEW library
-    // - mandatory to be able to use OpenGL extensions,
-    //   because OpenGL core API is made of OpenGL 1 and other functions are null pointers (=> segmentation fault !)
-    //   Currently, official OpenGL version is 4.5 (or 4.6)
     GLenum error = glewInit();
     if ( error != GLEW_OK )
     {
@@ -270,8 +259,30 @@ int main( int argc, char** argv )
     // Initialize all your resources (graphics, data, etc...)
     initialize();
 
+    while (!glfwWindowShouldClose(window))
+    {
+
+        display();
+    }
+    // Grahics window
+    // - configure the main framebuffer to store rgba colors,
+    //   and activate double buffering (for fluid/smooth visualization)
+    //glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );
+    // - window size and position
+    //glutInitWindowSize( 640, 480 );
+    //glutInitWindowPosition( 50, 50 );
+    // - create the window
+    //glutCreateWindow( "TurtleSDK" );
+
+    // Callbacks
+    // - callback called when displaying window (user custom fonction pointer: "void f( void )")
+    //glutDisplayFunc( display );
+    // - callback continuously called when events are not being received
+    //glutIdleFunc( idle );
+
+
     // Enter the GLUT main event loop (waiting for events: keyboard, mouse, refresh screen, etc...)
-    glutMainLoop();
+    //    glutMainLoop();
 
     // Clean all
     //finalize();

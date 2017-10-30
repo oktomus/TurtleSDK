@@ -22,7 +22,7 @@ void main( void )
         // Use animation                                                                  
         float amplitude = 1.0;                                                            
     float frequency = 0.5;                                                            
-    float height = amplitude * sin( 2.0 * 3.141592 * frequency * ( time * 0.001 ) );  
+    float height = amplitude * sin( 2.0 * 3.141592 * frequency * ( time ) );  
     vec3 pos = vec3( position.x, position.y + height, position.z );                   
     // Send position to Clip-space                                                    
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( pos, 1.0 );     
