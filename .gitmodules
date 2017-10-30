@@ -4,3 +4,4 @@
 [submodule "distant/glfw"]
 	path = distant/glfw
 	url = https://github.com/glfw/glfw
+    ignore = dirty
