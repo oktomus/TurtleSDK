@@ -110,13 +110,15 @@ bool initialize()
                 .5f, .5f, 0.f,
                 -.5f, .5f, 0.f
                 ));
-    models.at(2)->setColor(0.1f, 0.1f, 1.f);
+    models.at(2)->setColor(1.f, 1.f, 1.f);
+    /*
 
     models.push_back(std::make_shared<model::Cube>(0.f, 0.f, 0.f, .4f));
     models.at(3)->setColor(0.1f, 1.f, 1.f);
 
     models.push_back(std::make_shared<model::Cube>(0.f, 0.f, -1.6f, .8f));
     models.at(3)->setColor(0.1f, .1f, .5f);
+    */
 
     return statusOK;
 }
@@ -178,7 +180,7 @@ void display( void )
     glClearDepth( 1.f );
     // - clear the "color" framebuffer
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    glEnable(GL_BLEND);
+    //glEnable(GL_BLEND);
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     GLint uniformLocation;
@@ -197,12 +199,15 @@ void display( void )
     // Send uniforms to GPU
     //--------------------
 
-    glPolygonMode( GL_FRONT, GL_FILL );
-    mat.drawBuffer();
-    /*for (std::shared_ptr<model::Base> mod: models)
-    {
-        mod->draw();
-    }*/
+    glColor4f( 1.f, 0.f, 0.f, 1.f );
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    //mat.drawBuffer();
+    glBegin(GL_POINTS);
+    glVertex3f(-.5f, -.5f, 0.f);
+    glVertex3f(.5f, -.5f, 0.f);
+    glVertex3f(.5f, .5f, 0.f);
+    glVertex3f(-.5f, .5f, 0.f);
+    glEnd();
 
 
     // Deactivate current shader program

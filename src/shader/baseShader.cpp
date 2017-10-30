@@ -193,6 +193,7 @@ void shader::Base::drawBuffer()
             glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, glm::value_ptr( m->matrix() ) );
         }
         m->draw();
+        m->draw_points();
     }
 }
 
