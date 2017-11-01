@@ -15,7 +15,6 @@ project( TurtleSDK )
 
 # OpenGL
 find_package( OpenGL REQUIRED )
-find_package( GLUT REQUIRED )
 find_package( GLEW REQUIRED )
 
 ##################################################################################
@@ -24,14 +23,6 @@ find_package( GLEW REQUIRED )
 
 #OpenGL
 include_directories( ${OPENGL_INCLUDE_DIRS} )
-
-# freeglut
-if(NOT ${GLUT_FOUND})
-    message("GLUT not found, using local includes")
-    include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/freeglut/include" )
-else()
-    include_directories( ${GLUT_INCLUDE_DIRS} )
-endif()
 
 # glew
 if(NOT ${GLEW_FOUND})
@@ -93,4 +84,4 @@ endif()
 
 target_link_libraries( ${PROJECT_NAME} glfw)
 target_link_libraries( ${PROJECT_NAME} turtle)
-#target_link_libraries( ${PROJECT_NAME} imgui )
+target_link_libraries( ${PROJECT_NAME} imgui )
