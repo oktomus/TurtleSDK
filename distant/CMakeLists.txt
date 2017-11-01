@@ -15,6 +15,8 @@ file ( GLOB HEADERS imgui/*.h imgui/*.hpp)
 
 file ( GLOB SOURCES imgui/*.cpp)
 
+include_directories( "glfw/include" )
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE imgui)
+target_link_libraries( ${PROJECT_NAME} glfw)

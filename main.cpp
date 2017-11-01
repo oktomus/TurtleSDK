@@ -15,6 +15,9 @@
 // System
 #include <cstdio>
 
+
+#include <imgui.h>
+#include "imgui_impl_glfw_gl3.h"
 // Graphics
 // - GLEW (always before "gl.h")
 #include <GL/glew.h>
@@ -50,6 +53,8 @@ GLFWwindow* window;
 std::vector<shader::Base> materials;
 
 std::vector<std::shared_ptr<model::Base>> models;
+
+bool show_another_window = false;
 
 /******************************************************************************
  ***************************** TYPE DEFINITION ********************************
@@ -169,6 +174,14 @@ bool initializeShaderProgram()
  ******************************************************************************/
 void display( void )
 {
+
+    ImGui_ImplGlfwGL3_NewFrame();
+
+    {
+        ImGui::Begin("Another Window", &show_another_window);
+        ImGui::Text("Hello from another window!");
+        ImGui::End();
+    }
     //ImGui::Text("Hello, world!");
 
     //--------------------
@@ -201,7 +214,7 @@ void display( void )
 
     glColor4f( 1.f, 0.f, 0.f, 1.f );
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-    //mat.drawBuffer();
+    mat.drawBuffer();
     glBegin(GL_POINTS);
     glVertex3f(-.5f, -.5f, 0.f);
     glVertex3f(.5f, -.5f, 0.f);
@@ -219,7 +232,10 @@ void display( void )
     // OpenGL commands are not synchrone, but asynchrone (stored in a "command buffer")
     glFlush();
     // Swap buffers for "double buffering" display mode (=> swap "back" and "front" framebuffers)
+
+    ImGui::Render();
     glfwSwapBuffers(window);
+
     glfwPollEvents();
 }
 
@@ -261,11 +277,14 @@ int main( int argc, char** argv )
         exit( -1 );
     }
 
+    ImGui_ImplGlfwGL3_Init(window, true);
+
     // Initialize all your resources (graphics, data, etc...)
     initialize();
 
     while (!glfwWindowShouldClose(window))
     {
+
 
         display();
     }
@@ -286,6 +305,7 @@ int main( int argc, char** argv )
 
     // Clean all
 
+    ImGui_ImplGlfwGL3_Shutdown();
     glfwTerminate();
     //finalize();
 }

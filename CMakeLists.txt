@@ -41,7 +41,7 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src" )
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" )
 
 # imgui
-#include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/imgui" )
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/imgui" )
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/glfw/include" )
 
 
