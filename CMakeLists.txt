@@ -15,7 +15,6 @@ project( TurtleSDK )
 
 # OpenGL
 find_package( OpenGL REQUIRED )
-find_package( GLEW REQUIRED )
 
 ##################################################################################
 # Include directories
@@ -24,24 +23,18 @@ find_package( GLEW REQUIRED )
 #OpenGL
 include_directories( ${OPENGL_INCLUDE_DIRS} )
 
-# glew
-if(NOT ${GLEW_FOUND})
-    message("GLEW not found, using local includes")
-    include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/glew/include" )
-else() 
-    include_directories( ${GLEW_INCLUDE_DIRS} )
-endif()
-
 # glm
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/glm" )
 
 # src 
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src" )
-
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" )
 
+# gl3w
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/gl3w/includ" )
 # imgui
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/imgui" )
+# glfw
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/glfw/include" )
 
 
@@ -66,22 +59,7 @@ add_executable( ${PROJECT_NAME} ${srcList} ${resList} )
 # Opengl
 target_link_libraries( ${PROJECT_NAME} ${OPENGL_gl_LIBRARY} )
 
-# Glut
-
-if(NOT ${GLUT_FOUND})
-    target_link_libraries( ${PROJECT_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/libs/freeglut/lib64" )
-else()
-    target_link_libraries( ${PROJECT_NAME} ${GLUT_glut_LIBRARY} )
-endif()
-
-# Glew
-
-if(NOT ${GLUT_FOUND})
-    target_link_libraries( ${PROJECT_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/libs/glew/lib64" )
-else()
-    target_link_libraries( ${PROJECT_NAME} ${GLEW_LIBRARIES} )
-endif() 
-
+target_link_libraries( ${PROJECT_NAME} gl3w )
 target_link_libraries( ${PROJECT_NAME} glfw)
 target_link_libraries( ${PROJECT_NAME} turtle)
 target_link_libraries( ${PROJECT_NAME} imgui )

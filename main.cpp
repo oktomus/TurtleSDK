@@ -20,7 +20,7 @@
 #include "imgui_impl_glfw_gl3.h"
 // Graphics
 // - GLEW (always before "gl.h")
-#include <GL/glew.h>
+#include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 // - GL
 #ifdef _WIN32
@@ -212,15 +212,8 @@ void display( void )
     // Send uniforms to GPU
     //--------------------
 
-    glColor4f( 1.f, 0.f, 0.f, 1.f );
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     mat.drawBuffer();
-    glBegin(GL_POINTS);
-    glVertex3f(-.5f, -.5f, 0.f);
-    glVertex3f(.5f, -.5f, 0.f);
-    glVertex3f(.5f, .5f, 0.f);
-    glVertex3f(-.5f, .5f, 0.f);
-    glEnd();
 
 
     // Deactivate current shader program
@@ -270,12 +263,13 @@ int main( int argc, char** argv )
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
 
-    GLenum error = glewInit();
-    if ( error != GLEW_OK )
-    {
-        fprintf( stderr, "Error: %s\n", glewGetErrorString( error ) );
-        exit( -1 );
+    if (gl3wInit()) {
+        fprintf(stderr, "failed to initialize OpenGL\n");
+        return -1;
     }
+
+    printf("OpenGL %s, GLSL %s\n", glGetString(GL_VERSION),
+            glGetString(GL_SHADING_LANGUAGE_VERSION));
 
     ImGui_ImplGlfwGL3_Init(window, true);
 
@@ -284,10 +278,9 @@ int main( int argc, char** argv )
 
     while (!glfwWindowShouldClose(window))
     {
-
-
         display();
     }
+
     // Grahics window
     // - configure the main framebuffer to store rgba colors,
     //   and activate double buffering (for fluid/smooth visualization)
