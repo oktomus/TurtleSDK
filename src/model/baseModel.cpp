@@ -65,47 +65,38 @@ void Base::prepare()
 {
     int code;
 
-    code = initArrayBuffer();
+    code = initArray();
     if(code != 0) throw std::runtime_error(
-                "Impossibile d'initialiser le VBO");
-
-    code = initArrayObject();
-    if(code != 0) throw std::runtime_error(
-                "Impossibile d'initialiser le VAO");
+                "Unable to init the vertext buffer");
 }
 
-int Base::initArrayBuffer()
+int Base::initArray()
 {
 
     // VBO ID
     glGenBuffers( 1, &vboPosition);
     // bind VBO
     glBindBuffer( GL_ARRAY_BUFFER, vboPosition );
-    // CPU to host
-    glBufferData( GL_ARRAY_BUFFER, data.size() * sizeof( float ), data.data(), GL_STATIC_DRAW );
-    // unbind
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
-
-    return 0;
-}
-
-int Base::initArrayObject()
-{
-
+    // VAO ID
     glGenVertexArrays( 1, &vaoPosition );
     // bind VAO
     glBindVertexArray( vaoPosition );
-    // bind VBO
-    glBindBuffer( GL_ARRAY_BUFFER, vboPosition );
+
+    // CPU to host
+    glBufferData( GL_ARRAY_BUFFER, data.size() * sizeof( float ), data.data(), GL_STATIC_DRAW );
+
+    // VAO Parmas
     glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0 );
     // Enable access to attribute 0
     glEnableVertexAttribArray(0);
 
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
     // unbind VAO
     glBindVertexArray( 0 );
     // unbind VBO
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
 
     return 0;
 }

@@ -114,20 +114,11 @@ namespace model{
             size_t _nb_points;
 
             /**
-             * Initialise le buffer
+             * Init the VBO then the VAO
              *
-             * @return     Une code d'execution, 0 pour succees
+             * @return     Success code
              */
-            int initArrayBuffer();
-
-            /**
-             * Initialise l'objet lie au buffer
-             *
-             * @return     Une code d'execution, 0 pour succees
-             */
-            int initArrayObject();
-
-
+            int initArray();
     };
 
 }
