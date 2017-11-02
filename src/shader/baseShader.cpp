@@ -122,6 +122,8 @@ shader::Base::Base(const std::string& path)
         }
         throw std::runtime_error("Unable to link the material " + path);
     }
+    glDeleteShader(vertexId);
+    glDeleteShader(fragId);  
 
 
 }
