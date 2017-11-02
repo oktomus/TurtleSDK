@@ -76,10 +76,10 @@ GLuint shader::compileShader(
             GLsizei length = 0;
             glGetShaderInfoLog( index, logInfoLength, &length, infoLog );
             throw std::runtime_error(
-                    "Unable to compile " + sourcePath + "\nLog:\n" + infoLog);
+                    "Unable to compile the shader " + sourcePath + "\nLog:\n" + infoLog);
         }
 
-        throw std::runtime_error("Unable to compile " + sourcePath);
+        throw std::runtime_error("Unable to compile the shader " + sourcePath);
     }
 
 
@@ -106,6 +106,22 @@ shader::Base::Base(const std::string& path)
     glAttachShader( programId, fragId );
 
     glLinkProgram( programId );
+
+    GLint success;
+    glGetProgramiv(programId, GL_LINK_STATUS, &success);
+    if(!success) {
+        GLint logInfoLength = 0;
+        glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &logInfoLength );
+        if ( logInfoLength > 0 )
+        {
+            GLchar* infoLog = new GLchar[logInfoLength];
+            GLsizei length = 0;
+            glGetProgramInfoLog(programId, logInfoLength, &length, infoLog);
+            throw std::runtime_error(
+                    "Unable to link the material" + path + "\nLog:\n" + infoLog);
+        }
+        throw std::runtime_error("Unable to link the material " + path);
+    }
 
 
 }
