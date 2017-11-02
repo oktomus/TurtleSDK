@@ -68,38 +68,43 @@ Cube::Cube(float x, float y, float z, float size) :
     Base(GL_QUADS, 24)
 {
     data = {
-        // Front
+        // front
+        // 0 bottom left
         x - size, y - size, z + size,
+        // 1 bottom right
         x + size, y - size, z + size,
+        // 2 top right
         x + size, y + size, z + size,
+        // 3 bottom left
         x - size, y + size, z + size,
-
         // Back
+        // 4 Bottom right
         x + size, y - size, z - size,
+        // 5 Bottom left
         x - size, y - size, z - size,
+        // 6 Top left
         x - size, y + size, z - size,
+        // 7 Top right
         x + size, y + size, z - size,
+    };
+    indices = {
+        0, 1 ,3,
+        1, 2, 3,
 
-        // Right
-        x + size, y - size, z + size,
-        x + size, y - size, z - size,
-        x + size, y + size, z - size,
-        x + size, y + size, z + size,
+        4, 5 ,7,
+        5, 6, 7,
 
-        x - size, y - size, z - size,
-        x - size, y - size, z + size,
-        x - size, y + size, z + size,
-        x - size, y + size, z - size,
+        0, 3, 6,
+        6, 5, 3,
 
-        x - size, y + size, z - size,
-        x - size, y + size, z + size,
-        x + size, y + size, z + size,
-        x + size, y + size, z - size,
+        7, 4, 2,
+        2, 1, 2,
 
-        x - size, y - size, z + size,
-        x - size, y - size, z - size,
-        x + size, y - size, z - size,
-        x + size, y - size, z + size
+        0, 1, 5,
+        5, 4, 3,
+
+        0, 2, 6,
+        6, 7, 2,
     };
 
     prepare();

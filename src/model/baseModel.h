@@ -83,7 +83,7 @@ namespace model{
              */
             std::vector<float> data;
 
-            std::vector<size_t> indices;
+            std::vector<unsigned int> indices;
 
             /**
               * Create and bind buffers

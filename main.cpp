@@ -210,20 +210,15 @@ void initObjects()
                     ));
         models.at(2)->setColor(1.f, 1.f, 1.f);
 
-        /*
-
-           models.push_back(std::make_shared<model::Cube>(0.f, 0.f, 0.f, .4f));
-           models.at(3)->setColor(0.1f, 1.f, 1.f);
-
-           models.push_back(std::make_shared<model::Cube>(0.f, 0.f, -1.6f, .8f));
-           models.at(3)->setColor(0.1f, .1f, .5f);
-         */
+        models.push_back(std::make_shared<model::Cube>(0.f, 0.f, 0.f, .4f));
+        models.at(3)->setColor(0.3f, 0.f, 0.3f);
     }
 
     {
         materials.at(0)->addModelBuffer(models.at(0));
         materials.at(0)->addModelBuffer(models.at(1));
-        materials.at(1)->addModelBuffer(models.at(2));
+        materials.at(0)->addModelBuffer(models.at(2));
+        materials.at(0)->addModelBuffer(models.at(3));
     }
 }
 

@@ -6,10 +6,10 @@
 uniform vec4 color;
 
 // OUTPUT
-out vec4 fragmentColor;
+out vec4 FragColor;
 
 // PROCESS
 void main( void )
 {
-    fragmentColor = vec4(1.0, 1.0, 0.0, 1.0) ;
+    FragColor = vec4(1.0, 1.0, 0.0, 1.0) ;
 }

@@ -80,25 +80,20 @@ void Base::prepare()
 int Base::initArray()
 {
     
-    // VAO ID
     glGenVertexArrays( 1, &vaoPosition );
-    // bind VAO
+    glGenBuffers( 1, &vboPosition);
+    glGenBuffers( 1, &eboPosition);
+
     glBindVertexArray( vaoPosition );
 
-    // VBO ID
-    glGenBuffers( 1, &vboPosition);
-    // bind VBO
     glBindBuffer( GL_ARRAY_BUFFER, vboPosition );
-    // Send VBO Data
     glBufferData( GL_ARRAY_BUFFER, data.size() * sizeof( float ), data.data(), GL_STATIC_DRAW );
 
-    // EBO ID (if required)
     if(indices.size())
     {
-        glGenBuffers(1, &eboPosition);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboPosition);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
-                indices.size() * sizeof(size_t),
+                indices.size() * sizeof(unsigned int),
                 indices.data(),
                 GL_STATIC_DRAW);
     }
@@ -109,7 +104,6 @@ int Base::initArray()
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindVertexArray( 0 );
-
 
     return 0;
 }
