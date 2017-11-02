@@ -98,7 +98,7 @@ int Base::initArrayObject()
     glBindVertexArray( vaoPosition );
     // bind VBO
     glBindBuffer( GL_ARRAY_BUFFER, vboPosition );
-    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, 0 );
+    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0 );
     // Enable access to attribute 0
     glEnableVertexAttribArray(0);
 
