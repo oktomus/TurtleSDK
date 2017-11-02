@@ -314,7 +314,16 @@ static void error_callback(int error, const char* description)
 int main( int argc, char** argv )
 {
 
-    init();
+    try
+    {
+        init();
+    }
+    catch(const std::exception &e)
+    {
+        std::cout <<"\n\nInitialisation failed. Reason:\n" << e.what() << "\n\n";
+        terminate();
+        return 2;
+    }
 
     while (!glfwWindowShouldClose(window))
     {
@@ -332,5 +341,6 @@ int main( int argc, char** argv )
     }
 
     terminate();
+    return 0;
 
 }
