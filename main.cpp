@@ -240,6 +240,23 @@ void idle( void )
     // Mark current window as needing to be redisplayed
 }
 
+/**
+  * Process key input
+  *
+  * @param window   The window which received the input
+  */
+void processInput(GLFWwindow *window)
+{
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+}
+
+/**
+  * Catch glfw errors
+  *
+  * @param error    Error code
+  * @param description  Error message
+  */
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error %d: %s\n", error, description);
@@ -278,6 +295,7 @@ int main( int argc, char** argv )
 
     while (!glfwWindowShouldClose(window))
     {
+        processInput(window);
         display();
     }
 
