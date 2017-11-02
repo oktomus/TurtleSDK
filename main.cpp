@@ -39,7 +39,7 @@
 
 world::World globalWorld;
 GLFWwindow* window;
-std::vector<shader::Base> materials;
+std::vector<std::shared_ptr<shader::Base>> materials;
 std::vector<std::shared_ptr<model::Base>> models;
 bool show_another_window = false;
 
@@ -174,48 +174,53 @@ void init()
 
 void initMaterials()
 {
-    materials.push_back(shader::Base("shaders/animated"));
-    materials.push_back(shader::Base("shaders/solid"));
-    materials.at(0).setCamera(globalWorld.currentCamera());
-    materials.at(1).setCamera(globalWorld.currentCamera());
+    materials.push_back(std::make_shared<shader::Base>("shaders/animated"));
+    materials.push_back(std::make_shared<shader::Base>("shaders/solid"));
+    materials.at(0)->setCamera(globalWorld.currentCamera());
+    materials.at(1)->setCamera(globalWorld.currentCamera());
 }
 
 void initObjects()
 {
-    models.push_back(std::make_shared<model::Triangle>(
-                -.3f, -.3f, 0.f, 
-                .3f, -.3f, 0.f, 
-                .15f, .15f, 0.f
-                ));
-    models.at(0)->setColor(1.f, 0.1f, 0.1f);
+    {
+        models.push_back(std::make_shared<model::Triangle>(
+                    -.3f, -.3f, 0.f, 
+                    .3f, -.3f, 0.f, 
+                    .15f, .15f, 0.f
+                    ));
+        models.at(0)->setColor(1.f, 0.1f, 0.1f);
 
-    models.push_back(std::make_shared<model::Triangle>(
-                .5f, -.3f, 0.f, 
-                .9f, .0f, 0.f, 
-                .7f, .3f, 0.f
-                ));
+        models.push_back(std::make_shared<model::Triangle>(
+                    .5f, -.3f, 0.f, 
+                    .9f, .0f, 0.f, 
+                    .7f, .3f, 0.f
+                    ));
 
-    models.at(1)->setColor(0.1f, 1.f, 0.1f);
+        models.at(1)->setColor(0.1f, 1.f, 0.1f);
 
-    models.push_back(std::make_shared<model::Quad>(
-                -.5f, -.5f, 0.f,
-                .5f, -.5f, 0.f,
-                .5f, .5f, 0.f,
-                -.5f, .5f, 0.f
-                ));
-    models.at(2)->setColor(1.f, 1.f, 1.f);
+        models.push_back(std::make_shared<model::Quad>(
+                    -.5f, -.5f, 0.f,
+                    .5f, -.5f, 0.f,
+                    .5f, .5f, 0.f,
+                    -.5f, .5f, 0.f
+                    ));
+        models.at(2)->setColor(1.f, 1.f, 1.f);
 
-    materials.at(0).addModelBuffer(models.at(0));
-    materials.at(0).addModelBuffer(models.at(1));
-    materials.at(1).addModelBuffer(models.at(2));
-    /*
+        /*
 
-    models.push_back(std::make_shared<model::Cube>(0.f, 0.f, 0.f, .4f));
-    models.at(3)->setColor(0.1f, 1.f, 1.f);
+           models.push_back(std::make_shared<model::Cube>(0.f, 0.f, 0.f, .4f));
+           models.at(3)->setColor(0.1f, 1.f, 1.f);
 
-    models.push_back(std::make_shared<model::Cube>(0.f, 0.f, -1.6f, .8f));
-    models.at(3)->setColor(0.1f, .1f, .5f);
-    */
+           models.push_back(std::make_shared<model::Cube>(0.f, 0.f, -1.6f, .8f));
+           models.at(3)->setColor(0.1f, .1f, .5f);
+         */
+    }
+
+    {
+        materials.at(0)->addModelBuffer(models.at(0));
+        materials.at(0)->addModelBuffer(models.at(1));
+        materials.at(0)->addModelBuffer(models.at(2));
+    }
 }
 
 
@@ -235,6 +240,19 @@ void terminate()
     {
         fprintf(stdout, "GLFW...");
         glfwTerminate();
+        fprintf(stdout, "OK\n");
+    }
+
+    {
+        fprintf(stdout, "MEMORY...");
+        for(std::shared_ptr<shader::Base> s : materials)
+        {
+            s.reset();
+        }
+        for(std::shared_ptr<model::Base> m : models)
+        {
+            m.reset();
+        }
         fprintf(stdout, "OK\n");
     }
 
@@ -270,8 +288,8 @@ void display()
 
     // DRAW
     {
-        materials.at(0).drawBuffer();
-        materials.at(1).drawBuffer();
+        materials.at(0)->drawBuffer();
+        materials.at(1)->drawBuffer();
     }
 
 
