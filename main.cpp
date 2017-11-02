@@ -105,8 +105,11 @@ void init()
             exit(3);
         }
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
+#endif
         window = glfwCreateWindow(
                 1280, 720, "TurtleSDK", NULL, NULL);
 
@@ -117,6 +120,12 @@ void init()
         }
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1); // Enable vsync
+        fprintf(stdout, "OK\n");
+    }
+
+    {
+        fprintf(stdout, "CALLBACKS...");
+        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
         fprintf(stdout, "OK\n");
     }
 
@@ -145,11 +154,6 @@ void init()
         fprintf(stdout, "OK\n");
     }
 
-    {
-        fprintf(stdout, "CALLBACKS...");
-        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
-        fprintf(stdout, "OK\n");
-    }
 
     {
         fprintf(stdout, "WORLD...");
@@ -183,7 +187,7 @@ void initMaterials()
 void initObjects()
 {
     {
-        models.push_back(std::make_shared<model::Triangle>(
+        models.push_back(std::make_shared<model::EBOTriangle>(
                     -.3f, -.3f, 0.f, 
                     .3f, -.3f, 0.f, 
                     .15f, .15f, 0.f

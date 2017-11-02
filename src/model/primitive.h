@@ -36,6 +36,21 @@ namespace model{
                 return "Triangle";
             }
     };
+
+    class EBOTriangle : public Base
+    {
+        public:
+
+            EBOTriangle(
+                    float xa, float ya, float za,
+                    float xb, float yb, float zb,
+                    float xc, float yc, float zc);
+
+            const char* modelType() const
+            {
+                return "EBOTriangle";
+            }
+    };
     
     /**
      * Represente un Quad 3D
