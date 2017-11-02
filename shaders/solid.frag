@@ -11,5 +11,5 @@ out vec4 fragmentColor;
 // PROCESS
 void main( void )
 {
-    fragmentColor = color;
+    fragmentColor = vec4(1.0, 1.0, 0.0, 1.0) ;
 }

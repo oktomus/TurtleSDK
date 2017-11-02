@@ -219,7 +219,7 @@ void initObjects()
     {
         materials.at(0)->addModelBuffer(models.at(0));
         materials.at(0)->addModelBuffer(models.at(1));
-        materials.at(0)->addModelBuffer(models.at(2));
+        materials.at(1)->addModelBuffer(models.at(2));
     }
 }
 

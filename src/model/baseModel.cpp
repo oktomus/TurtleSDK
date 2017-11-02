@@ -28,7 +28,14 @@ Base::Base(GLenum mode, size_t points) :
 void Base::draw()
 {
     glBindVertexArray(vaoPosition);
-    glDrawArrays(_mode, 0, _nb_points);
+    if(indices.size())
+    {
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    }
+    else
+    {
+        glDrawArrays(_mode, 0, _nb_points);
+    }
     glBindVertexArray( 0 );
 }
 
@@ -72,30 +79,37 @@ void Base::prepare()
 
 int Base::initArray()
 {
-
-    // VBO ID
-    glGenBuffers( 1, &vboPosition);
-    // bind VBO
-    glBindBuffer( GL_ARRAY_BUFFER, vboPosition );
-
+    
     // VAO ID
     glGenVertexArrays( 1, &vaoPosition );
     // bind VAO
     glBindVertexArray( vaoPosition );
 
-    // CPU to host
+    // VBO ID
+    glGenBuffers( 1, &vboPosition);
+    // bind VBO
+    glBindBuffer( GL_ARRAY_BUFFER, vboPosition );
+    // Send VBO Data
     glBufferData( GL_ARRAY_BUFFER, data.size() * sizeof( float ), data.data(), GL_STATIC_DRAW );
 
-    // VAO Parmas
+    // EBO ID (if required)
+    if(indices.size())
+    {
+        glGenBuffers(1, &eboPosition);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboPosition);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
+                indices.size() * sizeof(size_t),
+                indices.data(),
+                GL_STATIC_DRAW);
+    }
+
+    // VAO Attributes
     glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0 );
-    // Enable access to attribute 0
     glEnableVertexAttribArray(0);
 
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
-    // unbind VAO
     glBindVertexArray( 0 );
-    // unbind VBO
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
 
     return 0;

@@ -83,15 +83,15 @@ namespace model{
              */
             std::vector<float> data;
 
+            std::vector<size_t> indices;
+
             /**
-              * Prepare le model pour etre utilise avec GL.
+              * Create and bind buffers
               *
-              * Appel initVBO et VBA
+              * If the indices vector is empty, then each vertices is drawn
+              * Otherwise, the indices vector is bound and used to draw verts
               */
             void prepare();
-
-
-        private:
 
             /**
              * Le mode utilise pour afficher le model
@@ -107,6 +107,11 @@ namespace model{
              * Array object
              */
             GLuint vaoPosition;
+            
+            /**
+             * Array object
+             */
+            GLuint eboPosition;
 
             /**
               * Nombre de points dans le model
