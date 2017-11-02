@@ -175,7 +175,6 @@ bool initializeShaderProgram()
 void display( void )
 {
 
-    ImGui_ImplGlfwGL3_NewFrame();
 
     {
         ImGui::Begin("Another Window", &show_another_window);
@@ -226,10 +225,6 @@ void display( void )
     glFlush();
     // Swap buffers for "double buffering" display mode (=> swap "back" and "front" framebuffers)
 
-    ImGui::Render();
-    glfwSwapBuffers(window);
-
-    glfwPollEvents();
 }
 
 /******************************************************************************
@@ -249,6 +244,18 @@ void processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+}
+
+/**
+  * Window resize callback
+  *
+  * @param window       The window
+  * @param width        The new width
+  * @param height       The new height
+  */
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
 }
 
 /**
@@ -288,7 +295,10 @@ int main( int argc, char** argv )
     printf("OpenGL %s, GLSL %s\n", glGetString(GL_VERSION),
             glGetString(GL_SHADING_LANGUAGE_VERSION));
 
+
     ImGui_ImplGlfwGL3_Init(window, true);
+    glViewport(0, 0, 1280, 720);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
 
     // Initialize all your resources (graphics, data, etc...)
     initialize();
@@ -296,7 +306,12 @@ int main( int argc, char** argv )
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
+        ImGui_ImplGlfwGL3_NewFrame();
         display();
+
+        ImGui::Render();
+        glfwPollEvents();
+        glfwSwapBuffers(window);
     }
 
     // Grahics window
