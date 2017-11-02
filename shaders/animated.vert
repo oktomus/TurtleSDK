@@ -1,7 +1,7 @@
 #version 330 core
 
 // INPUT                                     
-in vec3 position;                            
+layout (location = 0) in vec3 aPos;
 
 // UNIFORM                                   
 // - camera                                  
@@ -23,11 +23,11 @@ void main( void )
         float amplitude = 1.0;                                                            
     float frequency = 0.5;                                                            
     float height = amplitude * sin( 2.0 * 3.141592 * frequency * ( time ) );  
-    vec3 pos = vec3( position.x, position.y + height, position.z );                   
-    // Send position to Clip-space                                                    
+    vec3 pos = vec3( aPos.x, aPos.y + height, aPos.z );                   
+    // Send aPos to Clip-space                                                    
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( pos, 1.0 );     
 #else                                                                                 
-    // Send position to Clip-space                                                    
-    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 );
+    // Send aPos to Clip-space                                                    
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( aPos, 1.0 );
 #endif                                                                                
 }                                                                                     
