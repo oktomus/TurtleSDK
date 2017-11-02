@@ -37,63 +37,154 @@
 #include "world.h"
 #include "shader/baseShader.h"
 
-/******************************************************************************
- ****************************** NAMESPACE SECTION *****************************
- ******************************************************************************/
-
-/******************************************************************************
- ************************* DEFINE AND CONSTANT SECTION ************************
- ******************************************************************************/
-
-
 world::World globalWorld;
-
 GLFWwindow* window;
-// Shader program
 std::vector<shader::Base> materials;
-
 std::vector<std::shared_ptr<model::Base>> models;
-
 bool show_another_window = false;
 
-/******************************************************************************
- ***************************** TYPE DEFINITION ********************************
- ******************************************************************************/
+/**
+  * Initialize anything required to run Turtle
+  */
+void init();
 
-/******************************************************************************
- ***************************** METHOD DEFINITION ******************************
- ******************************************************************************/
+/**
+  * Init the scene materials
+  */
+void initMaterials();
 
-/******************************************************************************
- ***************************** METHOD DEFINITION ******************************
- ******************************************************************************/
+/**
+  * Init the scene objects
+  */
+void initObjects();
 
-bool initialize();
-bool checkExtensions();
-bool initializeShaderProgram();
-bool finalize();
+/**
+  * Terminate the current project
+  */
+void terminate();
 
-/******************************************************************************
- * Initialize all
- ******************************************************************************/
-bool initialize()
+/**
+  * Display a frame
+  */
+void display();
+
+/**
+  * Process glfw input
+  *
+  * @param window   The window which received the input
+  */
+void processInput(GLFWwindow *window);
+
+/**
+  * Window resize callback
+  *
+  * @param window       The window
+  * @param width        The new width
+  * @param height       The new height
+  */
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
+/**
+  * Catch glfw errors
+  *
+  * @param error    Error code
+  * @param description  Error message
+  */
+static void error_callback(int error, const char* description);
+
+void init()
 {
-    std::cout << "Initialize all..." << std::endl;
-    std::cout << "Initializing world object..\n";
-    globalWorld.init();
+    fprintf(stdout, "Initializing...\n");
 
-    bool statusOK = true;
-
-    if ( statusOK )
     {
-        statusOK = checkExtensions();
+        fprintf(stdout, "GLFW...");
+        glfwSetErrorCallback(error_callback);
+        if (!glfwInit())
+        {
+            fprintf(stderr, "Unable to init GLFW.\n");
+            exit(3);
+        }
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        window = glfwCreateWindow(
+                1280, 720, "TurtleSDK", NULL, NULL);
+
+        if (!window)
+        {
+            fprintf(stderr, "Unable to create a window.\n");
+            exit(2);
+        }
+        glfwMakeContextCurrent(window);
+        glfwSwapInterval(1); // Enable vsync
+        fprintf(stdout, "OK\n");
     }
 
-    if ( statusOK )
     {
-        statusOK = initializeShaderProgram();
+        fprintf(stdout, "GL3W...");
+
+        if (gl3wInit()) {
+            fprintf(stderr, "failed to initialize GL3W.\n");
+            exit(4);
+        }
+
+        printf("OpenGL %s, GLSL %s...", glGetString(GL_VERSION),
+                glGetString(GL_SHADING_LANGUAGE_VERSION));
+        fprintf(stdout, "OK\n");
     }
 
+    {
+        fprintf(stdout, "IMGUI...");
+        ImGui_ImplGlfwGL3_Init(window, true);
+        fprintf(stdout, "OK\n");
+    }
+
+    {
+        fprintf(stdout, "VIEWPORT...");
+        glViewport(0, 0, 1280, 720);
+        fprintf(stdout, "OK\n");
+    }
+
+    {
+        fprintf(stdout, "CALLBACKS...");
+        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
+        fprintf(stdout, "OK\n");
+    }
+
+    {
+        fprintf(stdout, "WORLD...");
+        globalWorld.init();
+        fprintf(stdout, "OK\n");
+    }
+
+    {
+        fprintf(stdout, "SHADERS...");
+        initMaterials();
+        fprintf(stdout, "OK\n");
+    }
+    {
+        fprintf(stdout, "OBJECTS...");
+        initObjects();
+        fprintf(stdout, "OK\n");
+    }
+
+
+    fprintf(stdout, "Init OK\n");
+}
+
+void initMaterials()
+{
+
+
+    materials.push_back(shader::Base("shaders/animated"));
+    materials.push_back(shader::Base("shaders/solid"));
+    materials.at(0).setCamera(globalWorld.currentCamera());
+    materials.at(1).setCamera(globalWorld.currentCamera());
+
+}
+
+void initObjects()
+{
     models.push_back(std::make_shared<model::Triangle>(
                 -.3f, -.3f, 0.f, 
                 .3f, -.3f, 0.f, 
@@ -124,58 +215,33 @@ bool initialize()
     models.push_back(std::make_shared<model::Cube>(0.f, 0.f, -1.6f, .8f));
     models.at(3)->setColor(0.1f, .1f, .5f);
     */
-
-    return statusOK;
 }
+
 
 /******************************************************************************
  * Finalize all
  ******************************************************************************/
-bool finalize()
+void terminate()
 {
-    bool statusOK = true;
+    fprintf(stdout, "Terminate...\n");
 
-    std::cout << "Finalize all..." << std::endl;
+    {
+        fprintf(stdout, "IMGUI...");
+        ImGui_ImplGlfwGL3_Shutdown();
+        fprintf(stdout, "OK\n");
+    }
 
-    return statusOK;
+    {
+        fprintf(stdout, "GLFW...");
+        glfwTerminate();
+        fprintf(stdout, "OK\n");
+    }
+
+    fprintf(stdout, "Terminate OK\n");
 }
 
-/******************************************************************************
- * Check GL extensions
- ******************************************************************************/
-bool checkExtensions()
+void display()
 {
-    bool statusOK = true;
-
-    std::cout << "Check GL extensions..." << std::endl;
-
-    return statusOK;
-}
-
-/******************************************************************************
- * Initialize shader program
- ******************************************************************************/
-bool initializeShaderProgram()
-{
-
-    bool statusOK = true;
-
-    std::cout << "Initialize shader program...\n" << std::endl;
-
-    materials.push_back(shader::Base("shaders/animated"));
-    materials.at(0).setCamera(globalWorld.currentCamera());
-    std::cout << "End Initialize shader program.\n" << std::endl;
-
-    return statusOK;
-}
-
-/******************************************************************************
- * Callback to display the scene
- ******************************************************************************/
-void display( void )
-{
-
-
     {
         ImGui::Begin("Another Window", &show_another_window);
         ImGui::Text("Hello from another window!");
@@ -227,111 +293,38 @@ void display( void )
 
 }
 
-/******************************************************************************
- * Callback continuously called when events are not being received
- ******************************************************************************/
-void idle( void )
-{
-    // Mark current window as needing to be redisplayed
-}
-
-/**
-  * Process key input
-  *
-  * @param window   The window which received the input
-  */
 void processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 }
 
-/**
-  * Window resize callback
-  *
-  * @param window       The window
-  * @param width        The new width
-  * @param height       The new height
-  */
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
 
-/**
-  * Catch glfw errors
-  *
-  * @param error    Error code
-  * @param description  Error message
-  */
 static void error_callback(int error, const char* description)
 {
-    fprintf(stderr, "Error %d: %s\n", error, description);
+    fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-/******************************************************************************
- * Main function
- ******************************************************************************/
 int main( int argc, char** argv )
 {
-    glfwSetErrorCallback(error_callback);
-    if (!glfwInit())
-        return 1;
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-
-    window = glfwCreateWindow(
-            1280, 720, "TurtleSDK", NULL, NULL);
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); // Enable vsync
-
-    if (gl3wInit()) {
-        fprintf(stderr, "failed to initialize OpenGL\n");
-        return -1;
-    }
-
-    printf("OpenGL %s, GLSL %s\n", glGetString(GL_VERSION),
-            glGetString(GL_SHADING_LANGUAGE_VERSION));
-
-
-    ImGui_ImplGlfwGL3_Init(window, true);
-    glViewport(0, 0, 1280, 720);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
 
     // Initialize all your resources (graphics, data, etc...)
-    initialize();
+    init();
 
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
         ImGui_ImplGlfwGL3_NewFrame();
         display();
-
         ImGui::Render();
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
 
-    // Grahics window
-    // - configure the main framebuffer to store rgba colors,
-    //   and activate double buffering (for fluid/smooth visualization)
-    //glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );
+    terminate();
 
-    // Callbacks
-    // - callback called when displaying window (user custom fonction pointer: "void f( void )")
-    //glutDisplayFunc( display );
-    // - callback continuously called when events are not being received
-    //glutIdleFunc( idle );
-
-
-    // Enter the GLUT main event loop (waiting for events: keyboard, mouse, refresh screen, etc...)
-    //    glutMainLoop();
-
-    // Clean all
-
-    ImGui_ImplGlfwGL3_Shutdown();
-    glfwTerminate();
-    //finalize();
 }

@@ -76,16 +76,12 @@ void Base::prepare()
 
 int Base::initArrayBuffer()
 {
-    std::cout << "Initialisation du VBO\n";
 
     // VBO ID
-    std::cout << "Gen Buffer...\n";
     glGenBuffers( 1, &vboPosition);
     // bind VBO
-    std::cout << "Bind Buffer...\n";
     glBindBuffer( GL_ARRAY_BUFFER, vboPosition );
     // CPU to host
-    std::cout << "Buffer Data for " << data.size() << " values...\n";
     glBufferData( GL_ARRAY_BUFFER, data.size() * sizeof( float ), data.data(), GL_STATIC_DRAW );
     // unbind
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
@@ -96,7 +92,6 @@ int Base::initArrayBuffer()
 
 int Base::initArrayObject()
 {
-    std::cout << "Initialisation du VAO\n";
 
     glGenVertexArrays( 1, &vaoPosition );
     // bind VAO
