@@ -20,7 +20,8 @@ Base::Base(GLenum mode, size_t points) :
     _mode(mode), 
     vboPosition(0), 
     vaoPosition(0), 
-    _nb_points(points)
+    _nb_points(points),
+    _meshColor(1.f)
 {
 }
 
