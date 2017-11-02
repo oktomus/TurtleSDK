@@ -174,13 +174,10 @@ void init()
 
 void initMaterials()
 {
-
-
     materials.push_back(shader::Base("shaders/animated"));
     materials.push_back(shader::Base("shaders/solid"));
     materials.at(0).setCamera(globalWorld.currentCamera());
     materials.at(1).setCamera(globalWorld.currentCamera());
-
 }
 
 void initObjects()
@@ -207,6 +204,10 @@ void initObjects()
                 -.5f, .5f, 0.f
                 ));
     models.at(2)->setColor(1.f, 1.f, 1.f);
+
+    materials.at(0).addModelBuffer(models.at(0));
+    materials.at(0).addModelBuffer(models.at(1));
+    materials.at(1).addModelBuffer(models.at(2));
     /*
 
     models.push_back(std::make_shared<model::Cube>(0.f, 0.f, 0.f, .4f));
@@ -242,54 +243,37 @@ void terminate()
 
 void display()
 {
+    // IMGUI
     {
         ImGui::Begin("Another Window", &show_another_window);
         ImGui::Text("Hello from another window!");
+        ImGui::Text("Hello from another window!");
+        ImGui::Text("Hello from another window!");
         ImGui::End();
     }
-    //ImGui::Text("Hello, world!");
 
-    //--------------------
-    // START frame
-    //--------------------
-    // Clear the color buffer (of the main framebuffer)
-    // - color used to clear
-    glClearColor( 0.f, 0.f, 0.f, 0.f );
-    glClearDepth( 1.f );
-    // - clear the "color" framebuffer
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    //glEnable(GL_BLEND);
-    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    GLint uniformLocation;
-
-    //--------------------
-    // Activate shader program
-    //--------------------
-    shader::Base& mat = materials.at(0);
-    for (std::shared_ptr<model::Base> mod: models)
+    // STATE ASSIGN
     {
-        mat.addModelBuffer(mod);
+        glClearColor( 0.f, 0.f, 0.f, 0.f );
+        glClearDepth( 1.f );
+        glEnable(GL_BLEND);
+        glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );       
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     }
-    mat.use();
 
-    //--------------------
-    // Send uniforms to GPU
-    //--------------------
-
-    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-    mat.drawBuffer();
+    // STATE ACT
+    {
+        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    }
 
 
-    // Deactivate current shader program
-    glUseProgram( 0 );
+    // DRAW
+    {
+        materials.at(0).drawBuffer();
+        materials.at(1).drawBuffer();
+    }
 
-    //--------------------
-    // END frame
-    //--------------------
-    // OpenGL commands are not synchrone, but asynchrone (stored in a "command buffer")
-    glFlush();
-    // Swap buffers for "double buffering" display mode (=> swap "back" and "front" framebuffers)
 
 }
 
@@ -312,17 +296,21 @@ static void error_callback(int error, const char* description)
 int main( int argc, char** argv )
 {
 
-    // Initialize all your resources (graphics, data, etc...)
     init();
 
     while (!glfwWindowShouldClose(window))
     {
-        processInput(window);
-        ImGui_ImplGlfwGL3_NewFrame();
+        {
+            processInput(window);
+            ImGui_ImplGlfwGL3_NewFrame();
+        }
         display();
-        ImGui::Render();
-        glfwPollEvents();
-        glfwSwapBuffers(window);
+        {
+            glFlush();
+            ImGui::Render();
+            glfwPollEvents();
+            glfwSwapBuffers(window);
+        }
     }
 
     terminate();
