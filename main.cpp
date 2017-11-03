@@ -291,6 +291,8 @@ void display()
         materials.at(1)->drawBuffer();
     }
 
+    globalWorld.moveCamera();
+
 
 }
 

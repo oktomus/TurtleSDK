@@ -32,6 +32,11 @@ namespace world{
 
         const camera::Camera& currentCamera() const;
 
+        void moveCamera()
+        {
+            _cameras.at(_currentCamera).move();
+        }
+
     private:
 
         std::vector<camera::Camera> _cameras;

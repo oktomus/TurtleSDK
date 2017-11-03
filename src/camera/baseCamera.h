@@ -32,6 +32,12 @@ namespace camera {
             return _projectionMatrix;
         }
 
+        void move()
+        {
+            _cameraEye.y += 0.1f;
+            _viewMatrix = glm::lookAt( _cameraEye, _cameraCenter, _cameraUp );
+        }
+
     private:
 
         // - view

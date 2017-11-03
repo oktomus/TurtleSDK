@@ -140,7 +140,6 @@ void shader::Base::use() const
                 static_cast< float >(glfwGetTime())
                 );
     }
-
     // Camera Uniforms
     if(_cam)
     {
@@ -163,6 +162,7 @@ void shader::Base::use() const
         
     }
 
+
 }
 
 const GLuint & shader::Base::id() const
@@ -173,6 +173,7 @@ const GLuint & shader::Base::id() const
 void shader::Base::setCamera(const camera::Camera& cam)
 {
     _cam = &cam;
+    glUseProgram( programId );
 }
 
 void shader::Base::updateUniforms()
