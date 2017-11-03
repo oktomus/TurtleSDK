@@ -173,7 +173,6 @@ const GLuint & shader::Base::id() const
 void shader::Base::setCamera(const camera::Camera& cam)
 {
     _cam = &cam;
-    glUseProgram( programId );
 }
 
 void shader::Base::updateUniforms()
