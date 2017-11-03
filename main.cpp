@@ -4,7 +4,6 @@
  ******************************************************************************/
 
 
-//#include <imgui.h>
 // STL
 #include <iostream>
 #include <vector>
@@ -31,6 +30,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 // Custom
 #include "model/primitive.h"
@@ -186,6 +188,12 @@ void initMaterials()
 
 void initObjects()
 {
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load("textures/wall.jpg", &width, &height, &nrChannels, 0);
+
+
+    fprintf(stdout, "Texture wal, w: %d, h: %d, c: %d\n", width,
+            height, nrChannels);
     {
         models.push_back(std::make_shared<model::EBOTriangle>(
                     -.3f, -.3f, 0.f, 

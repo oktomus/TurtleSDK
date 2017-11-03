@@ -36,6 +36,8 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/gl3w/includ" )
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/imgui" )
 # glfw
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/glfw/include" )
+# stb
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/stb" )
 
 
 ##################################################################################
