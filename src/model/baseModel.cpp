@@ -30,7 +30,7 @@ void Base::draw()
     glBindVertexArray(vaoPosition);
     if(indices.size())
     {
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        glDrawElements(_mode, indices.size(), GL_UNSIGNED_INT, 0);
     }
     else
     {

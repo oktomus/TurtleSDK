@@ -195,6 +195,7 @@ void initObjects()
     fprintf(stdout, "Texture wal, w: %d, h: %d, c: %d\n", width,
             height, nrChannels);
     {
+        /*
         models.push_back(std::make_shared<model::EBOTriangle>(
                     -.3f, -.3f, 0.f, 
                     .3f, -.3f, 0.f, 
@@ -217,16 +218,11 @@ void initObjects()
                     -.5f, .5f, 0.f
                     ));
         models.at(2)->setColor(1.f, 1.f, 1.f);
+        */
 
         models.push_back(std::make_shared<model::Cube>(0.f, 0.f, 0.f, .4f));
-        models.at(3)->setColor(0.3f, 0.f, 0.3f);
-    }
-
-    {
-        materials.at(0)->addModelBuffer(models.at(0));
-        materials.at(0)->addModelBuffer(models.at(1));
-        materials.at(0)->addModelBuffer(models.at(2));
-        materials.at(0)->addModelBuffer(models.at(3));
+        models.back()->setColor(0.3f, 0.f, 0.3f);
+        materials.at(0)->addModelBuffer(models.back());
     }
 }
 
@@ -279,12 +275,12 @@ void display()
 
     // STATE ASSIGN
     {
-        glClearColor( 0.f, 0.f, 0.f, 0.f );
-        glClearDepth( 1.f );
+        glClearColor( 0.f, 0.f, 0.f, 0.0f );
+        glClearDepth( 1.0 );
         glEnable(GL_BLEND);
         glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );       
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        glPolygonMode( GL_FRONT, GL_FILL );       
     }
 
     // STATE ACT
@@ -299,7 +295,7 @@ void display()
         materials.at(1)->drawBuffer();
     }
 
-    globalWorld.moveCamera();
+    //globalWorld.moveCamera();
 
 
 }
