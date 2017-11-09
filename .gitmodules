@@ -10,3 +10,7 @@
 	path = distant/gl3w
 	url = https://github.com/skaslev/gl3w.git
     ignore = dirty
+[submodule "distant/glm"]
+	path = distant/glm
+	url = https://github.com/g-truc/glm.git
+    ignore = dirty
