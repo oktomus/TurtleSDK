@@ -1,7 +1,8 @@
-add_subdirectory(glfw)
-add_subdirectory(gl3w)
+project(distant)
 
-cmake_minimum_required(VERSION 3.0)
+
+add_subdirectory(gl3w)
+add_subdirectory(glfw)
 
 project(imgui)
 
