@@ -1,29 +1,65 @@
 cmake_minimum_required( VERSION 3.0 )
-
-
-execute_process(
-	COMMAND git submodule update --init --recursive
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
-add_subdirectory(distant)
-
-# Include directories common
-include_directories( ${OPENGL_INCLUDE_DIRS} )
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/glm" )
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src" )
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/gl3w/include" )
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/imgui" )
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/glfw/include" )
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/distant/stb" )
-
-add_subdirectory(src)
-
-##################################################################################
-# Project
-##################################################################################
-
 project( TurtleSDK )
+
+##################################################################################
+# Externals
+##################################################################################
+set(GLFW_ROOT "${CMAKE_SOURCE_DIR}/distant/glfw")
+set(GL3W_ROOT "${CMAKE_SOURCE_DIR}/distant/gl3w")
+set(GLM_ROOT "${CMAKE_SOURCE_DIR}/distant/glm")
+set(IMGUI_ROOT "${CMAKE_SOURCE_DIR}/distant/imgui")
+set(STB_ROOT "${CMAKE_SOURCE_DIR}/distant/stb")
+
+set(GLFW_INC "${GLFW_ROOT}/include")
+set(GL3W_INC "${GL3W_ROOT}/include")
+set(GLM_INC "${GLM_ROOT}")
+set(IMGUI_INC "${IMGUI_ROOT}")
+set(STB_INC "${STB_ROOT}")
+
+set(GL3W_SRC "${GL3W_ROOT}/src/gl3w.c")
+
+if (NOT EXISTS ${GL3W_INC} OR
+        NOT EXISTS ${GLFW_INC} OR
+        NOT EXISTS ${GLM_INC} OR
+        NOT EXISTS ${IMGUI_INC})
+        message(STATUS "Updating submodules")
+        execute_process(COMMAND git submodule init)
+        execute_process(COMMAND git submodule update)
+endif()
+
+if (NOT EXISTS ${GL3W_SRC})
+        message(STATUS "Generating gl3w source files")
+        execute_process(COMMAND python gl3w_gen.py
+                                        WORKING_DIRECTORY ${GL3W_ROOT})
+endif()
+
+if (NOT EXISTS ${IMGUI_ROOT}/imgui_impl_glfw_gl3.cpp OR
+        NOT EXISTS ${IMGUI_ROOT}/imgui_impl_glfw_gl3.h)
+    message(STATUS "Generating imgui glfw implementation files")
+    file(COPY
+        ${IMGUI_ROOT}/examples/opengl3_example/imgui_impl_glfw_gl3.cpp
+        ${IMGUI_ROOT}/examples/opengl3_example/imgui_impl_glfw_gl3.h
+        DESTINATION ${IMGUI_ROOT})
+endif()
+
+file (GLOB IMGUI_SRC "${IMGUI_ROOT}/*.cpp")
+
+# Compile GLFW
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+add_subdirectory(${GLFW_ROOT})
+
+find_package(OpenGL REQUIRED)
+
+include_directories(
+        ${GLFW_INC}
+        ${GL3W_INC}
+        ${GLM_INC}
+        ${OPENGL_INCLUDE_DIR}
+        ${IMGUI_INC}
+        ${STB_INC}
+)
 
 ##################################################################################
 # Non source files (shaders, models, textures)
@@ -33,28 +69,42 @@ message(STATUS "Copy TurtleLib files into ${CMAKE_CURRENT_BINARY_DIR}/turtleLib"
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/turtleLib" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 ##################################################################################
-# Package Management
+# Turtle LIB
 ##################################################################################
 
-find_package( OpenGL REQUIRED )
+set(TURTLE_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-##################################################################################
-# Include directories
-##################################################################################
+file( GLOB hfiles "${TURTLE_SRC_DIR}/*/*.h" )
+file( GLOB cfiles "${TURTLE_SRC_DIR}/*/*.cpp" )
+set( headers ${headers} ${hfiles} )
+set( sources ${sources} ${cfiles} )
+
+file( GLOB hfiles "${TURTLE_SRC_DIR}/*.h" )
+file( GLOB cfiles "${TURTLE_SRC_DIR}/*.cpp" )
+set( headers ${headers} ${hfiles} )
+set( sources ${sources} ${cfiles} )
 
 
-##################################################################################
-# Program
-##################################################################################
+include_directories(
+    ${TURTLE_SRC_DIR}/src
+)
 
-add_executable( ${PROJECT_NAME} "main.cpp")
 
-##################################################################################
-# Linked libraries
-##################################################################################
+add_executable(
+    ${PROJECT_NAME}
+    ${sources}
+    ${headers}
+    ${GL3W_SRC}
+    ${IMGUI_SRC}
+    )
 
-target_link_libraries( ${PROJECT_NAME} ${OPENGL_gl_LIBRARY} )
-target_link_libraries( ${PROJECT_NAME} gl3w )
-target_link_libraries( ${PROJECT_NAME} glfw)
-target_link_libraries( ${PROJECT_NAME} turtle)
-target_link_libraries( ${PROJECT_NAME} imgui )
+target_link_libraries(
+    ${PROJECT_NAME}
+    ${OPENGL_gl_LIBRARY}
+    glfw
+    )
+
+target_include_directories(
+    ${PROJECT_NAME} PRIVATE
+    ${TURTLE_SRC_DIR}
+    )
