@@ -3,6 +3,7 @@ CMakeDoxy*
 build
 imgui.ini
 
+distant/stb
 # CPP
 *.cbp
 
