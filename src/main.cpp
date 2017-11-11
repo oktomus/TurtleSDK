@@ -36,6 +36,7 @@
 
 // Custom
 #include "model/primitive.h"
+#include "mesh.h"
 #include "world.h"
 #include "shader/baseShader.h"
 
@@ -43,6 +44,7 @@ world::World globalWorld;
 GLFWwindow* window;
 std::vector<std::shared_ptr<shader::Base>> materials;
 std::vector<std::shared_ptr<model::Base>> models;
+std::vector<Mesh> meshes;
 bool show_another_window = false;
 
 /**
@@ -188,28 +190,41 @@ void initMaterials()
 
 void initObjects()
 {
-    int width, height, nrChannels;
-    unsigned char *data = stbi_load("turtleLib/textures/wall.jpg", &width, &height, &nrChannels, 0);
+    /*
+    // Doesnt work..
+    meshes.push_back(Mesh::triangle({.5f, -.3f, 0.f,
+                                     .9f, 0.f, 0.f,
+                                     .7f, .3f, 0.f,
+                                     .0f, 0.f, 0.f,
+                                     .3f, .3f, 0.f,
+                                     .0f, 6.f, 0.f,
+                                    }));
+    */
+    meshes.push_back(Mesh::triangle({.5f, -.3f, 0.f,
 
+                                     .9f, 0.f, 0.f,
+                                     .7f, .3f, 0.f
+                                    }));
+    meshes.back().setIndices({0, 1, 2});
 
-    fprintf(stdout, "Texture wal, w: %d, h: %d, c: %d\n", width,
-            height, nrChannels);
-    {
-        /*
+    /*
         models.push_back(std::make_shared<model::EBOTriangle>(
-                    -.3f, -.3f, 0.f, 
-                    .3f, -.3f, 0.f, 
+                    -.3f, -.3f, 0.f,
+                    .3f, -.3f, 0.f,
                     .15f, .15f, 0.f
                     ));
         models.at(0)->setColor(1.f, 0.1f, 0.1f);
+        */
 
-        models.push_back(std::make_shared<model::Triangle>(
-                    .5f, -.3f, 0.f, 
-                    .9f, .0f, 0.f, 
+        models.push_back(std::make_shared<model::EBOTriangle>(
+                    .5f, -.3f, 0.f,
+                    .9f, .0f, 0.f,
                     .7f, .3f, 0.f
                     ));
 
-        models.at(1)->setColor(0.1f, 1.f, 0.1f);
+        models.back()->setColor(0.1f, 1.f, 0.1f);
+        materials.at(0)->addModelBuffer(models.back());
+        /*
 
         models.push_back(std::make_shared<model::Quad>(
                     -.5f, -.5f, 0.f,
@@ -218,12 +233,11 @@ void initObjects()
                     -.5f, .5f, 0.f
                     ));
         models.at(2)->setColor(1.f, 1.f, 1.f);
-        */
 
         models.push_back(std::make_shared<model::Cube>(0.f, 0.f, 0.f, .4f));
         models.back()->setColor(0.3f, 0.f, 0.3f);
         materials.at(0)->addModelBuffer(models.back());
-    }
+        */
 }
 
 
@@ -280,7 +294,7 @@ void display()
         glEnable(GL_BLEND);
         glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        glPolygonMode( GL_FRONT, GL_FILL );       
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     }
 
     // STATE ACT
@@ -291,8 +305,11 @@ void display()
 
     // DRAW
     {
+        //materials.at(0)->drawBuffer();
         materials.at(0)->drawBuffer();
-        materials.at(1)->drawBuffer();
+        materials.at(1)->use();
+        meshes.back().draw();
+        meshes.back().drawPoints();
     }
 
     //globalWorld.moveCamera();

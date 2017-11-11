@@ -80,23 +80,16 @@ void Base::prepare()
 int Base::initArray()
 {
     
+    GLuint tmpVBO;
     glGenVertexArrays( 1, &vaoPosition );
-    glGenBuffers( 1, &vboPosition);
-    glGenBuffers( 1, &eboPosition);
+    glBindVertexArray( vaoPosition );
+    glGenBuffers( 1, &tmpVBO);
+    glBindBuffer( GL_ARRAY_BUFFER, tmpVBO );
 
     glBindVertexArray( vaoPosition );
 
-    glBindBuffer( GL_ARRAY_BUFFER, vboPosition );
     glBufferData( GL_ARRAY_BUFFER, data.size() * sizeof( float ), data.data(), GL_STATIC_DRAW );
 
-    if(indices.size())
-    {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboPosition);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
-                indices.size() * sizeof(unsigned int),
-                indices.data(),
-                GL_STATIC_DRAW);
-    }
 
     // VAO Attributes
     glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0 );
@@ -104,6 +97,19 @@ int Base::initArray()
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindVertexArray( 0 );
+    {
+        glBindVertexArray( vaoPosition );
+        glGenBuffers( 1, &eboPosition);
+        if(indices.size())
+        {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboPosition);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                         indices.size() * sizeof(unsigned int),
+                         indices.data(),
+                         GL_STATIC_DRAW);
+        }
+        glBindVertexArray( 0 );
+    }
 
     return 0;
 }
