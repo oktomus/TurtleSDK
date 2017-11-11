@@ -21,10 +21,10 @@ set(GL3W_SRC "${GL3W_ROOT}/src/gl3w.c")
 if (NOT EXISTS ${GL3W_INC} OR
         NOT EXISTS ${GLFW_INC} OR
         NOT EXISTS ${GLM_INC} OR
-        NOT EXISTS ${IMGUI_INC})
+        NOT EXISTS ${IMGUI_INC}/examples)
         message(STATUS "Updating submodules")
-        execute_process(COMMAND git submodule init)
-        execute_process(COMMAND git submodule update)
+        execute_process(COMMAND git submodule init WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+        execute_process(COMMAND git submodule update WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
 if (NOT EXISTS ${GL3W_SRC})
