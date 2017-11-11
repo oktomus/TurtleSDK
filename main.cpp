@@ -180,8 +180,8 @@ void init()
 
 void initMaterials()
 {
-    materials.push_back(std::make_shared<shader::Base>("shaders/animated"));
-    materials.push_back(std::make_shared<shader::Base>("shaders/solid"));
+    materials.push_back(std::make_shared<shader::Base>("turtleLib/shaders/animated"));
+    materials.push_back(std::make_shared<shader::Base>("turtleLib/shaders/solid"));
     materials.at(0)->setCamera(globalWorld.currentCamera());
     materials.at(1)->setCamera(globalWorld.currentCamera());
 }
@@ -189,7 +189,7 @@ void initMaterials()
 void initObjects()
 {
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("textures/wall.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("turtleLib/textures/wall.jpg", &width, &height, &nrChannels, 0);
 
 
     fprintf(stdout, "Texture wal, w: %d, h: %d, c: %d\n", width,
