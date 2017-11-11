@@ -27,6 +27,15 @@ if (NOT EXISTS ${GL3W_INC} OR
         execute_process(COMMAND git submodule update WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
+if (NOT EXISTS ${STB_ROOT}/stb_image.h)
+    message(STATUS "Downloading required std headers")
+    file(
+        DOWNLOAD
+        "https://raw.githubusercontent.com/nothings/stb/master/stb_image.h"
+        ${STB_ROOT}/stb_image.h
+        )
+endif()
+
 if (NOT EXISTS ${GL3W_SRC})
         message(STATUS "Generating gl3w source files")
         execute_process(COMMAND python gl3w_gen.py
