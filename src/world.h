@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "camera/baseCamera.h"
-#include "model/primitive.h"
 
 /*
                       ▀▀█        █ 

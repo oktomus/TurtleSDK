@@ -8,6 +8,7 @@
 #include <vector>
 
 // Graphic
+#include <assimp/Importer.hpp>
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 

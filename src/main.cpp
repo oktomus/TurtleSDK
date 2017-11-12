@@ -35,14 +35,12 @@
 #include "stb_image.h"
 
 // Custom
-#include "model/primitive.h"
 #include "mesh.h"
 #include "shader.h"
 #include "world.h"
 
 world::World globalWorld;
 GLFWwindow* window;
-std::vector<std::shared_ptr<model::Base>> models;
 std::vector<Mesh> meshes;
 std::vector<Shader> shaders;
 bool show_another_window = false;
