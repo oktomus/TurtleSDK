@@ -46,6 +46,18 @@ std::vector<Mesh> meshes;
 std::vector<Model> models;
 std::vector<Shader> shaders;
 bool show_another_window = false;
+// Time spent between each frame
+float deltaTime = 0.0f;
+// Time of last frame
+float lastFrame = 0.0f;
+// Number of frames during the last second
+size_t frames = 0;
+// Time it was when reseting frame counter
+float startFramesTime = 0.0f;
+// The time of the current frame
+float currentTime;
+// The current frame rate
+float frameRate = 0.0;
 
 /**
   * Initialize anything required to run Turtle
@@ -271,10 +283,8 @@ void display()
 {
     // IMGUI
     {
-        ImGui::Begin("Another Window", &show_another_window);
-        ImGui::Text("Hello from another window!");
-        ImGui::Text("Hello from another window!");
-        ImGui::Text("Hello from another window!");
+        ImGui::Begin("Turtle Settings", &show_another_window);
+        ImGui::Text("%f ms/frame, ~%d FPS", frameRate, (long)(1000 / frameRate));
         ImGui::End();
     }
 
@@ -285,8 +295,8 @@ void display()
         glEnable(GL_BLEND);
         glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        //glPolygonMode( GL_FRONT, GL_FILL );
-        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        glPolygonMode( GL_FRONT, GL_FILL );
+        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     }
 
     // STATE ACT
@@ -344,6 +354,17 @@ int main( int argc, char** argv )
 
     while (!glfwWindowShouldClose(window))
     {
+        frames += 1;
+        currentTime = glfwGetTime();
+        deltaTime = currentTime - lastFrame;
+        lastFrame = currentTime;
+        if (currentTime - startFramesTime >= 1.0)
+        {
+            frameRate = 1000 / double(frames);
+            frames = 0;
+            startFramesTime += 1.0;
+        }
+
         {
             processInput(window);
             ImGui_ImplGlfwGL3_NewFrame();
