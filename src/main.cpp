@@ -285,6 +285,9 @@ void display()
     {
         ImGui::Begin("Turtle Settings", &show_another_window);
         ImGui::Text("%f ms/frame, ~%d FPS", frameRate, (long)(1000 / frameRate));
+        if (ImGui::Button("Quit"))
+            glfwSetWindowShouldClose(window, true);
+
         ImGui::End();
     }
 
