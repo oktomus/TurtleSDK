@@ -38,9 +38,7 @@
 #include "mesh.h"
 #include "model.h"
 #include "shader.h"
-#include "world.h"
 
-world::World globalWorld;
 GLFWwindow* window;
 std::vector<Mesh> meshes;
 std::vector<Model> models;
@@ -172,7 +170,6 @@ void init()
 
     {
         fprintf(stdout, "WORLD...");
-        globalWorld.init();
         fprintf(stdout, "OK\n");
     }
 
