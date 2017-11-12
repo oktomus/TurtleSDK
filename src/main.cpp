@@ -30,6 +30,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -56,6 +57,20 @@ float startFramesTime = 0.0f;
 float currentTime;
 // The current frame rate
 float frameRate = 0.0;
+
+int WIN_WIDTH = 1280;
+int WIN_HEIGHT = 720;
+
+// last positions of the mouse
+float lastPosX, lastPosY;
+bool firstMouve = true;
+bool mouseRotateCamera = false;
+
+
+// Camera
+glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
 /**
   * Initialize anything required to run Turtle
@@ -88,6 +103,19 @@ void display();
   * @param window   The window which received the input
   */
 void processInput(GLFWwindow *window);
+
+/**
+  * Process mouse events
+  */
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+
+/**
+  * Process scroll events
+  *
+  */
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 /**
   * Window resize callback
@@ -125,7 +153,7 @@ void init()
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
 #endif
         window = glfwCreateWindow(
-                1280, 720, "TurtleSDK", NULL, NULL);
+                WIN_WIDTH, WIN_HEIGHT, "TurtleSDK", NULL, NULL);
 
         if (!window)
         {
@@ -139,6 +167,10 @@ void init()
     {
         fprintf(stdout, "CALLBACKS...");
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
+        glfwSetCursorPosCallback(window, mouse_callback);
+        glfwSetScrollCallback(window, scroll_callback);
+        glfwSetMouseButtonCallback(window, mouse_button_callback);
+        //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         fprintf(stdout, "OK\n");
     }
 
@@ -157,7 +189,10 @@ void init()
 
     {
         fprintf(stdout, "IMGUI...");
-        ImGui_ImplGlfwGL3_Init(window, true);
+        // fase means: don't register imgui callbacks
+        // May cause troubles for text inputs
+        // Needs to be tested
+        ImGui_ImplGlfwGL3_Init(window, false);
         fprintf(stdout, "OK\n");
     }
 
@@ -282,9 +317,17 @@ void display()
     {
         ImGui::Begin("Turtle Settings", &show_another_window);
         ImGui::Text("%f ms/frame, ~%d FPS", frameRate, (long)(1000 / frameRate));
+        ImGui::Text("Camera Pos (%f, %f, %f)", cameraPos.x, cameraPos.y, cameraPos.z);
         if (ImGui::Button("Quit"))
             glfwSetWindowShouldClose(window, true);
+        if (ImGui::Button("Reset Camera"))
+        {
+            cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
+            cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+            cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+        }
 
+        
         ImGui::End();
     }
 
@@ -293,6 +336,7 @@ void display()
         glClearColor( 0.f, 0.f, 0.f, 0.0f );
         glClearDepth( 1.0 );
         glEnable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
         glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
         glPolygonMode( GL_FRONT, GL_FILL );
@@ -307,6 +351,14 @@ void display()
 
     // DRAW
     {
+
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 model;
+        shaders.back().setMat4("projection", projection);
+        shaders.back().setMat4("model", model);
+        glm::mat4 view = glm::lookAt(cameraPos, cameraFront, cameraUp);
+        shaders.back().use();
+        shaders.back().setMat4("view", view);
         //materials.at(0)->drawBuffer();
         //materials.at(0)->drawBuffer();
         //materials.at(1)->use();
@@ -326,11 +378,67 @@ void processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    /*
+    float cameraSpeed = 2.5 * deltaTime; 
+
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        cameraPos += cameraSpeed * cameraUp;
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        cameraPos -= cameraSpeed * cameraFront;
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        */
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (firstMouve)
+    {
+        lastPosX = xpos;
+        lastPosY = ypos;
+        firstMouve = false;
+    }
+    float difx = xpos - lastPosX;
+    float dify = ypos - lastPosY; // Y 0 top, 100 bottom -> reverse
+    lastPosX = xpos; lastPosY = ypos;
+
+    if(mouseRotateCamera){
+        // Rotate
+        cameraPos = glm::rotate(cameraPos, difx * 0.01f, glm::vec3(0, 1, 0));
+        cameraPos = glm::rotate(cameraPos, dify * 0.01f, glm::vec3(1, 0, 0));
+        // Calcule front
+        glm::vec3 cameraTarget(0, 0, 0);
+        cameraFront = glm::normalize(cameraPos - cameraTarget);
+        // Calcule up
+        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+        glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraFront));
+        cameraUp = glm::cross(cameraFront, cameraRight);
+    }
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+        mouseRotateCamera = true;
+    else
+        mouseRotateCamera = false;
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * float(yoffset);
+    if (cameraPos.z <= 0.5f)
+        cameraPos.z = 0.5f;
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+    WIN_WIDTH = width;
+    WIN_HEIGHT = height;
 }
 
 static void error_callback(int error, const char* description)
@@ -365,11 +473,11 @@ int main( int argc, char** argv )
             startFramesTime += 1.0;
         }
 
-        {
-            processInput(window);
-            ImGui_ImplGlfwGL3_NewFrame();
-        }
+        processInput(window);
+        ImGui_ImplGlfwGL3_NewFrame();
+
         display();
+
         {
             glFlush();
             ImGui::Render();

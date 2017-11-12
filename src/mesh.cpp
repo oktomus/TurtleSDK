@@ -33,7 +33,6 @@ Mesh::Mesh(const std::vector<Vertex> &vertices,
 
 void Mesh::draw(const Shader & shader, const GLenum& mode) const
 {
-    shader.use();
     // Drawing depends on indices if they have been set or not
     glBindVertexArray(_vaoId);
     if (mode == -1) glDrawElements(_drawMode, _indicesCount, GL_UNSIGNED_INT, 0);
