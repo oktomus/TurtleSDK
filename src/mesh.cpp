@@ -3,9 +3,10 @@
 #include <stdexcept>
 #include <iostream>
 
-Mesh::Mesh()
+Mesh::Mesh(const std::vector<Vertex> &vertices,
+           const std::vector<GLuint> & indices,
+           const std::vector<Texture> & textures)
 {
-
     // Default values
     _drawMode = GL_TRIANGLES;
     _transformUpdate = true;
@@ -13,74 +14,36 @@ Mesh::Mesh()
     _position = {0, 0, 0};
     _scale = {1, 1, 1};
     _rotation = {0, 0, 0};
-    _vertCount = 0;
-    _eboCount = 0;
+
+    _indicesCount = indices.size();
 
     // Most important object
     glGenVertexArrays( 1, &_vaoId );
-}
-
-template <class T>
-void Mesh::addBuffer(
-        GLuint &idLocation,
-        GLenum bufType,
-        const std::vector<T>& data)
-{
-    // VAO bind could be done here to be sure
-    // But since this is a private method
-    // Nothing to worry about
-    glGenBuffers( 1, &idLocation);
-    glBindBuffer(bufType, idLocation);
-    glBufferData(bufType, data.size() * sizeof(T),
-                 data.data(), GL_STATIC_DRAW);
-}
-
-void Mesh::setPoints(const std::vector<GLfloat>& data)
-{
-    // A point is x y z
-    _vertCount = data.size() / 3;
-    // We don't need to store buffers ids, only the vao
-
-    GLuint vbopos;
     glBindVertexArray(_vaoId);
-    addBuffer(vbopos, GL_ARRAY_BUFFER, data);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void *) 0);
+
+    GLuint vbo, ebo;
+    addBuffer(vbo, GL_ARRAY_BUFFER, vertices);
+    addBuffer(ebo, GL_ELEMENT_ARRAY_BUFFER, indices);
+
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
     glBindVertexArray(0);
 }
 
-void Mesh::setIndices(const std::vector<GLuint>& data)
+void Mesh::draw(const Shader & shader, const GLenum& mode) const
 {
-    // All changes happen when we unbind the vao
-    // So we must not unbind the ebo or change the vector
-    _eboCount = data.size();
-    GLuint ebopos;
-    glBindVertexArray(_vaoId);
-    addBuffer(ebopos, GL_ELEMENT_ARRAY_BUFFER, data);
-    glBindVertexArray(0);
-}
-
-void Mesh::draw() const
-{
+    shader.use();
     // Drawing depends on indices if they have been set or not
     glBindVertexArray(_vaoId);
-    if (_eboCount)
-        glDrawElements(_drawMode, _eboCount, GL_UNSIGNED_INT, 0);
-    else
-        glDrawArrays(_drawMode, 0, _vertCount);
+    if (mode == -1) glDrawElements(_drawMode, _indicesCount, GL_UNSIGNED_INT, 0);
+    else glDrawElements(mode, _indicesCount, GL_UNSIGNED_INT, 0);
     glBindVertexArray( 0 );
 }
 
-void Mesh::drawPoints() const
+void Mesh::drawPoints(const Shader & shader) const
 {
-    // Simplest drawing method
-    glBindVertexArray(_vaoId);
-    if (_eboCount)
-        glDrawElements(GL_POINTS, _eboCount, GL_UNSIGNED_INT, 0);
-    else
-        glDrawArrays(GL_POINTS, 0, _vertCount);
-    glBindVertexArray( 0 );
+    draw(shader, GL_POINTS);
 }
 
 
@@ -120,31 +83,43 @@ const glm::mat4& Mesh::getTransform()
     return this->_transform;
 }
 
-Mesh Mesh::triangle(const std::vector<GLfloat> & points)
+Mesh Mesh::triangle()
 {
     // Create a triangle
-    // We can create multiple triangle
-    // As long as we specify points 3 by 3
-    if (points.size() != 3)
-        throw std::invalid_argument("3 points are required to create a triangle. 9 values.");
-    Mesh triangle;
-    triangle._drawMode = GL_TRIANGLES;
-    triangle.setPoints(points);
-    // No ebo required -> 0, 1, 2, 3.. redundant
+    std::vector<Vertex> points;
+    points.push_back({{-.5f, -.5f, 0.f}});
+    points.push_back({{.5f, -.5f, 0.f}});
+    points.push_back({{.0f, .5f, 0.f}});
+
+    Mesh triangle(points, {0, 1, 2}, {});
     return triangle;
 }
 
-Mesh Mesh::quad(const std::vector<GLfloat> & points)
+Mesh Mesh::quad()
 {
-    if(points.size() != 12)
-        throw std::invalid_argument("4 points are required to create a quad. 12 values.");
+    std::vector<Vertex> points;
+    points.push_back({{-.5f, -.5f, 0.f}});
+    points.push_back({{.5f, -.5f, 0.f}});
+    points.push_back({{.5f, .5f, 0.f}});
+    points.push_back({{-.5f, .5f, 0.f}});
 
-    Mesh quad;
-    quad._drawMode = GL_TRIANGLES;
-
-    quad.setPoints(points);
-    quad.setIndices({0, 1, 3, 1, 2, 3});
-
+    Mesh quad(points, {0, 1, 3, 1, 2, 3}, {});
     return quad;
-
 }
+
+
+template <class T>
+void Mesh::addBuffer(
+        GLuint &idLocation,
+        GLenum bufType,
+        const std::vector<T>& data)
+{
+    // VAO bind could be done here to be sure
+    // But since this is a private method
+    // Nothing to worry about
+    glGenBuffers( 1, &idLocation);
+    glBindBuffer(bufType, idLocation);
+    glBufferData(bufType, data.size() * sizeof(T),
+                 data.data(), GL_STATIC_DRAW);
+}
+

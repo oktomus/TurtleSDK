@@ -34,7 +34,7 @@ Shader::Shader(std::string path, const bool &useGeo) :
 {
 }
 
-void Shader::use()
+void Shader::use() const
 {
    glUseProgram(_id);
 }

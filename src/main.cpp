@@ -202,11 +202,7 @@ void initObjects()
                                     }));
     meshes.back().setIndices({0, 1, 2});
     */
-    meshes.push_back(Mesh::quad({.2f, .2f, .0f,
-                         .2f, -.2f, .0f,
-                         -.2f, -.2f, .0f,
-                         -.2f, .2f, .0f}));
-
+    meshes.push_back(Mesh::quad());
     /*
         models.push_back(std::make_shared<model::EBOTriangle>(
                     -.3f, -.3f, 0.f,
@@ -303,10 +299,9 @@ void display()
         //materials.at(0)->drawBuffer();
         //materials.at(0)->drawBuffer();
         //materials.at(1)->use();
-        shaders.back().use();
         //glUseProgram(materials.at(1)->id());
-        meshes.back().drawPoints();
-        meshes.back().draw();
+        meshes.back().drawPoints(shaders.back());
+        meshes.back().draw(shaders.back());
         //glUseProgram(0);
     }
 

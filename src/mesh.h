@@ -1,6 +1,9 @@
 #ifndef __TURTLE_MESH__
 #define __TURTLE_MESH__
 
+// Turtle
+#include "shader.h"
+
 // STD
 #include <vector>
 
@@ -12,6 +15,21 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+struct Vertex {
+    glm::vec3 Position;
+    /*
+    glm::vec3 Normal;
+    glm::vec3 TexCoords;
+    glm::vec3 Tangent;
+    glm::vec3 Bitangent;
+    */
+};
+
+struct Texture{
+    GLuint id;
+    std::string type;
+};
+
 /**
  * @brief Mesh wrapper.
  *
@@ -19,6 +37,40 @@
  */
 class Mesh
 {
+
+public:
+
+    Mesh(const std::vector<Vertex> &vertices,
+         const std::vector<GLuint> & indices,
+         const std::vector<Texture> & textures);
+
+    /**
+     * @brief Draw the model
+     */
+    void draw(const Shader & shader, const GLenum& mode = -1) const;
+
+    /**
+     * @brief Draw the points of the model
+     */
+    void drawPoints(const Shader & shader) const;
+
+    /**
+     * @brief Get the transform matrix of the model
+     * @return A 4 by 4 matrix
+     */
+    const glm::mat4& getTransform();
+
+    /**
+     * @brief Create a triangle with 3 points
+     * @return          The corresponding mesh
+     */
+    static Mesh triangle();
+
+    /**
+     * @brief Create one quad
+     * @return          The mesh
+     */
+    static Mesh quad();
 
 private:
 
@@ -71,10 +123,8 @@ private:
 
     /**
      * @brief Amount of indices in the EBO.
-     *
-     * If 0, ebo is not used.
      */
-    GLuint _eboCount;
+    GLuint _indicesCount;
 
     /**
      * @brief Generate and allocate a buffer in the VAO
@@ -88,51 +138,6 @@ private:
             GLenum bufType,
             const std::vector<T>& data);
 
-public:
-
-    Mesh();
-
-    /**
-     * @brief Set the points of the model
-     * @param data      The points
-     */
-    void setPoints(const std::vector<GLfloat>& data);
-
-    /**
-     * @brief Set the element object array buffer
-     * @param data      Indices to use to draw the model
-     */
-    void setIndices(const std::vector<GLuint>& data);
-
-    /**
-     * @brief Draw the model
-     */
-    void draw() const;
-
-    /**
-     * @brief Draw the points of the model
-     */
-    void drawPoints() const;
-
-    /**
-     * @brief Get the transform matrix of the model
-     * @return A 4 by 4 matrix
-     */
-    const glm::mat4& getTransform();
-
-    /**
-     * @brief Create a triangle with 3 points
-     * @param points    A vector of 3 points
-     * @return          The corresponding mesh
-     */
-    static Mesh triangle(const std::vector<GLfloat> & points);
-
-    /**
-     * @brief Create one quad
-     * @param points    The 4 points of the mesh
-     * @return          The mesh
-     */
-    static Mesh quad(const std::vector<GLfloat> & points);
 
 };
 

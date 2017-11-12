@@ -38,7 +38,7 @@ public:
     /**
      * @brief Use the shader with glUseProgram.
      */
-    void use();
+    void use() const;
 
     /////
     ///// Unifrom setters
