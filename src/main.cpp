@@ -36,12 +36,14 @@
 
 // Custom
 #include "mesh.h"
+#include "model.h"
 #include "shader.h"
 #include "world.h"
 
 world::World globalWorld;
 GLFWwindow* window;
 std::vector<Mesh> meshes;
+std::vector<Model> models;
 std::vector<Shader> shaders;
 bool show_another_window = false;
 
@@ -200,7 +202,8 @@ void initObjects()
                                     }));
     meshes.back().setIndices({0, 1, 2});
     */
-    meshes.push_back(Mesh::quad());
+    //meshes.push_back(Mesh::quad());
+    models.push_back(Model("/home/oktomus/Downloads/spinner.obj"));
     /*
         models.push_back(std::make_shared<model::EBOTriangle>(
                     -.3f, -.3f, 0.f,
@@ -282,8 +285,8 @@ void display()
         glEnable(GL_BLEND);
         glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        glPolygonMode( GL_FRONT, GL_FILL );
-        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        //glPolygonMode( GL_FRONT, GL_FILL );
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     }
 
     // STATE ACT
@@ -298,9 +301,10 @@ void display()
         //materials.at(0)->drawBuffer();
         //materials.at(1)->use();
         //glUseProgram(materials.at(1)->id());
-        meshes.back().drawPoints(shaders.back());
-        meshes.back().draw(shaders.back());
+        //meshes.back().drawPoints(shaders.back());
+        //meshes.back().draw(shaders.back());
         //glUseProgram(0);
+        models.back().draw(shaders.back());
     }
 
     //globalWorld.moveCamera();
