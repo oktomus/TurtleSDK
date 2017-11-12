@@ -123,7 +123,6 @@ void init()
             exit(2);
         }
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(1); // Enable vsync
         fprintf(stdout, "OK\n");
     }
 
@@ -199,13 +198,17 @@ void initObjects()
                                      .3f, .3f, 0.f,
                                      .0f, 6.f, 0.f,
                                     }));
-    */
     meshes.push_back(Mesh::triangle({.5f, -.3f, 0.f,
 
                                      .9f, 0.f, 0.f,
                                      .7f, .3f, 0.f
                                     }));
     meshes.back().setIndices({0, 1, 2});
+    */
+    meshes.push_back(Mesh::quad({.2f, .2f, .0f,
+                         .2f, -.2f, .0f,
+                         -.2f, -.2f, .0f,
+                         -.2f, .2f, .0f}));
 
     /*
         models.push_back(std::make_shared<model::EBOTriangle>(
@@ -216,6 +219,7 @@ void initObjects()
         models.at(0)->setColor(1.f, 0.1f, 0.1f);
         */
 
+    /*
         models.push_back(std::make_shared<model::EBOTriangle>(
                     .5f, -.3f, 0.f,
                     .9f, .0f, 0.f,
@@ -224,6 +228,7 @@ void initObjects()
 
         models.back()->setColor(0.1f, 1.f, 0.1f);
         materials.at(0)->addModelBuffer(models.back());
+        */
         /*
 
         models.push_back(std::make_shared<model::Quad>(
@@ -294,7 +299,8 @@ void display()
         glEnable(GL_BLEND);
         glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        glPolygonMode( GL_FRONT, GL_FILL );
+        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     }
 
     // STATE ACT
@@ -306,10 +312,12 @@ void display()
     // DRAW
     {
         //materials.at(0)->drawBuffer();
-        materials.at(0)->drawBuffer();
-        materials.at(1)->use();
-        meshes.back().draw();
+        //materials.at(0)->drawBuffer();
+        //materials.at(1)->use();
+        glUseProgram(materials.at(1)->id());
         meshes.back().drawPoints();
+        meshes.back().draw();
+        glUseProgram(0);
     }
 
     //globalWorld.moveCamera();

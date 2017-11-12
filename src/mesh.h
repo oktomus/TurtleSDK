@@ -102,7 +102,7 @@ public:
      * @brief Set the element object array buffer
      * @param data      Indices to use to draw the model
      */
-    void setIndices(const std::vector<unsigned int>& data);
+    void setIndices(const std::vector<GLuint>& data);
 
     /**
      * @brief Draw the model
@@ -126,6 +126,13 @@ public:
      * @return          The corresponding mesh
      */
     static Mesh triangle(const std::vector<GLfloat> & points);
+
+    /**
+     * @brief Create one quad
+     * @param points    The 4 points of the mesh
+     * @return          The mesh
+     */
+    static Mesh quad(const std::vector<GLfloat> & points);
 
 };
 

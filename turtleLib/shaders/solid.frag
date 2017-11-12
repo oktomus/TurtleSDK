@@ -2,9 +2,6 @@
 
 // INPUT
 
-// VARS
-uniform vec4 color;
-
 // OUTPUT
 out vec4 FragColor;
 
