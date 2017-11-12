@@ -37,14 +37,14 @@
 // Custom
 #include "model/primitive.h"
 #include "mesh.h"
+#include "shader.h"
 #include "world.h"
-#include "shader/baseShader.h"
 
 world::World globalWorld;
 GLFWwindow* window;
-std::vector<std::shared_ptr<shader::Base>> materials;
 std::vector<std::shared_ptr<model::Base>> models;
 std::vector<Mesh> meshes;
+std::vector<Shader> shaders;
 bool show_another_window = false;
 
 /**
@@ -181,10 +181,7 @@ void init()
 
 void initMaterials()
 {
-    materials.push_back(std::make_shared<shader::Base>("turtleLib/shaders/animated"));
-    materials.push_back(std::make_shared<shader::Base>("turtleLib/shaders/solid"));
-    materials.at(0)->setCamera(globalWorld.currentCamera());
-    materials.at(1)->setCamera(globalWorld.currentCamera());
+    shaders.push_back(Shader("turtleLib/shaders/solid"));
 }
 
 void initObjects()
@@ -267,14 +264,6 @@ void terminate()
 
     {
         fprintf(stdout, "MEMORY...");
-        for(std::shared_ptr<shader::Base> s : materials)
-        {
-            s.reset();
-        }
-        for(std::shared_ptr<model::Base> m : models)
-        {
-            m.reset();
-        }
         fprintf(stdout, "OK\n");
     }
 
@@ -314,10 +303,11 @@ void display()
         //materials.at(0)->drawBuffer();
         //materials.at(0)->drawBuffer();
         //materials.at(1)->use();
-        glUseProgram(materials.at(1)->id());
+        shaders.back().use();
+        //glUseProgram(materials.at(1)->id());
         meshes.back().drawPoints();
         meshes.back().draw();
-        glUseProgram(0);
+        //glUseProgram(0);
     }
 
     //globalWorld.moveCamera();

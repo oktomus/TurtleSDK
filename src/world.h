@@ -7,11 +7,6 @@
 #include "camera/baseCamera.h"
 #include "model/primitive.h"
 
-namespace shader{
-    class Base;
-}
-
-
 /*
                       ▀▀█        █ 
 ▄     ▄  ▄▄▄    ▄ ▄▄    █     ▄▄▄█ 
@@ -41,10 +36,6 @@ namespace world{
 
         std::vector<camera::Camera> _cameras;
         int _currentCamera;
-
-        std::vector<std::unique_ptr<model::Base>> _models;
-        std::vector<shader::Base> _materials;
-
 
 
     };
