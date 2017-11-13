@@ -39,11 +39,15 @@
 #include "mesh.h"
 #include "model.h"
 #include "shader.h"
+#include "orbitCamera.h"
 
 GLFWwindow* window;
 std::vector<Mesh> meshes;
 std::vector<Model> models;
 std::vector<Shader> shaders;
+
+OrbitCamera ocam({0, 30, 30}, {0, 10, 0});
+
 bool show_another_window = false;
 // Time spent between each frame
 float deltaTime = 0.0f;
@@ -60,16 +64,6 @@ float frameRate = 0.0;
 
 int WIN_WIDTH = 1280;
 int WIN_HEIGHT = 720;
-
-// last positions of the mouse
-float lastPosX, lastPosY;
-bool firstMouve = true;
-bool mouseRotateCamera = false;
-
-
-// Camera
-glm::vec3 cameraPos   = glm::vec3(0.0f, 8.0f,  10.0f);
-glm::vec3 cameraTarget   = glm::vec3(0.0f, 2.0f,  0.0f);
 
 /**
   * Initialize anything required to run Turtle
@@ -266,13 +260,12 @@ void display()
     {
         ImGui::Begin("Turtle Settings", &show_another_window);
         ImGui::Text("%f ms/frame, ~%d FPS", frameRate, (long)(1000 / frameRate));
-        ImGui::Text("Camera Pos (%f, %f, %f)", cameraPos.x, cameraPos.y, cameraPos.z);
+        ImGui::Text("Camera Pos (%f, %f, %f)", ocam.pos.x, ocam.pos.y, ocam.pos.z);
         if (ImGui::Button("Quit"))
             glfwSetWindowShouldClose(window, true);
         if (ImGui::Button("Reset Camera"))
         {
-            cameraPos   = glm::vec3(0.0f, 10.0f,  8.0f);
-            cameraTarget   = glm::vec3(0.0f, 0.0f,  0.0f);
+            ocam.reset();
         }
 
         
@@ -300,21 +293,15 @@ void display()
     // DRAW
     {
 
-        glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
-        glm::vec3 up = glm::vec3(0, 1, 0);
-        glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-        glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-
         // Camera thing
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
         glm::mat4 model;
         shaders.back().setMat4("projection", projection);
         shaders.back().setMat4("model", model);
-        glm::mat4 view = glm::lookAt(cameraPos, cameraDirection, cameraUp);
 
         // Camera uniform
         shaders.back().use();
-        shaders.back().setMat4("view", view);
+        shaders.back().setMat4("view", ocam.viewMat());
         //materials.at(0)->drawBuffer();
         //materials.at(0)->drawBuffer();
         //materials.at(1)->use();
@@ -351,36 +338,17 @@ void processInput(GLFWwindow *window)
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    if (firstMouve)
-    {
-        lastPosX = xpos;
-        lastPosY = ypos;
-        firstMouve = false;
-    }
-    float difx = xpos - lastPosX;
-    float dify = ypos - lastPosY; // Y 0 top, 100 bottom -> reverse
-    lastPosX = xpos; lastPosY = ypos;
-
-    if(mouseRotateCamera){
-        // Rotate
-        cameraPos = glm::rotate(cameraPos, difx * 0.01f, glm::vec3(0, 1, 0));
-        cameraPos = glm::rotate(cameraPos, dify * 0.01f, glm::vec3(1, 0, 0));
-    }
+    ocam.process_mouse_move(window, xpos, ypos);
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-        mouseRotateCamera = true;
-    else
-        mouseRotateCamera = false;
+    ocam.process_mouse_action(window, button, action, mods);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
-    cameraPos -= cameraDirection * float(yoffset);
-    cameraDirection = glm::normalize(cameraPos - cameraTarget);
+    ocam.process_scroll(window, xoffset, yoffset);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
