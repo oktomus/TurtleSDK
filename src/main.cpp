@@ -68,9 +68,8 @@ bool mouseRotateCamera = false;
 
 
 // Camera
-glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+glm::vec3 cameraPos   = glm::vec3(0.0f, 8.0f,  10.0f);
+glm::vec3 cameraTarget   = glm::vec3(0.0f, 2.0f,  0.0f);
 
 /**
   * Initialize anything required to run Turtle
@@ -272,9 +271,8 @@ void display()
             glfwSetWindowShouldClose(window, true);
         if (ImGui::Button("Reset Camera"))
         {
-            cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
-            cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-            cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+            cameraPos   = glm::vec3(0.0f, 10.0f,  8.0f);
+            cameraTarget   = glm::vec3(0.0f, 0.0f,  0.0f);
         }
 
         
@@ -289,8 +287,8 @@ void display()
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        //glPolygonMode( GL_FRONT, GL_FILL );
-        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        glPolygonMode( GL_FRONT, GL_FILL );
+        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     }
 
     // STATE ACT
@@ -302,11 +300,19 @@ void display()
     // DRAW
     {
 
+        glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+        glm::vec3 up = glm::vec3(0, 1, 0);
+        glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+        glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+
+        // Camera thing
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
         glm::mat4 model;
         shaders.back().setMat4("projection", projection);
         shaders.back().setMat4("model", model);
-        glm::mat4 view = glm::lookAt(cameraPos, cameraFront, cameraUp);
+        glm::mat4 view = glm::lookAt(cameraPos, cameraDirection, cameraUp);
+
+        // Camera uniform
         shaders.back().use();
         shaders.back().setMat4("view", view);
         //materials.at(0)->drawBuffer();
@@ -359,13 +365,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
         // Rotate
         cameraPos = glm::rotate(cameraPos, difx * 0.01f, glm::vec3(0, 1, 0));
         cameraPos = glm::rotate(cameraPos, dify * 0.01f, glm::vec3(1, 0, 0));
-        // Calcule front
-        glm::vec3 cameraTarget(0, 0, 0);
-        cameraFront = glm::normalize(cameraPos - cameraTarget);
-        // Calcule up
-        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-        glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraFront));
-        cameraUp = glm::cross(cameraFront, cameraRight);
     }
 }
 
@@ -379,9 +378,9 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * float(yoffset);
-    if (cameraPos.z <= 0.5f)
-        cameraPos.z = 0.5f;
+    glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+    cameraPos -= cameraDirection * float(yoffset);
+    cameraDirection = glm::normalize(cameraPos - cameraTarget);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
