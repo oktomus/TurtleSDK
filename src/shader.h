@@ -32,7 +32,7 @@ public:
      * @param path      Path to the source without extension
      * @param useGeo    If true, use the geo shader
      */
-    Shader(std::string path,
+    explicit Shader(std::string path,
            const bool& useGeo = false);
 
     /**

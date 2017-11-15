@@ -68,6 +68,11 @@ Mesh Model::processAiMesh(aiMesh *mesh, const aiScene *scene)
         point.Position.y = mesh->mVertices[i].y;
         point.Position.z = mesh->mVertices[i].z;
 
+        // Normal
+        point.Normal.x = mesh->mNormals[i].x;
+        point.Normal.y = mesh->mNormals[i].y;
+        point.Normal.z = mesh->mNormals[i].z;
+
         points.push_back(point);
     }
 

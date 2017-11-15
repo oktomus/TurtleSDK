@@ -45,7 +45,7 @@ std::string Shader::readFile(const std::string & path)
 
     if (!txtFile.is_open())
     {
-        fprintf(stderr, "ERROR::SHADER::FILE: Cannot read file %s\n", path);
+        fprintf(stderr, "ERROR::SHADER::FILE: Cannot read file %s\n", path.c_str());
         return "";
     }
 

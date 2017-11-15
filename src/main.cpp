@@ -47,6 +47,7 @@ std::vector<Model> models;
 std::vector<Shader> shaders;
 
 OrbitCamera ocam({0, 30, 30}, {0, 10, 0});
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 bool show_another_window = false;
 // Time spent between each frame
@@ -96,6 +97,9 @@ void display();
   * @param window   The window which received the input
   */
 void processInput(GLFWwindow *window);
+
+void key_callback(GLFWwindow*, int key, int, int action, int mods);
+void char_callback(GLFWwindow*, unsigned int c);
 
 /**
   * Process mouse events
@@ -163,6 +167,8 @@ void init()
         glfwSetCursorPosCallback(window, mouse_callback);
         glfwSetScrollCallback(window, scroll_callback);
         glfwSetMouseButtonCallback(window, mouse_button_callback);
+        glfwSetKeyCallback(window, key_callback);
+        glfwSetCharCallback(window, char_callback);
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         fprintf(stdout, "OK\n");
     }
@@ -218,7 +224,9 @@ void init()
 
 void initMaterials()
 {
-    shaders.push_back(Shader("turtleLib/shaders/solid"));
+    shaders.push_back(Shader("turtleLib/shaders/phong"));
+    shaders.push_back(Shader("turtleLib/shaders/phong.vert",
+                          "turtleLib/shaders/purewhite.frag", ""));
 }
 
 void initObjects()
@@ -267,6 +275,9 @@ void display()
         {
             ocam.reset();
         }
+        ImGui::InputFloat("Light X", &lightPos.x, 0.1f, 1.0f);
+        ImGui::InputFloat("Light Y", &lightPos.y, 0.1f, 1.0f);
+        ImGui::InputFloat("Light Z", &lightPos.z, 0.1f, 1.0f);
 
         
         ImGui::End();
@@ -276,7 +287,7 @@ void display()
     {
         glClearColor( 0.f, 0.f, 0.f, 0.0f );
         glClearDepth( 1.0 );
-        glEnable(GL_BLEND);
+        //glEnable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -293,23 +304,37 @@ void display()
     // DRAW
     {
 
+        Shader * modelShader = &(shaders[0]);
+        Shader * lightShader = &(shaders[1]);
+        Model * object = &(models[0]);
+        Model * light = &(models[0]);
+
         // Camera thing
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 model;
-        shaders.back().setMat4("projection", projection);
-        shaders.back().setMat4("model", model);
 
+        // Drawing model
+        glm::mat4 model;
         // Camera uniform
-        shaders.back().use();
-        shaders.back().setMat4("view", ocam.viewMat());
-        //materials.at(0)->drawBuffer();
-        //materials.at(0)->drawBuffer();
-        //materials.at(1)->use();
-        //glUseProgram(materials.at(1)->id());
-        //meshes.back().drawPoints(shaders.back());
-        //meshes.back().draw(shaders.back());
-        //glUseProgram(0);
-        models.back().draw(shaders.back());
+        modelShader->use();
+        modelShader->setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+        modelShader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        modelShader->setVec3("lightPos", lightPos);
+        modelShader->setMat4("view", ocam.viewMat());
+        modelShader->setMat4("projection", projection);
+        modelShader->setMat4("model", model);
+        object->draw(*modelShader);
+
+        // Drawing light
+        model = glm::translate(glm::mat4(), lightPos);
+        model = glm::scale(model, glm::vec3(.2f));
+        // Camera uniform
+        lightShader->use();
+        lightShader->setMat4("view", ocam.viewMat());
+        lightShader->setMat4("projection", projection);
+        lightShader->setMat4("model", model);
+        light->draw(*lightShader);
+
+
     }
 
     //globalWorld.moveCamera();
@@ -336,6 +361,16 @@ void processInput(GLFWwindow *window)
         */
 }
 
+void key_callback(GLFWwindow*, int key, int, int action, int mods)
+{
+    ImGui_ImplGlfwGL3_KeyCallback(0, key, 0, action, mods);
+}
+
+void char_callback(GLFWwindow*, unsigned int c)
+{
+    ImGui_ImplGlfwGL3_CharCallback(0, c);
+}
+
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
     ocam.process_mouse_move(window, xpos, ypos);
@@ -344,11 +379,13 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
     ocam.process_mouse_action(window, button, action, mods);
+    ImGui_ImplGlfwGL3_MouseButtonCallback(window, button, action, mods);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     ocam.process_scroll(window, xoffset, yoffset);
+    ImGui_ImplGlfwGL3_ScrollCallback(window, xoffset, yoffset);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
