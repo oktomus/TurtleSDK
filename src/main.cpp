@@ -31,10 +31,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 // Custom
 #include "mesh.h"
 #include "model.h"
@@ -231,7 +227,8 @@ void initMaterials()
 
 void initObjects()
 {
-    models.push_back(Model("turtleLib/models/broccoli.obj"));
+    //models.push_back(Model("turtleLib/models/broccoli/broccoli2.obj"));
+    models.push_back(Model("turtleLib/models/woodenCase/case.obj"));
 }
 
 
@@ -316,11 +313,8 @@ void display()
         glm::mat4 model;
         // Camera uniform
         modelShader->use();
-        modelShader->setVec3("material.ambient", .3f, 0.2f, 1.0f);
-        modelShader->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-        modelShader->setVec3("material.specular", .5f, .5f, .5f);
         modelShader->setFloat("material.shininess", 32.0f);
-        modelShader->setVec3("light.ambient", .2f, .2f, .2f);
+        modelShader->setVec3("light.ambient", .1f, .1f, .1f);
         modelShader->setVec3("light.diffuse", .5f, 0.5f, 0.5f);
         modelShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
         modelShader->setVec3("light.position", lightPos);

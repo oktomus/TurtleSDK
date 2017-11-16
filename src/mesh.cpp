@@ -11,6 +11,8 @@ Mesh::Mesh(const std::vector<Vertex> &vertices,
     _drawMode = GL_TRIANGLES;
     _transformUpdate = true;
 
+    textures_ = textures;
+
     _position = {0, 0, 0};
     _scale = {1, 1, 1};
     _rotation = {0, 0, 0};
@@ -31,6 +33,9 @@ Mesh::Mesh(const std::vector<Vertex> &vertices,
     // normals
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, Normal));
+    // Tex coords
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, TexCoords));
 
     glBindVertexArray(0);
 }
@@ -38,10 +43,30 @@ Mesh::Mesh(const std::vector<Vertex> &vertices,
 void Mesh::draw(const Shader & shader, const GLenum& mode) const
 {
     // Drawing depends on indices if they have been set or not
+
+    // Need to generate texture names
+    GLuint diffi = 1;
+    GLuint speci = 1;
+
+    for(size_t i = 0; i < textures_.size(); ++i)
+    {
+        glActiveTexture(GL_TEXTURE0 + i);
+
+        std::string num, name = textures_.at(i).type;
+        if (name == "texture_diffuse")
+            num = std::to_string(diffi++);
+        else if (name == "texture_specular")
+            num = std::to_string(speci++);
+
+        shader.setInt(("material." + name + num).c_str(), i);
+        glBindTexture(GL_TEXTURE_2D, textures_.at(i).id);
+    }
+
     glBindVertexArray(_vaoId);
     if (mode == -1) glDrawElements(_drawMode, _indicesCount, GL_UNSIGNED_INT, 0);
     else glDrawElements(mode, _indicesCount, GL_UNSIGNED_INT, 0);
     glBindVertexArray( 0 );
+    glActiveTexture(GL_TEXTURE0);
 }
 
 void Mesh::drawPoints(const Shader & shader) const

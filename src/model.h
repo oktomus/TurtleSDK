@@ -12,6 +12,7 @@
 // Assimp
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
+#include <assimp/material.h>
 #include <assimp/postprocess.h>
 
 /**
@@ -41,6 +42,11 @@ private:
     std::vector<Mesh> meshes;
 
     /**
+     * @brief The directory in which the object is stored
+     */
+    std::string directory;
+
+    /**
      * @brief Load the given model
      * @param path      Path to the model
      */
@@ -52,10 +58,18 @@ private:
      * @param scene     The assimp scene node
      * @return          The mesh
      */
-    static Mesh processAiMesh(aiMesh *mesh, const aiScene * scene);
+    Mesh processAiMesh(aiMesh *mesh, const aiScene * scene);
 
 
-
+    /**
+      * @brief Load object textures inside opengl
+      */
+    std::vector<Texture> loadMaterialTextures(
+                     aiMaterial *mat,
+                     aiTextureType type,
+                     std::string typeName);
 };
+
+GLuint textureFromFile(const char *path, const std::string &directory, bool gamma = false);
 
 #endif
