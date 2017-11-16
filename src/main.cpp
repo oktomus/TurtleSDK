@@ -47,7 +47,7 @@ std::vector<Model> models;
 std::vector<Shader> shaders;
 
 OrbitCamera ocam({0, 30, 30}, {0, 10, 0});
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 lightPos(1.2f, 7.0f, 2.0f);
 
 bool show_another_window = false;
 // Time spent between each frame
@@ -224,7 +224,7 @@ void init()
 
 void initMaterials()
 {
-    shaders.push_back(Shader("turtleLib/shaders/phong"));
+    shaders.push_back(Shader("turtleLib/shaders/material"));
     shaders.push_back(Shader("turtleLib/shaders/phong.vert",
                           "turtleLib/shaders/purewhite.frag", ""));
 }
@@ -316,9 +316,14 @@ void display()
         glm::mat4 model;
         // Camera uniform
         modelShader->use();
-        modelShader->setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-        modelShader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-        modelShader->setVec3("lightPos", lightPos);
+        modelShader->setVec3("material.ambient", .3f, 0.2f, 1.0f);
+        modelShader->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+        modelShader->setVec3("material.specular", .5f, .5f, .5f);
+        modelShader->setFloat("material.shininess", 32.0f);
+        modelShader->setVec3("light.ambient", .2f, .2f, .2f);
+        modelShader->setVec3("light.diffuse", .5f, 0.5f, 0.5f);
+        modelShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        modelShader->setVec3("light.position", lightPos);
         modelShader->setMat4("view", ocam.viewMat());
         modelShader->setMat4("projection", projection);
         modelShader->setMat4("model", model);
