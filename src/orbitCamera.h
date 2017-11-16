@@ -42,6 +42,7 @@ public:
     void process_scroll(GLFWwindow* window, double xoffset, double yoffset);
 
     glm::mat4 viewMat() const;
+    glm::vec3 up() const;
 
 private:
 

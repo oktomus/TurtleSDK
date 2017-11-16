@@ -61,3 +61,12 @@ glm::mat4 OrbitCamera::viewMat() const
     glm::mat4 view = glm::lookAt(pos, cameraDirection, cameraUp);
     return view;
 }
+
+glm::vec3 OrbitCamera::up() const
+{
+
+    glm::vec3 cameraDirection = glm::normalize(pos - target);
+    glm::vec3 up = glm::vec3(0, 1, 0);
+    glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+    return glm::cross(cameraDirection, cameraRight);
+}

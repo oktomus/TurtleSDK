@@ -43,7 +43,14 @@ std::vector<Model> models;
 std::vector<Shader> shaders;
 
 OrbitCamera ocam({0, 30, 30}, {0, 10, 0});
-glm::vec3 lightPos(1.2f, 7.0f, 2.0f);
+glm::vec3 lightDirection(10.f, -10.0f, 10.0f);
+
+std::vector<glm::vec3> pointLightPositions = {
+    glm::vec3( 0.7f,  0.2f,  2.0f),
+    glm::vec3( 15, 0, 0),
+    glm::vec3(-4.0f,  2.0f, -12.0f),
+    glm::vec3( 0.0f,  0.0f, -3.0f)
+};
 
 bool show_another_window = false;
 // Time spent between each frame
@@ -272,9 +279,9 @@ void display()
         {
             ocam.reset();
         }
-        ImGui::InputFloat("Light X", &lightPos.x, 0.1f, 1.0f);
-        ImGui::InputFloat("Light Y", &lightPos.y, 0.1f, 1.0f);
-        ImGui::InputFloat("Light Z", &lightPos.z, 0.1f, 1.0f);
+        ImGui::InputFloat("Light X", &lightDirection.x, 0.1f, 1.0f);
+        ImGui::InputFloat("Light Y", &lightDirection.y, 0.1f, 1.0f);
+        ImGui::InputFloat("Light Z", &lightDirection.z, 0.1f, 1.0f);
 
         
         ImGui::End();
@@ -313,10 +320,55 @@ void display()
         // Camera uniform
         modelShader->use();
         modelShader->setFloat("material.shininess", 32.0f);
-        modelShader->setVec3("light.ambient", .1f, .1f, .1f);
-        modelShader->setVec3("light.diffuse", .5f, 0.5f, 0.5f);
-        modelShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-        modelShader->setVec3("light.position", lightPos);
+        // directional light
+        modelShader->setVec3("dirLight.direction", lightDirection);
+        modelShader->setVec3("dirLight.value.ambient", 0.05f, 0.05f, 0.05f);
+        modelShader->setVec3("dirLight.value.diffuse", 0.4f, 0.4f, 0.4f);
+        modelShader->setVec3("dirLight.value.specular", 0.5f, 0.5f, 0.5f);
+        // point light 1
+        modelShader->setVec3("pointLights[0].position", pointLightPositions[0]);
+        modelShader->setVec3("pointLights[0].value.ambient", 0.05f, 0.05f, 0.05f);
+        modelShader->setVec3("pointLights[0].value.diffuse", 0.8f, 0.8f, 0.8f);
+        modelShader->setVec3("pointLights[0].value.specular", 1.0f, 1.0f, 1.0f);
+        modelShader->setFloat("pointLights[0].constant", 1.0f);
+        modelShader->setFloat("pointLights[0].linear", 0.09);
+        modelShader->setFloat("pointLights[0].quadratic", 0.032);
+        // point light 2
+        modelShader->setVec3("pointLights[1].position", pointLightPositions[1]);
+        modelShader->setVec3("pointLights[1].value.ambient", 0.05f, 0.05f, 0.05f);
+        modelShader->setVec3("pointLights[1].value.diffuse", 0.8f, 0.8f, 0.8f);
+        modelShader->setVec3("pointLights[1].value.specular", 1.0f, 1.0f, 1.0f);
+        modelShader->setFloat("pointLights[1].constant", 1.0f);
+        modelShader->setFloat("pointLights[1].linear", 0.09);
+        modelShader->setFloat("pointLights[1].quadratic", 0.032);
+        // point light 3
+        modelShader->setVec3("pointLights[2].position", pointLightPositions[2]);
+        modelShader->setVec3("pointLights[2].value.ambient", 0.05f, 0.05f, 0.05f);
+        modelShader->setVec3("pointLights[2].value.diffuse", 0.8f, 0.8f, 0.8f);
+        modelShader->setVec3("pointLights[2].value.specular", 1.0f, 1.0f, 1.0f);
+        modelShader->setFloat("pointLights[2].constant", 1.0f);
+        modelShader->setFloat("pointLights[2].linear", 0.09);
+        modelShader->setFloat("pointLights[2].quadratic", 0.032);
+        // point light 4
+        modelShader->setVec3("pointLights[3].position", pointLightPositions[3]);
+        modelShader->setVec3("pointLights[3].value.ambient", 0.05f, 0.05f, 0.05f);
+        modelShader->setVec3("pointLights[3].value.diffuse", 0.8f, 0.8f, 0.8f);
+        modelShader->setVec3("pointLights[3].value.specular", 1.0f, 1.0f, 1.0f);
+        modelShader->setFloat("pointLights[3].constant", 1.0f);
+        modelShader->setFloat("pointLights[3].linear", 0.09);
+        modelShader->setFloat("pointLights[3].quadratic", 0.032);
+
+        modelShader->setVec3("spotLight.position", ocam.pos);
+        modelShader->setVec3("spotLight.direction", ocam.up());
+        modelShader->setVec3("spotLight.value.ambient", 0.0f, 0.0f, 0.0f);
+        modelShader->setVec3("spotLight.value.diffuse", 1.0f, 1.0f, 1.0f);
+        modelShader->setVec3("spotLight.value.specular", 1.0f, 1.0f, 1.0f);
+        modelShader->setFloat("spotLight.constant", 1.0f);
+        modelShader->setFloat("spotLight.linear", 0.09);
+        modelShader->setFloat("spotLight.quadratic", 0.032);
+        modelShader->setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+        modelShader->setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+
         modelShader->setMat4("view", ocam.viewMat());
         modelShader->setVec3("viewPos", ocam.pos);
         modelShader->setMat4("projection", projection);
@@ -331,7 +383,7 @@ void display()
         }
 
         // Drawing light
-        glm::mat4 model = glm::translate(glm::mat4(), lightPos);
+        glm::mat4 model = glm::translate(glm::mat4(), lightDirection);
         model = glm::scale(model, glm::vec3(.2f));
         // Camera uniform
         lightShader->use();
@@ -339,6 +391,13 @@ void display()
         lightShader->setMat4("projection", projection);
         lightShader->setMat4("model", model);
         light->draw(*lightShader);
+        for(size_t i = 0; i < pointLightPositions.size(); ++i)
+        {
+            model = glm::translate(glm::mat4(), pointLightPositions.at(i));
+            model = glm::scale(model, glm::vec3(.2f));
+            lightShader->setMat4("model", model);
+            light->draw(*lightShader);
+        }
 
 
     }
