@@ -319,6 +319,7 @@ void display()
         modelShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
         modelShader->setVec3("light.position", lightPos);
         modelShader->setMat4("view", ocam.viewMat());
+        modelShader->setVec3("viewPos", ocam.pos);
         modelShader->setMat4("projection", projection);
         modelShader->setMat4("model", model);
         object->draw(*modelShader);

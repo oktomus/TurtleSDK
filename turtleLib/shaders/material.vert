@@ -21,8 +21,10 @@ out vec2 TexCoords;
 void main( void )                             
 {                                             
     gl_PointSize = 20.0; 
-    gl_Position = projection * view * model * vec4( aPos, 1.0 );
-    FragPos = vec3(view * model * vec4(aPos, 1.0));
-    Normal =  mat3(transpose(inverse(view * model))) * aNormal;  
+
     TexCoords = aTexCoords;
+    FragPos = vec3(model * vec4(aPos, 1.0));
+    Normal =  mat3(transpose(inverse(model))) * aNormal;  
+
+    gl_Position = projection * view * vec4( FragPos, 1.0 );
 }                                                                                     

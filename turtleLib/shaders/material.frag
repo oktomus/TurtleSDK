@@ -24,6 +24,7 @@ in vec2 TexCoords;
 
 uniform Material material;
 uniform Light light;  
+uniform vec3 viewPos;
 
 out vec4 fragmentColor;
 
@@ -40,7 +41,7 @@ void main( void )
     vec3 diffuse = light.diffuse * diff * vec3(texture(material.texture_diffuse1, TexCoords));
 
     // Specular
-    vec3 viewDir = normalize(- FragPos);
+    vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     vec3 specular = light.specular * spec * vec3(texture(material.texture_specular1, TexCoords));
