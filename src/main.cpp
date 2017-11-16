@@ -310,7 +310,6 @@ void display()
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
 
         // Drawing model
-        glm::mat4 model;
         // Camera uniform
         modelShader->use();
         modelShader->setFloat("material.shininess", 32.0f);
@@ -321,11 +320,18 @@ void display()
         modelShader->setMat4("view", ocam.viewMat());
         modelShader->setVec3("viewPos", ocam.pos);
         modelShader->setMat4("projection", projection);
-        modelShader->setMat4("model", model);
-        object->draw(*modelShader);
+        for(unsigned int i = 0; i < 10; i++)
+        {
+            glm::mat4 model;
+            model = glm::translate(model, glm::vec3( -15.0f + i * 3.0f, 0, 0));
+            float angle = 20.0f * i;
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            modelShader->setMat4("model", model);
+            object->draw(*modelShader);
+        }
 
         // Drawing light
-        model = glm::translate(glm::mat4(), lightPos);
+        glm::mat4 model = glm::translate(glm::mat4(), lightPos);
         model = glm::scale(model, glm::vec3(.2f));
         // Camera uniform
         lightShader->use();
