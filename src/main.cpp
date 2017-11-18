@@ -50,8 +50,8 @@ std::vector<SpotLight> spotLights;
 OrbitCamera ocam({0, 30, 30}, {0, 10, 0});
 glm::vec3 lightDirection(10.f, -10.0f, 10.0f);
 
-bool show_another_window = true;
-bool objects_window = true;
+bool debug_window = false;
+bool objects_window = false;
 // Time spent between each frame
 float deltaTime = 0.0f;
 // Time of last frame
@@ -309,49 +309,76 @@ void display()
 {
     // IMGUI
     {
-        ImGui::Begin("Turtle Settings", &show_another_window);
-        ImGui::Text("%f ms/frame, ~%d FPS", frameRate, (long)(1000 / frameRate));
-        ImGui::Checkbox("Disable viewport events", &disableViewportEvents);
-        ImGui::Text("Camera Pos (%f, %f, %f)", ocam.pos.x, ocam.pos.y, ocam.pos.z);
-        if (ImGui::Button("Quit"))
-            glfwSetWindowShouldClose(window, true);
-        if (ImGui::Button("Reset Camera"))
+        // Top bar
+        if (ImGui::BeginMainMenuBar())
         {
-            ocam.reset();
+            if (ImGui::BeginMenu("Turtle"))
+            {
+                ImGui::MenuItem("Disable viewport events", "", &disableViewportEvents);
+                static bool should_quit = false;
+                ImGui::MenuItem("Quit", "Escape", &should_quit);
+                if(should_quit) glfwSetWindowShouldClose(window, true);
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Windows"))
+            {
+                ImGui::MenuItem("Debug", "", &debug_window);
+                ImGui::MenuItem("Objects", "", &objects_window);
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
         }
-        ImGui::End();
-
-        ImGui::Begin("Objects", &objects_window);
-
-        if(ImGui::CollapsingHeader("Lighting"))
+        // Debug win
+        if(debug_window)
         {
-            static int currentLight = 0;
-            std::string lightsCombo = "";
-            for(size_t i = 0; i < dirLights.size() + pointLights.size() + spotLights.size(); i++)
-                lightsCombo += std::to_string(i) + '\0';
-            lightsCombo += '\0';
-            ImGui::Combo("Edit Light", &currentLight, lightsCombo.c_str());
+            ImGui::Begin("Turtle", &debug_window);
 
-            if(currentLight == -1)
-                ImGui::Text("No light selected");
-            else if(currentLight < dirLights.size())
-            {
-                ImGui::Text("Directional light");
-                dirLights.at(currentLight).ui();
-            }
-            else if(currentLight < dirLights.size() + pointLights.size())
-            {
-                ImGui::Text("Point light");
-                pointLights.at(currentLight - dirLights.size()).ui();
-            }
-            else
-            {
-                ImGui::Text("Spot light");
-                spotLights.at(currentLight - dirLights.size() - pointLights.size()).ui();
-            }
+            ImGui::Text("%f ms/frame, ~%d FPS", frameRate, (long)(1000 / frameRate));
+            ImGui::End();
+
         }
 
-        ImGui::End();
+        if(objects_window)
+        {
+            ImGui::Begin("Objects", &objects_window);
+
+            ImGui::Text("Camera Pos (%f, %f, %f)", ocam.pos.x, ocam.pos.y, ocam.pos.z);
+            if (ImGui::Button("Reset Camera"))
+            {
+                ocam.reset();
+            }
+
+            if(ImGui::CollapsingHeader("Lighting"))
+            {
+                static int currentLight = 0;
+                std::string lightsCombo = "";
+                for(size_t i = 0; i < dirLights.size() + pointLights.size() + spotLights.size(); i++)
+                    lightsCombo += std::to_string(i) + '\0';
+                lightsCombo += '\0';
+                ImGui::Combo("Edit Light", &currentLight, lightsCombo.c_str());
+
+                if(currentLight == -1)
+                    ImGui::Text("No light selected");
+                else if(currentLight < dirLights.size())
+                {
+                    ImGui::Text("Directional light");
+                    dirLights.at(currentLight).ui();
+                }
+                else if(currentLight < dirLights.size() + pointLights.size())
+                {
+                    ImGui::Text("Point light");
+                    pointLights.at(currentLight - dirLights.size()).ui();
+                }
+                else
+                {
+                    ImGui::Text("Spot light");
+                    spotLights.at(currentLight - dirLights.size() - pointLights.size()).ui();
+                }
+            }
+
+            ImGui::End();
+
+        }
     }
 
     // STATE ASSIGN
@@ -442,7 +469,7 @@ void processInput(GLFWwindow *window)
         glfwSetWindowShouldClose(window, true);
 
     /*
-    float cameraSpeed = 2.5 * deltaTime; 
+    float cameraSpeed = 2.5 * deltaTime;
 
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
         cameraPos += cameraSpeed * cameraUp;
