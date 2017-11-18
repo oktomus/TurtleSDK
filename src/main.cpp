@@ -241,40 +241,11 @@ void initObjects()
 
     // Lights
     dirLights.push_back(DirectionLight());
-    dirLights.back().direction_ = {-10.f, -10.f, -10.f};
-
     pointLights.push_back(PointLight());
-    pointLights.back().linear_ = 0.09;
-    pointLights.back().quadratic_ = 0.032;
-    pointLights.back().constant_ = 1;
-    pointLights.back().position_ = {0, 0, 0};
-
     pointLights.push_back(PointLight());
-    pointLights.back().linear_ = 0.09;
-    pointLights.back().quadratic_ = 0.032;
-    pointLights.back().constant_ = 1;
-    pointLights.back().position_ = {0, 0, 0};
-
     pointLights.push_back(PointLight());
-    pointLights.back().linear_ = 0.09;
-    pointLights.back().quadratic_ = 0.032;
-    pointLights.back().constant_ = 1;
-    pointLights.back().position_ = {0, 0, 0};
-
     pointLights.push_back(PointLight());
-    pointLights.back().linear_ = 0.09;
-    pointLights.back().quadratic_ = 0.032;
-    pointLights.back().constant_ = 1;
-    pointLights.back().position_ = {0, 0, 0};
-
     spotLights.push_back(SpotLight());
-    spotLights.back().linear_ = 0.09;
-    spotLights.back().quadratic_ = 0.032;
-    spotLights.back().constant_ = 1;
-    spotLights.back().position_ = {0, 0, 0};
-    spotLights.back().cutOff_ = glm::cos(glm::radians(40.f));
-    spotLights.back().outerCutOff_ = glm::cos(glm::radians(45.f));
-    spotLights.back().direction_ = {-10.f, -10.f, -10.f};
 }
 
 
@@ -346,6 +317,24 @@ void display()
             if (ImGui::Button("Reset Camera"))
             {
                 ocam.reset();
+            }
+
+            if(ImGui::CollapsingHeader("Models"))
+            {
+                static int currentModel = 0;
+                std::string modelCombo = "";
+                for(size_t i = 0; i < models.size(); i++)
+                    modelCombo += std::to_string(i) + '\0';
+                modelCombo += '\0';
+                ImGui::Combo("Edit Model", &currentModel, modelCombo.c_str());
+
+                if(currentModel == -1)
+                    ImGui::Text("No model selected");
+                else
+                {
+                    ImGui::Text("Model");
+                    models.at(currentModel).ui();
+                }
             }
 
             if(ImGui::CollapsingHeader("Lighting"))
@@ -426,14 +415,9 @@ void display()
         modelShader->setMat4("view", ocam.viewMat());
         modelShader->setVec3("viewPos", ocam.pos);
         modelShader->setMat4("projection", projection);
-        for(unsigned int i = 0; i < 10; i++)
+        for(Model & m : models)
         {
-            glm::mat4 model;
-            model = glm::translate(model, glm::vec3( -15.0f + i * 3.0f, 0, 0));
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            modelShader->setMat4("model", model);
-            object->draw(*modelShader);
+            m.draw(*modelShader);
         }
 
         /*

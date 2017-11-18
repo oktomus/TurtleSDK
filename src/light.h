@@ -33,7 +33,7 @@ public:
     virtual void setUniforms(const Shader& shader, const std::string& uname) const;
     virtual void ui();
 
-    glm::vec3 direction_;
+    glm::vec3 direction_ = {-10.f, -10.f, -10.f};
 
 };
 
@@ -45,10 +45,10 @@ public:
     virtual void setUniforms(const Shader& shader, const std::string& uname) const;
     virtual void ui();
 
-    glm::vec3 position_;
-    float constant_;
-    float linear_;
-    float quadratic_;
+    glm::vec3 position_ = {5.f, 5.f, 5.f};
+    float constant_ = 1;
+    float linear_ = 0.09;
+    float quadratic_ = 0.032;
 };
 
 class SpotLight : public PointLight, public DirectionLight
@@ -59,8 +59,8 @@ public:
     virtual void setUniforms(const Shader& shader, const std::string& uname) const;
     virtual void ui();
 
-    float cutOff_;
-    float outerCutOff_;
+    float cutOff_ = 12.5f;
+    float outerCutOff_ = 20.f;
 
 };
 

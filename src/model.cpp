@@ -1,6 +1,8 @@
 #include "model.h"
 #include <list>
-
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <imgui.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -8,15 +10,36 @@
 
 Model::Model(const std::string &path)
 {
+    scale_ = {1, 1, 1};
+    translate_ = {0, 0, 0};
+    rotate_ = {0, 0, 0};
+
     loadModel(path);
 }
 
-void Model::draw(const Shader & shader) const
+void Model::draw(const Shader & shader)
 {
+    transform_ = glm::mat4();
+
+    // Revert order !
+    transform_ = glm::translate(transform_, translate_);
+    transform_ = glm::rotate(transform_, glm::radians(rotate_[0]), glm::vec3(1, 0, 0));
+    transform_ = glm::rotate(transform_, glm::radians(rotate_[1]), glm::vec3(0, 1, 0));
+    transform_ = glm::rotate(transform_, glm::radians(rotate_[2]), glm::vec3(0, 0, 1));
+    transform_ = glm::scale(transform_, scale_);
+
+    shader.setMat4("model", transform_);
     for(unsigned int i = 0; i < meshes.size(); ++i)
     {
         meshes.at(i).draw(shader);
     }
+}
+
+void Model::ui()
+{
+    ImGui::SliderFloat3("Model position", glm::value_ptr(translate_), -10.f, 10.f);
+    ImGui::SliderFloat3("Model rotation", glm::value_ptr(rotate_), 0.f, 360.f);
+    ImGui::SliderFloat3("Model size", glm::value_ptr(scale_), 0.f, 5.f);
 }
 
 void Model::loadModel(const std::string &path)

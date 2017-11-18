@@ -23,9 +23,9 @@ void Light::setUniforms(const Shader &shader, const std::string &uname) const
 
 void Light::ui()
 {
-    ImGui::SliderFloat3("Ambient", glm::value_ptr(ambient_), 0.0f, 1.0f);
-    ImGui::SliderFloat3("Diffuse", glm::value_ptr(diffuse_), 0.0f, 1.0f);
-    ImGui::SliderFloat3("Specular", glm::value_ptr(specular_), 0.0f, 1.0f);
+    ImGui::ColorEdit3("Light ambient color", glm::value_ptr(ambient_));
+    ImGui::ColorEdit3("Light diffuse color", glm::value_ptr(diffuse_));
+    ImGui::ColorEdit3("Light specular color", glm::value_ptr(specular_));
 }
 
 void DirectionLight::setUniforms(const Shader &shader, const std::string &uname) const
@@ -52,24 +52,24 @@ void PointLight::setUniforms(const Shader &shader, const std::string &uname) con
 void PointLight::ui()
 {
     Light::ui();
-    ImGui::SliderFloat("Constant", &constant_, 0, 10);
-    ImGui::SliderFloat("Linear", &linear_, 0, 1);
-    ImGui::SliderFloat("Quadratic", &quadratic_, 0, .1);
-    ImGui::SliderFloat3("Position", glm::value_ptr(position_), -10, 10);
+    ImGui::SliderFloat("Light Constant", &constant_, 0, 10);
+    ImGui::SliderFloat("Light Linear", &linear_, 0, 1);
+    ImGui::SliderFloat("Light Quadratic", &quadratic_, 0, .1);
+    ImGui::SliderFloat3("Light Position", glm::value_ptr(position_), -10, 10);
 }
 
 void SpotLight::setUniforms(const Shader &shader, const std::string &uname) const
 {
     DirectionLight::setUniforms(shader, uname);
     PointLight::setUniforms(shader, uname);
-    shader.setFloat(uname + ".cutOff", cutOff_);
-    shader.setFloat(uname + ".outerCutOff", outerCutOff_);
+    shader.setFloat(uname + ".cutOff", glm::cos(glm::radians(cutOff_)));
+    shader.setFloat(uname + ".outerCutOff", glm::cos(glm::radians(outerCutOff_)));
 }
 
 void SpotLight::ui()
 {
     PointLight::ui();
-    ImGui::SliderFloat3("Direction", glm::value_ptr(direction_), -10.f, 10.f);
-    ImGui::SliderAngle("Cut off", &cutOff_, 0, 360.f);
-    ImGui::SliderAngle("Outer cut off", &outerCutOff_, 0, 360.f);
+    ImGui::SliderFloat3("Spot Direction", glm::value_ptr(direction_), -10.f, 10.f);
+    ImGui::SliderAngle("Spot Cut off", &cutOff_, 0, 360.f);
+    ImGui::SliderAngle("Spot outer cut off", &outerCutOff_, 0, 360.f);
 }

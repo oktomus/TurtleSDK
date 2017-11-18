@@ -32,7 +32,16 @@ public:
      * @brief Draw the model's meshes
      * @param shader    Shader used to draw
      */
-    void draw(const Shader & shader) const;
+    void draw(const Shader & shader);
+
+
+    void ui();
+
+    glm::vec3 translate_;
+    glm::vec3 scale_;
+    glm::vec3 rotate_;
+
+    glm::mat4 transform_;
 
 private:
 
