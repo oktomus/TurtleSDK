@@ -130,7 +130,7 @@ private:
     /**
      * @brief Camera of the scene
      */
-    OrbitCamera ocam_ = OrbitCamera({0, 30, 30}, {0, 10, 0});
+    OrbitCamera ocam_ = OrbitCamera({0, 30, 30}, {0, 20, 0});
 
     /**
      * @brief Shader of the scene
@@ -156,6 +156,11 @@ private:
      * @brief Spot lights of the scene
      */
     std::vector<SpotLight> spotLights_;
+
+    /**
+     * @brief Clear color
+     */
+    glm::vec4 clearColor_ = glm::vec4(0.1, 0.1, 0.1, 0);
 
     /**
      * @brief Time spent between current and last frame
@@ -194,7 +199,7 @@ private:
 
     // Imgui related
 
-    bool debug_window_ = false;
+    bool debug_window_ = true;
     bool objects_window_ = false;
 
 };

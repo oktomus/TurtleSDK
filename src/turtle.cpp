@@ -92,6 +92,7 @@ void Turtle::init()
         shaders_.push_back(Shader("turtleLib/shaders/material"));
         shaders_.push_back(Shader("turtleLib/shaders/phong.vert",
                                  "turtleLib/shaders/purewhite.frag", ""));
+        shaders_.push_back(Shader("turtleLib/shaders/grid.vert", "turtleLib/shaders/solid.frag", ""));
         fprintf(stdout, "OK\n");
     }
     {
@@ -186,7 +187,7 @@ void Turtle::displayFrame()
     displayUi();
     // STATE ASSIGN
     {
-        glClearColor( 0.f, 0.f, 0.f, 0.0f );
+        glClearColor(clearColor_[0], clearColor_[1], clearColor_[2], clearColor_[3]);
         glClearDepth( 1.0 );
         //glEnable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
@@ -264,6 +265,7 @@ void Turtle::displayUi()
             ImGui::Begin("Turtle", &debug_window_);
 
             ImGui::Text("%f ms/frame, ~%d FPS", frameRate_, (long)(1000 / frameRate_));
+            ImGui::ColorEdit4("Clear color", glm::value_ptr(clearColor_));
             ImGui::End();
 
         }
