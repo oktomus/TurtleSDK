@@ -10,6 +10,7 @@
 #include <fstream>
 #include <memory>
 #include <functional>
+#include <string>
 
 // System
 #include <cstdio>
@@ -36,23 +37,21 @@
 #include "model.h"
 #include "shader.h"
 #include "orbitCamera.h"
+#include "light.h"
 
 GLFWwindow* window;
 std::vector<Mesh> meshes;
 std::vector<Model> models;
 std::vector<Shader> shaders;
+std::vector<DirectionLight> dirLights;
+std::vector<PointLight> pointLights;
+std::vector<SpotLight> spotLights;
 
 OrbitCamera ocam({0, 30, 30}, {0, 10, 0});
 glm::vec3 lightDirection(10.f, -10.0f, 10.0f);
 
-std::vector<glm::vec3> pointLightPositions = {
-    glm::vec3( 0.7f,  0.2f,  2.0f),
-    glm::vec3( 15, 0, 0),
-    glm::vec3(-4.0f,  2.0f, -12.0f),
-    glm::vec3( 0.0f,  0.0f, -3.0f)
-};
-
-bool show_another_window = false;
+bool show_another_window = true;
+bool objects_window = true;
 // Time spent between each frame
 float deltaTime = 0.0f;
 // Time of last frame
@@ -68,6 +67,9 @@ float frameRate = 0.0;
 
 int WIN_WIDTH = 1280;
 int WIN_HEIGHT = 720;
+
+
+bool disableViewportEvents = false;
 
 /**
   * Initialize anything required to run Turtle
@@ -236,6 +238,43 @@ void initObjects()
 {
     //models.push_back(Model("turtleLib/models/broccoli/broccoli2.obj"));
     models.push_back(Model("turtleLib/models/woodenCase/case.obj"));
+
+    // Lights
+    dirLights.push_back(DirectionLight());
+    dirLights.back().direction_ = {-10.f, -10.f, -10.f};
+
+    pointLights.push_back(PointLight());
+    pointLights.back().linear_ = 0.09;
+    pointLights.back().quadratic_ = 0.032;
+    pointLights.back().constant_ = 1;
+    pointLights.back().position_ = {0, 0, 0};
+
+    pointLights.push_back(PointLight());
+    pointLights.back().linear_ = 0.09;
+    pointLights.back().quadratic_ = 0.032;
+    pointLights.back().constant_ = 1;
+    pointLights.back().position_ = {0, 0, 0};
+
+    pointLights.push_back(PointLight());
+    pointLights.back().linear_ = 0.09;
+    pointLights.back().quadratic_ = 0.032;
+    pointLights.back().constant_ = 1;
+    pointLights.back().position_ = {0, 0, 0};
+
+    pointLights.push_back(PointLight());
+    pointLights.back().linear_ = 0.09;
+    pointLights.back().quadratic_ = 0.032;
+    pointLights.back().constant_ = 1;
+    pointLights.back().position_ = {0, 0, 0};
+
+    spotLights.push_back(SpotLight());
+    spotLights.back().linear_ = 0.09;
+    spotLights.back().quadratic_ = 0.032;
+    spotLights.back().constant_ = 1;
+    spotLights.back().position_ = {0, 0, 0};
+    spotLights.back().cutOff_ = glm::cos(glm::radians(40.f));
+    spotLights.back().outerCutOff_ = glm::cos(glm::radians(45.f));
+    spotLights.back().direction_ = {-10.f, -10.f, -10.f};
 }
 
 
@@ -272,6 +311,7 @@ void display()
     {
         ImGui::Begin("Turtle Settings", &show_another_window);
         ImGui::Text("%f ms/frame, ~%d FPS", frameRate, (long)(1000 / frameRate));
+        ImGui::Checkbox("Disable viewport events", &disableViewportEvents);
         ImGui::Text("Camera Pos (%f, %f, %f)", ocam.pos.x, ocam.pos.y, ocam.pos.z);
         if (ImGui::Button("Quit"))
             glfwSetWindowShouldClose(window, true);
@@ -279,11 +319,38 @@ void display()
         {
             ocam.reset();
         }
-        ImGui::InputFloat("Light X", &lightDirection.x, 0.1f, 1.0f);
-        ImGui::InputFloat("Light Y", &lightDirection.y, 0.1f, 1.0f);
-        ImGui::InputFloat("Light Z", &lightDirection.z, 0.1f, 1.0f);
+        ImGui::End();
 
-        
+        ImGui::Begin("Objects", &objects_window);
+
+        if(ImGui::CollapsingHeader("Lighting"))
+        {
+            static int currentLight = 0;
+            std::string lightsCombo = "";
+            for(size_t i = 0; i < dirLights.size() + pointLights.size() + spotLights.size(); i++)
+                lightsCombo += std::to_string(i) + '\0';
+            lightsCombo += '\0';
+            ImGui::Combo("Edit Light", &currentLight, lightsCombo.c_str());
+
+            if(currentLight == -1)
+                ImGui::Text("No light selected");
+            else if(currentLight < dirLights.size())
+            {
+                ImGui::Text("Directional light");
+                dirLights.at(currentLight).ui();
+            }
+            else if(currentLight < dirLights.size() + pointLights.size())
+            {
+                ImGui::Text("Point light");
+                pointLights.at(currentLight - dirLights.size()).ui();
+            }
+            else
+            {
+                ImGui::Text("Spot light");
+                spotLights.at(currentLight - dirLights.size() - pointLights.size()).ui();
+            }
+        }
+
         ImGui::End();
     }
 
@@ -321,53 +388,13 @@ void display()
         modelShader->use();
         modelShader->setFloat("material.shininess", 32.0f);
         // directional light
-        modelShader->setVec3("dirLight.direction", lightDirection);
-        modelShader->setVec3("dirLight.value.ambient", 0.05f, 0.05f, 0.05f);
-        modelShader->setVec3("dirLight.value.diffuse", 0.4f, 0.4f, 0.4f);
-        modelShader->setVec3("dirLight.value.specular", 0.5f, 0.5f, 0.5f);
+        dirLights.back().setUniforms(*modelShader, "dirLight");
         // point light 1
-        modelShader->setVec3("pointLights[0].position", pointLightPositions[0]);
-        modelShader->setVec3("pointLights[0].value.ambient", 0.05f, 0.05f, 0.05f);
-        modelShader->setVec3("pointLights[0].value.diffuse", 0.8f, 0.8f, 0.8f);
-        modelShader->setVec3("pointLights[0].value.specular", 1.0f, 1.0f, 1.0f);
-        modelShader->setFloat("pointLights[0].constant", 1.0f);
-        modelShader->setFloat("pointLights[0].linear", 0.09);
-        modelShader->setFloat("pointLights[0].quadratic", 0.032);
-        // point light 2
-        modelShader->setVec3("pointLights[1].position", pointLightPositions[1]);
-        modelShader->setVec3("pointLights[1].value.ambient", 0.05f, 0.05f, 0.05f);
-        modelShader->setVec3("pointLights[1].value.diffuse", 0.8f, 0.8f, 0.8f);
-        modelShader->setVec3("pointLights[1].value.specular", 1.0f, 1.0f, 1.0f);
-        modelShader->setFloat("pointLights[1].constant", 1.0f);
-        modelShader->setFloat("pointLights[1].linear", 0.09);
-        modelShader->setFloat("pointLights[1].quadratic", 0.032);
-        // point light 3
-        modelShader->setVec3("pointLights[2].position", pointLightPositions[2]);
-        modelShader->setVec3("pointLights[2].value.ambient", 0.05f, 0.05f, 0.05f);
-        modelShader->setVec3("pointLights[2].value.diffuse", 0.8f, 0.8f, 0.8f);
-        modelShader->setVec3("pointLights[2].value.specular", 1.0f, 1.0f, 1.0f);
-        modelShader->setFloat("pointLights[2].constant", 1.0f);
-        modelShader->setFloat("pointLights[2].linear", 0.09);
-        modelShader->setFloat("pointLights[2].quadratic", 0.032);
-        // point light 4
-        modelShader->setVec3("pointLights[3].position", pointLightPositions[3]);
-        modelShader->setVec3("pointLights[3].value.ambient", 0.05f, 0.05f, 0.05f);
-        modelShader->setVec3("pointLights[3].value.diffuse", 0.8f, 0.8f, 0.8f);
-        modelShader->setVec3("pointLights[3].value.specular", 1.0f, 1.0f, 1.0f);
-        modelShader->setFloat("pointLights[3].constant", 1.0f);
-        modelShader->setFloat("pointLights[3].linear", 0.09);
-        modelShader->setFloat("pointLights[3].quadratic", 0.032);
-
-        modelShader->setVec3("spotLight.position", ocam.pos);
-        modelShader->setVec3("spotLight.direction", ocam.up());
-        modelShader->setVec3("spotLight.value.ambient", 0.0f, 0.0f, 0.0f);
-        modelShader->setVec3("spotLight.value.diffuse", 1.0f, 1.0f, 1.0f);
-        modelShader->setVec3("spotLight.value.specular", 1.0f, 1.0f, 1.0f);
-        modelShader->setFloat("spotLight.constant", 1.0f);
-        modelShader->setFloat("spotLight.linear", 0.09);
-        modelShader->setFloat("spotLight.quadratic", 0.032);
-        modelShader->setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-        modelShader->setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+        for(size_t i = 0; i < 4; ++i)
+        {
+            pointLights.at(i).setUniforms(*modelShader, "pointLights[" + std::to_string(i) + "]");
+        }
+        pointLights.back().setUniforms(*modelShader, "spotLight");
 
         modelShader->setMat4("view", ocam.viewMat());
         modelShader->setVec3("viewPos", ocam.pos);
@@ -382,6 +409,7 @@ void display()
             object->draw(*modelShader);
         }
 
+        /*
         // Drawing light
         glm::mat4 model = glm::translate(glm::mat4(), lightDirection);
         model = glm::scale(model, glm::vec3(.2f));
@@ -398,6 +426,7 @@ void display()
             lightShader->setMat4("model", model);
             light->draw(*lightShader);
         }
+        */
 
 
     }
@@ -438,18 +467,21 @@ void char_callback(GLFWwindow*, unsigned int c)
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    ocam.process_mouse_move(window, xpos, ypos);
+    if(!disableViewportEvents)
+        ocam.process_mouse_move(window, xpos, ypos);
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    ocam.process_mouse_action(window, button, action, mods);
+    if(!disableViewportEvents)
+        ocam.process_mouse_action(window, button, action, mods);
     ImGui_ImplGlfwGL3_MouseButtonCallback(window, button, action, mods);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    ocam.process_scroll(window, xoffset, yoffset);
+    if(!disableViewportEvents)
+        ocam.process_scroll(window, xoffset, yoffset);
     ImGui_ImplGlfwGL3_ScrollCallback(window, xoffset, yoffset);
 }
 
