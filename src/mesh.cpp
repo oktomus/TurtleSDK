@@ -67,6 +67,7 @@ void Mesh::draw(const Shader & shader, const GLenum& mode) const
     else glDrawElements(mode, _indicesCount, GL_UNSIGNED_INT, 0);
     glBindVertexArray( 0 );
     glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Mesh::drawPoints(const Shader & shader) const

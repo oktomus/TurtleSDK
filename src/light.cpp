@@ -60,10 +60,10 @@ void PointLight::ui()
 
 void SpotLight::setUniforms(const Shader &shader, const std::string &uname) const
 {
-    DirectionLight::setUniforms(shader, uname);
     PointLight::setUniforms(shader, uname);
     shader.setFloat(uname + ".cutOff", glm::cos(glm::radians(cutOff_)));
     shader.setFloat(uname + ".outerCutOff", glm::cos(glm::radians(outerCutOff_)));
+    shader.setVec3(uname + ".direction", direction_);
 }
 
 void SpotLight::ui()

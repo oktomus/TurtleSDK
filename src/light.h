@@ -51,7 +51,7 @@ public:
     float quadratic_ = 0.032;
 };
 
-class SpotLight : public PointLight, public DirectionLight
+class SpotLight : public PointLight
 {
 
 public:
@@ -61,6 +61,7 @@ public:
 
     float cutOff_ = 12.5f;
     float outerCutOff_ = 20.f;
+    glm::vec3 direction_ = {-10.f, -10.f, -10.f};
 
 };
 

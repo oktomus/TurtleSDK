@@ -19,6 +19,7 @@ Model::Model(const std::string &path)
 
 void Model::draw(const Shader & shader)
 {
+    if(!draw_) return;
     transform_ = glm::mat4();
 
     // Revert order !
@@ -37,6 +38,7 @@ void Model::draw(const Shader & shader)
 
 void Model::ui()
 {
+    ImGui::Checkbox("Display in the viewport", &draw_);
     ImGui::SliderFloat3("Model position", glm::value_ptr(translate_), -10.f, 10.f);
     ImGui::SliderFloat3("Model rotation", glm::value_ptr(rotate_), 0.f, 360.f);
     ImGui::SliderFloat3("Model size", glm::value_ptr(scale_), 0.f, 5.f);

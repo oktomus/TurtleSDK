@@ -89,16 +89,16 @@ void Turtle::init()
 
     {
         fprintf(stdout, "SHADERS...");
-        shaders_.push_back(Shader("turtleLib/shaders/material"));
-        shaders_.push_back(Shader("turtleLib/shaders/phong.vert",
-                                 "turtleLib/shaders/purewhite.frag", ""));
-        shaders_.push_back(Shader("turtleLib/shaders/grid.vert", "turtleLib/shaders/solid.frag", ""));
+        shaders_["phong"] = std::make_shared<Shader>("turtleLib/shaders/material");
+        shaders_["light"] = std::make_shared<Shader>("turtleLib/shaders/flatBillBoardStill.vert",
+                                                     "turtleLib/shaders/flatBillBoardStill.frag", "");
         fprintf(stdout, "OK\n");
     }
     {
         fprintf(stdout, "OBJECTS...");
         //models.push_back(Model("turtleLib/models/broccoli/broccoli2.obj"));
-        models_.push_back(Model("turtleLib/models/woodenCase/case.obj"));
+        models_["boite"] = std::make_shared<Model>("turtleLib/models/woodenCase/case.obj");
+        models_["light"] = std::make_shared<Model>("turtleLib/models/light/light.obj");
 
         // Lights
         dirLights_.push_back(DirectionLight());
@@ -189,11 +189,13 @@ void Turtle::displayFrame()
     {
         glClearColor(clearColor_[0], clearColor_[1], clearColor_[2], clearColor_[3]);
         glClearDepth( 1.0 );
-        //glEnable(GL_BLEND);
+        glEnable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
         glPolygonMode( GL_FRONT, GL_FILL );
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     }
 
@@ -205,33 +207,59 @@ void Turtle::displayFrame()
     // DRAW
     {
 
-        Shader * modelShader = &(shaders_[0]);
-        Shader * lightShader = &(shaders_[1]);
-        Model * object = &(models_[0]);
-        Model * light = &(models_[0]);
-
         // Camera thing
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)winWidth_ / (float)winHeight_, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(
+                    glm::radians(45.0f), (float)winWidth_ / (float)winHeight_, 0.1f, 100.0f);
 
         // Drawing model
         // Camera uniform
-        modelShader->use();
-        modelShader->setFloat("material.shininess", 32.0f);
+        shaders_["phong"]->use();
+        shaders_["phong"]->setFloat("material.shininess", 32.0f);
         // directional light
-        dirLights_.back().setUniforms(*modelShader, "dirLight");
+        dirLights_.back().setUniforms(*(shaders_["phong"].get()), "dirLight");
         // point light 1
         for(size_t i = 0; i < 4; ++i)
         {
-            pointLights_.at(i).setUniforms(*modelShader, "pointLights[" + std::to_string(i) + "]");
+            pointLights_.at(i).setUniforms(*(shaders_["phong"].get()), "pointLights[" + std::to_string(i) + "]");
         }
-        pointLights_.back().setUniforms(*modelShader, "spotLight");
+        pointLights_.back().setUniforms(*(shaders_["phong"].get()), "spotLight");
 
-        modelShader->setMat4("view", ocam_.viewMat());
-        modelShader->setVec3("viewPos", ocam_.pos);
-        modelShader->setMat4("projection", projection);
-        for(Model & m : models_)
+        shaders_["phong"]->setMat4("view", ocam_.viewMat());
+        shaders_["phong"]->setVec3("viewPos", ocam_.pos);
+        shaders_["phong"]->setMat4("projection", projection);
+
+        models_["boite"]->draw(*(shaders_["phong"].get()));
+
+        shaders_["light"]->use();
+        shaders_["light"]->setMat4("view", ocam_.viewMat());
+        shaders_["light"]->setMat4("projection", projection);
+        glm::vec3 CameraRight_worldspace = {ocam_.viewMat()[0][0], ocam_.viewMat()[1][0], ocam_.viewMat()[2][0]};
+        glm::vec3 CameraUp_worldspace = {ocam_.viewMat()[0][1], ocam_.viewMat()[1][1], ocam_.viewMat()[2][1]};
+        shaders_["light"]->setVec3("camUp", CameraUp_worldspace);
+        shaders_["light"]->setVec3("camRight", CameraRight_worldspace);
+
+        for(DirectionLight d : dirLights_)
         {
-            m.draw(*modelShader);
+            models_["light"]->translate_ = d.direction_;
+            shaders_["light"]->setVec3("fill", d.diffuse_);
+            shaders_["light"]->setVec3("billboardCenter", d.direction_);
+            models_["light"]->draw(*(shaders_["light"].get()));
+        }
+
+        for(PointLight p: pointLights_)
+        {
+            models_["light"]->translate_ = p.position_;
+            shaders_["light"]->setVec3("fill", p.diffuse_);
+            shaders_["light"]->setVec3("billboardCenter", p.position_);
+            models_["light"]->draw(*(shaders_["light"].get()));
+        }
+
+        for(SpotLight s: spotLights_)
+        {
+            models_["light"]->translate_ = s.position_;
+            shaders_["light"]->setVec3("fill", s.diffuse_);
+            shaders_["light"]->setVec3("billboardCenter", s.position_);
+            models_["light"]->draw(*(shaders_["light"].get()));
         }
     }
 }
@@ -284,8 +312,8 @@ void Turtle::displayUi()
             {
                 static int currentModel = 0;
                 std::string modelCombo = "";
-                for(size_t i = 0; i < models_.size(); i++)
-                    modelCombo += std::to_string(i) + '\0';
+                for(auto m : models_)
+                    modelCombo += m.first + '\0';
                 modelCombo += '\0';
                 ImGui::Combo("Edit Model", &currentModel, modelCombo.c_str());
 
@@ -293,8 +321,17 @@ void Turtle::displayUi()
                     ImGui::Text("No model selected");
                 else
                 {
-                    ImGui::Text("Model");
-                    models_.at(currentModel).ui();
+                    ImGui::Text("Model %d", currentModel);
+                    int i = 0;
+                    for(auto m : models_)
+                    {
+                        if(currentModel == i)
+                        {
+                            m.second->ui();
+                            break;
+                        }
+                        ++i;
+                    }
                 }
             }
 

@@ -15,11 +15,14 @@
 #include <assimp/material.h>
 #include <assimp/postprocess.h>
 
+class Turtle;
+
 /**
  * @brief A set of one or more mesh.
  */
 class Model{
 
+    friend Turtle;
 public:
 
     /**
@@ -54,6 +57,11 @@ private:
      * @brief The directory in which the object is stored
      */
     std::string directory;
+
+    /**
+     * @brief Tell if the object should be drawn or not
+     */
+    bool draw_ = true;
 
     /**
      * @brief Load the given model

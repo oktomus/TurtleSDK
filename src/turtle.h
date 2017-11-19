@@ -11,6 +11,9 @@
 #endif
 
 #include <vector>
+#include <map>
+#include <string>
+#include <memory>
 
 #include "shader.h"
 #include "model.h"
@@ -135,12 +138,12 @@ private:
     /**
      * @brief Shader of the scene
      */
-    std::vector<Shader> shaders_;
+    std::map<std::string, std::shared_ptr<Shader>> shaders_;
 
     /**
      * @brief Models of the scene
      */
-    std::vector<Model> models_;
+    std::map<std::string, std::shared_ptr<Model>> models_;
 
     /**
      * @brief Directionnal lights of the scene
