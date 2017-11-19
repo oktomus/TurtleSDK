@@ -35,23 +35,33 @@ public:
      * @brief Draw the model's meshes
      * @param shader    Shader used to draw
      */
-    void draw(const Shader & shader);
+    virtual void draw(const Shader & shader);
 
 
-    void ui();
+    virtual void ui();
 
-    glm::vec3 translate_;
-    glm::vec3 scale_;
-    glm::vec3 rotate_;
+    glm::vec3 translate_ = {0, 0, 0};
+    glm::vec3 scale_ = {1, 1, 1};
+    glm::vec3 rotate_ = {0, 0, 0};
 
     glm::mat4 transform_;
 
-private:
+protected:
+
+    Model();
+
+    /**
+     * @brief Load the given model
+     * @param path      Path to the model
+     */
+    void loadModel(const std::string & path);
 
     /**
      * @brief Meshes included in the model
      */
     std::vector<Mesh> meshes;
+
+private:
 
     /**
      * @brief The directory in which the object is stored
@@ -63,11 +73,6 @@ private:
      */
     bool draw_ = true;
 
-    /**
-     * @brief Load the given model
-     * @param path      Path to the model
-     */
-    void loadModel(const std::string & path);
 
     /**
      * @brief Create a mesh base on an assimp mesh node

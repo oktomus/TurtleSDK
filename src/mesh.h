@@ -31,6 +31,9 @@ struct Texture{
     std::string type;
 };
 
+class Model;
+class Ground;
+
 /**
  * @brief Mesh wrapper.
  *
@@ -38,6 +41,9 @@ struct Texture{
  */
 class Mesh
 {
+
+    friend Model;
+    friend Ground;
 
 public:
 
@@ -50,84 +56,22 @@ public:
      */
     void draw(const Shader & shader, const GLenum& mode = -1) const;
 
-    /**
-     * @brief Draw the points of the model
-     */
-    void drawPoints(const Shader & shader) const;
-
-    /**
-     * @brief Get the transform matrix of the model
-     * @return A 4 by 4 matrix
-     */
-    const glm::mat4& getTransform();
-
-    /**
-     * @brief Create a triangle with 3 points
-     * @return          The corresponding mesh
-     */
-    static Mesh triangle();
-
-    /**
-     * @brief Create one quad
-     * @return          The mesh
-     */
-    static Mesh quad();
-
 private:
 
     std::vector<Texture> textures_;
-
-    /**
-     * @brief Model's position
-     */
-    glm::vec3 _position;
-
-    /**
-     * @brief Model's rotation
-     */
-    glm::vec3 _rotation;
-
-    /**
-     * @brief Model's scale
-     */
-    glm::vec3 _scale;
-
-    /**
-     * @brief Model's transform matrix
-     */
-    glm::mat4 _transform;
-
-    /**
-     * @brief State of the transform matrix.
-     *
-     * If true, the transfrom matrix should be recalculated before
-     * returning it.
-     *
-     * Set to true each time the position, rotation or scale is
-     * changed.
-     */
-    bool _transformUpdate;
+    std::vector<Vertex> points_;
+    std::vector<GLuint> indices_;
 
     /**
      * @brief Mode used to draw.
      * GL_TRIANGLES, QUADS, ...
      */
-    GLenum _drawMode;
+    GLenum _drawMode = GL_TRIANGLES;
 
     /**
      * @brief Vertex Array Object id.
      */
     GLuint _vaoId;
-
-    /**
-     * @brief Number of point in the mesh.
-     */
-    GLuint _vertCount;
-
-    /**
-     * @brief Amount of indices in the EBO.
-     */
-    GLuint _indicesCount;
 
     /**
      * @brief Generate and allocate a buffer in the VAO
@@ -140,6 +84,8 @@ private:
             GLuint &idLocation,
             GLenum bufType,
             const std::vector<T>& data);
+
+    void init();
 
 
 };

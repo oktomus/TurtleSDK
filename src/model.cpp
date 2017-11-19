@@ -10,10 +10,6 @@
 
 Model::Model(const std::string &path)
 {
-    scale_ = {1, 1, 1};
-    translate_ = {0, 0, 0};
-    rotate_ = {0, 0, 0};
-
     loadModel(path);
 }
 
@@ -42,6 +38,11 @@ void Model::ui()
     ImGui::SliderFloat3("Model position", glm::value_ptr(translate_), -10.f, 10.f);
     ImGui::SliderFloat3("Model rotation", glm::value_ptr(rotate_), 0.f, 360.f);
     ImGui::SliderFloat3("Model size", glm::value_ptr(scale_), 0.f, 5.f);
+}
+
+Model::Model()
+{
+
 }
 
 void Model::loadModel(const std::string &path)

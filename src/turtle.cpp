@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "turtle.h"
+#include "ground.h"
 
 Turtle Turtle::instance_;
 
@@ -90,6 +91,7 @@ void Turtle::init()
     {
         fprintf(stdout, "SHADERS...");
         shaders_["phong"] = std::make_shared<Shader>("turtleLib/shaders/material");
+        shaders_["ground"] = std::make_shared<Shader>("turtleLib/shaders/ground");
         shaders_["light"] = std::make_shared<Shader>("turtleLib/shaders/flatBillBoardStill.vert",
                                                      "turtleLib/shaders/flatBillBoardStill.frag", "");
         fprintf(stdout, "OK\n");
@@ -99,6 +101,7 @@ void Turtle::init()
         //models.push_back(Model("turtleLib/models/broccoli/broccoli2.obj"));
         models_["boite"] = std::make_shared<Model>("turtleLib/models/woodenCase/case.obj");
         models_["light"] = std::make_shared<Model>("turtleLib/models/light/light.obj");
+        models_["ground"] = std::make_shared<Ground>();
 
         // Lights
         dirLights_.push_back(DirectionLight());
@@ -229,6 +232,24 @@ void Turtle::displayFrame()
         shaders_["phong"]->setMat4("projection", projection);
 
         models_["boite"]->draw(*(shaders_["phong"].get()));
+
+        shaders_["ground"]->use();
+        shaders_["ground"]->use();
+        shaders_["ground"]->setFloat("material.shininess", 32.0f);
+        // directional light
+        dirLights_.back().setUniforms(*(shaders_["ground"].get()), "dirLight");
+        // point light 1
+        for(size_t i = 0; i < 4; ++i)
+        {
+            pointLights_.at(i).setUniforms(*(shaders_["ground"].get()), "pointLights[" + std::to_string(i) + "]");
+        }
+        pointLights_.back().setUniforms(*(shaders_["ground"].get()), "spotLight");
+
+        shaders_["ground"]->setVec3("viewPos", ocam_.pos);
+        shaders_["ground"]->setMat4("view", ocam_.viewMat());
+        shaders_["ground"]->setMat4("projection", projection);
+
+        models_["ground"]->draw(*(shaders_["ground"].get()));
 
         shaders_["light"]->use();
         shaders_["light"]->setMat4("view", ocam_.viewMat());
