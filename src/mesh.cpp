@@ -48,14 +48,23 @@ void Mesh::draw(const Shader & shader, const GLenum& mode) const
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void Mesh::updateDataBuffer()
+{
+    glBindVertexArray(_vaoId);
+    glBindBuffer(GL_ARRAY_BUFFER, _vboId);
+    glBufferData(GL_ARRAY_BUFFER, points_.size() * sizeof(Vertex),
+                 points_.data(), GL_STATIC_DRAW);
+    glBindVertexArray(0);
+}
+
 void Mesh::init()
 {
     // Most important object
     glGenVertexArrays( 1, &_vaoId );
     glBindVertexArray(_vaoId);
 
-    GLuint vbo, ebo;
-    addBuffer(vbo, GL_ARRAY_BUFFER, points_);
+    GLuint ebo;
+    addBuffer(_vboId, GL_ARRAY_BUFFER, points_);
     addBuffer(ebo, GL_ELEMENT_ARRAY_BUFFER, indices_);
 
     // positions

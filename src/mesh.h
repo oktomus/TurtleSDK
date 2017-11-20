@@ -32,7 +32,7 @@ struct Texture{
 };
 
 class Model;
-class Ground;
+class Terrain;
 
 /**
  * @brief Mesh wrapper.
@@ -43,7 +43,7 @@ class Mesh
 {
 
     friend Model;
-    friend Ground;
+    friend Terrain;
 
 public:
 
@@ -55,6 +55,11 @@ public:
      * @brief Draw the model
      */
     void draw(const Shader & shader, const GLenum& mode = -1) const;
+
+    /**
+     * @brief Update the data buffer
+     */
+    void updateDataBuffer();
 
 private:
 
@@ -72,6 +77,11 @@ private:
      * @brief Vertex Array Object id.
      */
     GLuint _vaoId;
+
+    /**
+     * @brief Vertex buffer object id
+     */
+    GLuint _vboId;
 
     /**
      * @brief Generate and allocate a buffer in the VAO

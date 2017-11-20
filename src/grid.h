@@ -25,6 +25,18 @@ public:
      */
     std::vector<unsigned int> indices;
 
+    /**
+     * @brief Get the size
+     * @return
+     */
+    float size() const { return size_; }
+
+    /**
+     * @brief Get the slicing
+     * @return
+     */
+    unsigned int slicing() const { return slicing_; }
+
 private:
 
     /**

@@ -4,6 +4,7 @@ build
 imgui.ini
 
 distant/stb
+distant/web
 # CPP
 *.cbp
 

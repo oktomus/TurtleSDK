@@ -8,13 +8,13 @@ set(GLFW_ROOT "${CMAKE_SOURCE_DIR}/distant/glfw")
 set(GL3W_ROOT "${CMAKE_SOURCE_DIR}/distant/gl3w")
 set(GLM_ROOT "${CMAKE_SOURCE_DIR}/distant/glm")
 set(IMGUI_ROOT "${CMAKE_SOURCE_DIR}/distant/imgui")
-set(STB_ROOT "${CMAKE_SOURCE_DIR}/distant/stb")
+set(WEB_ROOT "${CMAKE_SOURCE_DIR}/distant/web")
 
 set(GLFW_INC "${GLFW_ROOT}/include")
 set(GL3W_INC "${GL3W_ROOT}/include")
 set(GLM_INC "${GLM_ROOT}")
 set(IMGUI_INC "${IMGUI_ROOT}")
-set(STB_INC "${STB_ROOT}")
+set(WEB_INC "${WEB_ROOT}")
 
 set(GL3W_SRC "${GL3W_ROOT}/src/gl3w.c")
 
@@ -27,12 +27,24 @@ if (NOT EXISTS ${GL3W_INC} OR
         execute_process(COMMAND git submodule update WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
-if (NOT EXISTS ${STB_ROOT}/stb_image.h)
-    message(STATUS "Downloading required std headers")
+if (NOT EXISTS ${WEB_ROOT}/stb_image.h OR
+        NOT EXISTS ${WEB_ROOT}/PerlinNoise.h OR
+        NOT EXISTS ${WEB_ROOT}/PerlinNoise.cpp)
+    message(STATUS "Downloading required web files")
     file(
         DOWNLOAD
         "https://raw.githubusercontent.com/nothings/stb/master/stb_image.h"
-        ${STB_ROOT}/stb_image.h
+        ${WEB_ROOT}/stb_image.h
+        )
+    file(
+        DOWNLOAD
+        "https://raw.githubusercontent.com/sol-prog/Perlin_Noise/master/PerlinNoise.cpp"
+        ${WEB_ROOT}/PerlinNoise.cpp
+        )
+    file(
+        DOWNLOAD
+        "https://raw.githubusercontent.com/sol-prog/Perlin_Noise/master/PerlinNoise.h"
+        ${WEB_ROOT}/PerlinNoise.h
         )
 endif()
 
@@ -52,6 +64,7 @@ if (NOT EXISTS ${IMGUI_ROOT}/imgui_impl_glfw_gl3.cpp OR
 endif()
 
 file (GLOB IMGUI_SRC "${IMGUI_ROOT}/*.cpp")
+file (GLOB WEB_SRC "${WEB_ROOT}/*.cpp")
 
 # Compile GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -67,7 +80,7 @@ include_directories(
         ${GLM_INC}
         ${OPENGL_INCLUDE_DIR}
         ${IMGUI_INC}
-        ${STB_INC}
+        ${WEB_INC}
 )
 
 ##################################################################################
@@ -105,6 +118,7 @@ add_executable(
     ${headers}
     ${GL3W_SRC}
     ${IMGUI_SRC}
+    ${WEB_SRC}
     )
 
 target_link_libraries(
