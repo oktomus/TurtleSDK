@@ -2,7 +2,8 @@
 #include <iostream>
 
 #include "turtle.h"
-#include "ground.h"
+#include "grid.h"
+#include "terrain.h"
 
 Turtle Turtle::instance_;
 
@@ -92,6 +93,7 @@ void Turtle::init()
         fprintf(stdout, "SHADERS...");
         shaders_["phong"] = std::make_shared<Shader>("turtleLib/shaders/material");
         shaders_["ground"] = std::make_shared<Shader>("turtleLib/shaders/ground");
+        shaders_["solid"] = std::make_shared<Shader>("turtleLib/shaders/solid");
         shaders_["light"] = std::make_shared<Shader>("turtleLib/shaders/flatBillBoardStill.vert",
                                                      "turtleLib/shaders/flatBillBoardStill.frag", "");
         fprintf(stdout, "OK\n");
@@ -101,7 +103,8 @@ void Turtle::init()
         //models.push_back(Model("turtleLib/models/broccoli/broccoli2.obj"));
         models_["boite"] = std::make_shared<Model>("turtleLib/models/woodenCase/case.obj");
         models_["light"] = std::make_shared<Model>("turtleLib/models/light/light.obj");
-        models_["ground"] = std::make_shared<Ground>();
+        //models_["ground"] = std::make_shared<Ground>();
+        models_["ground"] = std::make_shared<Terrain>(GridGenerator::flatGrid(50, 20));
 
         // Lights
         dirLights_.push_back(DirectionLight());
@@ -197,9 +200,11 @@ void Turtle::displayFrame()
         glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
         //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        glPolygonMode( GL_FRONT, GL_FILL );
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        if(drawLine_)
+            glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        else
+            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
 
     // STATE ACT
@@ -232,7 +237,12 @@ void Turtle::displayFrame()
         shaders_["phong"]->setMat4("projection", projection);
 
         models_["boite"]->draw(*(shaders_["phong"].get()));
+        shaders_["solid"]->use();
+        shaders_["solid"]->setMat4("view", ocam_.viewMat());
+        shaders_["solid"]->setMat4("projection", projection);
+        models_["ground"]->draw(*(shaders_["solid"].get()));
 
+        /*
         shaders_["ground"]->use();
         shaders_["ground"]->use();
         shaders_["ground"]->setFloat("material.shininess", 32.0f);
@@ -250,7 +260,7 @@ void Turtle::displayFrame()
         shaders_["ground"]->setMat4("projection", projection);
 
         models_["ground"]->draw(*(shaders_["ground"].get()));
-
+*/
         shaders_["light"]->use();
         shaders_["light"]->setMat4("view", ocam_.viewMat());
         shaders_["light"]->setMat4("projection", projection);
@@ -295,6 +305,7 @@ void Turtle::displayUi()
             if (ImGui::BeginMenu("Turtle"))
             {
                 ImGui::MenuItem("Disable viewport events", "", &disableViewportEvents_);
+                ImGui::MenuItem("Wireframe mode", "", &drawLine_);
                 static bool should_quit = false;
                 ImGui::MenuItem("Quit", "Escape", &should_quit);
                 if(should_quit) glfwSetWindowShouldClose(window_, true);

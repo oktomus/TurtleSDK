@@ -186,6 +186,11 @@ private:
     bool disableViewportEvents_ = false;
 
     /**
+     * @brief Draw line if true, else draw faces
+     */
+    bool drawLine_ = false;
+
+    /**
      * @brief Width of the window
      */
     int winWidth_ = 1280;
