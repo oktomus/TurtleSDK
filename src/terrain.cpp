@@ -25,6 +25,13 @@ Terrain::Terrain(const Grid & pGrid)
 
 }
 
+void Terrain::draw(const Shader & shader)
+{
+    glm::mat4 tr;
+    shader.setMat4("model", tr);
+    Model::draw(shader);
+}
+
 void Terrain::randomize()
 {
     Terrain::randomize(meshes.at(0).points_, slicing_);

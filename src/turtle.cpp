@@ -103,7 +103,9 @@ void Turtle::init()
     {
         fprintf(stdout, "OBJECTS...");
         models_.push_back(std::make_shared<Model>("turtleLib/models/woodenCase/case.obj"));
-        lightDisplay_ = std::make_shared<Model>("turtleLib/models/light/light.obj");
+        objects_.push_back(Object(models_.back()));
+        models_.push_back(std::make_shared<Model>("turtleLib/models/light/light.obj"));
+        lightDisplay_ = Object(models_.back());
         ground_ = std::make_shared<Terrain>(GridGenerator::flatGrid(50, 20));
 
         // Lights
@@ -230,9 +232,9 @@ void Turtle::displayFrame()
         shaders_["phong"]->setMat4("projection", projMat_);
         shaders_["phong"]->setBool("noTexture", false);
 
-        for(auto m : models_)
+        for(auto o : objects_)
         {
-            m->draw(*(shaders_["phong"].get()));
+            o.draw(*(shaders_["phong"].get()));
         }
         shaders_["phong"]->setBool("noTexture", true);
         ground_->draw(*(shaders_["phong"].get()));
@@ -253,26 +255,26 @@ void Turtle::displayLights()
 
     for(DirectionLight d : dirLights_)
     {
-        lightDisplay_->translate_ = d.direction_;
+        lightDisplay_.translate_ = d.direction_;
         shaders_["light"]->setVec3("fill", d.diffuse_);
         shaders_["light"]->setVec3("billboardCenter", d.direction_);
-        lightDisplay_->draw(*(shaders_["light"].get()));
+        lightDisplay_.draw(*(shaders_["light"].get()));
     }
 
     for(PointLight p: pointLights_)
     {
-        lightDisplay_->translate_ = p.position_;
+        lightDisplay_.translate_ = p.position_;
         shaders_["light"]->setVec3("fill", p.diffuse_);
         shaders_["light"]->setVec3("billboardCenter", p.position_);
-        lightDisplay_->draw(*(shaders_["light"].get()));
+        lightDisplay_.draw(*(shaders_["light"].get()));
     }
 
     for(SpotLight s: spotLights_)
     {
-        lightDisplay_->translate_ = s.position_;
+        lightDisplay_.translate_ = s.position_;
         shaders_["light"]->setVec3("fill", s.diffuse_);
         shaders_["light"]->setVec3("billboardCenter", s.position_);
-        lightDisplay_->draw(*(shaders_["light"].get()));
+        lightDisplay_.draw(*(shaders_["light"].get()));
     }
 
 }
@@ -294,7 +296,7 @@ void Turtle::displayUi()
             if (ImGui::BeginMenu("Windows"))
             {
                 ImGui::MenuItem("Debug", "", &debug_window_);
-                ImGui::MenuItem("Objects", "", &objects_window_);
+                ImGui::MenuItem("Objects", "", &scene_window);
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
@@ -311,9 +313,9 @@ void Turtle::displayUi()
 
         }
 
-        if(objects_window_)
+        if(scene_window)
         {
-            ImGui::Begin("Objects", &objects_window_);
+            ImGui::Begin("Scene", &scene_window);
 
             ImGui::Checkbox("Wireframe mode", &drawLine_);
             ImGui::Checkbox("Display lights in the viewport", &drawLights_);
@@ -336,24 +338,21 @@ void Turtle::displayUi()
                 }
             }
 
-            if(ImGui::CollapsingHeader("Models"))
+            if(ImGui::CollapsingHeader("Objects"))
             {
                 static int currentModel = 0;
                 std::string modelCombo = "";
-                for(size_t i = 0; i < models_.size(); i++)
+                for(size_t i = 0; i < objects_.size(); i++)
                 {
                     modelCombo += std::to_string(i) + '\0';
                 }
                 modelCombo += '\0';
-                ImGui::Combo("Edit Model", &currentModel, modelCombo.c_str());
+                ImGui::Combo("Edit Object", &currentModel, modelCombo.c_str());
 
-                if(currentModel == -1)
-                    ImGui::Text("No model selected");
-                else
+                objects_.at(currentModel).ui();
+                if (ImGui::Button("Create a new instance"))
                 {
-                    ImGui::Text("Model %d", currentModel);
-
-                    models_.at(currentModel)->ui();
+                    objects_.push_back(objects_.at(currentModel));
                 }
             }
 

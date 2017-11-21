@@ -17,6 +17,7 @@
 
 #include "shader.h"
 #include "model.h"
+#include "object.h"
 #include "terrain.h"
 #include "orbitCamera.h"
 #include "light.h"
@@ -152,6 +153,11 @@ private:
     std::vector<std::shared_ptr<Model>> models_;
 
     /**
+      * @brief Objects of the scene
+      */
+    std::vector<Object> objects_;
+
+    /**
       * @brief Ground of the world
       */
     std::shared_ptr<Terrain> ground_;
@@ -159,7 +165,7 @@ private:
     /**
       * @brief Model used to display lights in the viewport
       */
-    std::shared_ptr<Model> lightDisplay_;
+    Object lightDisplay_;
 
     /**
      * @brief Directionnal lights of the scene
@@ -234,7 +240,7 @@ private:
     // Imgui related
 
     bool debug_window_ = true;
-    bool objects_window_ = true;
+    bool scene_window = true;
 
 };
 

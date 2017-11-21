@@ -16,6 +16,7 @@
 #include <assimp/postprocess.h>
 
 class Turtle;
+class Object;
 
 /**
  * @brief A set of one or more mesh.
@@ -23,6 +24,7 @@ class Turtle;
 class Model{
 
     friend Turtle;
+    friend Object;
 public:
 
     /**
@@ -40,11 +42,6 @@ public:
 
     virtual void ui();
 
-    glm::vec3 translate_ = {0, 0, 0};
-    glm::vec3 scale_ = {1, 1, 1};
-    glm::vec3 rotate_ = {0, 0, 0};
-
-    glm::mat4 transform_;
 
 protected:
 
@@ -72,7 +69,6 @@ private:
      * @brief Tell if the object should be drawn or not
      */
     bool draw_ = true;
-
 
     /**
      * @brief Create a mesh base on an assimp mesh node

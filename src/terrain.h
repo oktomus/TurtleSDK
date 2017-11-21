@@ -18,6 +18,12 @@ public:
     Terrain(const Grid&);
 
     /**
+      * @brief Draw the terrain
+      * This override set the model mat to nothing
+      */
+    void draw(const Shader & shader);
+
+    /**
      * @brief Randomize the height of the terrain using a perlin noise
      */
     void randomize();
