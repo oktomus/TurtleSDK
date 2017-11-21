@@ -63,4 +63,6 @@ void Terrain::randomize(std::vector<Vertex> &pPoints, unsigned int pSlicing)
                     10.4
                     ) * 2;
     }
+
+
 }
