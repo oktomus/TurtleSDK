@@ -103,8 +103,7 @@ void Turtle::init()
     }
     {
         fprintf(stdout, "OBJECTS...");
-        //models.push_back(Model("turtleLib/models/broccoli/broccoli2.obj"));
-        models_["boite"] = std::make_shared<Model>("turtleLib/models/woodenCase/case.obj");
+        models_.push_back(std::make_shared<Model>("turtleLib/models/woodenCase/case.obj"));
         lightDisplay_ = std::make_shared<Model>("turtleLib/models/light/light.obj");
         ground_ = std::make_shared<Terrain>(GridGenerator::flatGrid(50, 20));
 
@@ -234,7 +233,11 @@ void Turtle::displayFrame()
         shaders_["phong"]->setVec3("viewPos", ocam_.pos);
         shaders_["phong"]->setMat4("projection", projMat_);
 
-        models_["boite"]->draw(*(shaders_["phong"].get()));
+        for(auto m : models_)
+        {
+            m->draw(*(shaders_["phong"].get()));
+        }
+
         shaders_["solid"]->use();
         shaders_["solid"]->setMat4("view", ocam_.viewMat());
         shaders_["solid"]->setMat4("projection", projMat_);
@@ -363,8 +366,10 @@ void Turtle::displayUi()
             {
                 static int currentModel = 0;
                 std::string modelCombo = "";
-                for(auto m : models_)
-                    modelCombo += m.first + '\0';
+                for(size_t i = 0; i < models_.size(); i++)
+                {
+                    modelCombo += std::to_string(i) + '\0';
+                }
                 modelCombo += '\0';
                 ImGui::Combo("Edit Model", &currentModel, modelCombo.c_str());
 
@@ -373,16 +378,8 @@ void Turtle::displayUi()
                 else
                 {
                     ImGui::Text("Model %d", currentModel);
-                    int i = 0;
-                    for(auto m : models_)
-                    {
-                        if(currentModel == i)
-                        {
-                            m.second->ui();
-                            break;
-                        }
-                        ++i;
-                    }
+
+                    models_.at(currentModel)->ui();
                 }
             }
 

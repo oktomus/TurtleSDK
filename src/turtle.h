@@ -149,7 +149,7 @@ private:
     /**
      * @brief Models of the scene
      */
-    std::map<std::string, std::shared_ptr<Model>> models_;
+    std::vector<std::shared_ptr<Model>> models_;
 
     /**
       * @brief Ground of the world
