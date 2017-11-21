@@ -17,6 +17,7 @@
 
 #include "shader.h"
 #include "model.h"
+#include "terrain.h"
 #include "orbitCamera.h"
 #include "light.h"
 
@@ -57,6 +58,11 @@ public:
      * @brief Display of frame
      */
     void displayFrame();
+
+    /**
+     * @brief Display world lights
+     */
+    void displayLights();
 
     /**
      * @brief Display the ui.
@@ -146,6 +152,21 @@ private:
     std::map<std::string, std::shared_ptr<Model>> models_;
 
     /**
+      * @brief Ground of the world
+      */
+    std::shared_ptr<Terrain> ground_;
+
+    /**
+      * @brief Model used to display lights in the viewport
+      */
+    std::shared_ptr<Model> lightDisplay_;
+
+    /**
+     * @brief Shader used to display the light objects in the viewport
+     */
+    std::shared_ptr<Shader> lightDisplayShader_;
+
+    /**
      * @brief Directionnal lights of the scene
      */
     std::vector<DirectionLight> dirLights_;
@@ -164,6 +185,11 @@ private:
      * @brief Clear color
      */
     glm::vec4 clearColor_ = glm::vec4(0.1, 0.1, 0.1, 0);
+
+    /**
+      * @brief Projection matrix
+      */
+    glm::mat4 projMat_;
 
     /**
      * @brief Time spent between current and last frame

@@ -55,6 +55,7 @@ void Turtle::init()
         glfwSetMouseButtonCallback(window_, this->mouseButtonCallback);
         glfwSetKeyCallback(window_, this->keyCallback);
         glfwSetCharCallback(window_, this->charCallback);
+
         fprintf(stdout, "OK\n");
     }
 
@@ -80,6 +81,7 @@ void Turtle::init()
     {
         fprintf(stdout, "VIEWPORT...");
         glViewport(0, 0, winWidth_, winHeight_);
+        framebufferSizeCallback(window_, winWidth_, winHeight_);
         fprintf(stdout, "OK\n");
     }
 
@@ -94,17 +96,17 @@ void Turtle::init()
         shaders_["phong"] = std::make_shared<Shader>("turtleLib/shaders/material");
         shaders_["ground"] = std::make_shared<Shader>("turtleLib/shaders/ground");
         shaders_["solid"] = std::make_shared<Shader>("turtleLib/shaders/solid");
-        shaders_["light"] = std::make_shared<Shader>("turtleLib/shaders/flatBillBoardStill.vert",
+        lightDisplayShader_ = std::make_shared<Shader>("turtleLib/shaders/flatBillBoardStill.vert",
                                                      "turtleLib/shaders/flatBillBoardStill.frag", "");
+
         fprintf(stdout, "OK\n");
     }
     {
         fprintf(stdout, "OBJECTS...");
         //models.push_back(Model("turtleLib/models/broccoli/broccoli2.obj"));
         models_["boite"] = std::make_shared<Model>("turtleLib/models/woodenCase/case.obj");
-        models_["light"] = std::make_shared<Model>("turtleLib/models/light/light.obj");
-        //models_["ground"] = std::make_shared<Ground>();
-        models_["ground"] = std::make_shared<Terrain>(GridGenerator::flatGrid(50, 20));
+        lightDisplay_ = std::make_shared<Model>("turtleLib/models/light/light.obj");
+        ground_ = std::make_shared<Terrain>(GridGenerator::flatGrid(50, 20));
 
         // Lights
         dirLights_.push_back(DirectionLight());
@@ -215,10 +217,6 @@ void Turtle::displayFrame()
     // DRAW
     {
 
-        // Camera thing
-        glm::mat4 projection = glm::perspective(
-                    glm::radians(45.0f), (float)winWidth_ / (float)winHeight_, 0.1f, 100.0f);
-
         // Drawing model
         // Camera uniform
         shaders_["phong"]->use();
@@ -234,13 +232,15 @@ void Turtle::displayFrame()
 
         shaders_["phong"]->setMat4("view", ocam_.viewMat());
         shaders_["phong"]->setVec3("viewPos", ocam_.pos);
-        shaders_["phong"]->setMat4("projection", projection);
+        shaders_["phong"]->setMat4("projection", projMat_);
 
         models_["boite"]->draw(*(shaders_["phong"].get()));
         shaders_["solid"]->use();
         shaders_["solid"]->setMat4("view", ocam_.viewMat());
-        shaders_["solid"]->setMat4("projection", projection);
-        models_["ground"]->draw(*(shaders_["solid"].get()));
+        shaders_["solid"]->setMat4("projection", projMat_);
+        ground_->draw(*(shaders_["solid"].get()));
+
+        displayLights();
 
         /*
         shaders_["ground"]->use();
@@ -261,38 +261,43 @@ void Turtle::displayFrame()
 
         models_["ground"]->draw(*(shaders_["ground"].get()));
 */
-        shaders_["light"]->use();
-        shaders_["light"]->setMat4("view", ocam_.viewMat());
-        shaders_["light"]->setMat4("projection", projection);
-        glm::vec3 CameraRight_worldspace = {ocam_.viewMat()[0][0], ocam_.viewMat()[1][0], ocam_.viewMat()[2][0]};
-        glm::vec3 CameraUp_worldspace = {ocam_.viewMat()[0][1], ocam_.viewMat()[1][1], ocam_.viewMat()[2][1]};
-        shaders_["light"]->setVec3("camUp", CameraUp_worldspace);
-        shaders_["light"]->setVec3("camRight", CameraRight_worldspace);
-
-        for(DirectionLight d : dirLights_)
-        {
-            models_["light"]->translate_ = d.direction_;
-            shaders_["light"]->setVec3("fill", d.diffuse_);
-            shaders_["light"]->setVec3("billboardCenter", d.direction_);
-            models_["light"]->draw(*(shaders_["light"].get()));
-        }
-
-        for(PointLight p: pointLights_)
-        {
-            models_["light"]->translate_ = p.position_;
-            shaders_["light"]->setVec3("fill", p.diffuse_);
-            shaders_["light"]->setVec3("billboardCenter", p.position_);
-            models_["light"]->draw(*(shaders_["light"].get()));
-        }
-
-        for(SpotLight s: spotLights_)
-        {
-            models_["light"]->translate_ = s.position_;
-            shaders_["light"]->setVec3("fill", s.diffuse_);
-            shaders_["light"]->setVec3("billboardCenter", s.position_);
-            models_["light"]->draw(*(shaders_["light"].get()));
-        }
     }
+}
+
+void Turtle::displayLights()
+{
+    lightDisplayShader_->use();
+    lightDisplayShader_->setMat4("view", ocam_.viewMat());
+    lightDisplayShader_->setMat4("projection", projMat_);
+    glm::vec3 CameraRight_worldspace = {ocam_.viewMat()[0][0], ocam_.viewMat()[1][0], ocam_.viewMat()[2][0]};
+    glm::vec3 CameraUp_worldspace = {ocam_.viewMat()[0][1], ocam_.viewMat()[1][1], ocam_.viewMat()[2][1]};
+    lightDisplayShader_->setVec3("camUp", CameraUp_worldspace);
+    lightDisplayShader_->setVec3("camRight", CameraRight_worldspace);
+
+    for(DirectionLight d : dirLights_)
+    {
+        lightDisplay_->translate_ = d.direction_;
+        lightDisplayShader_->setVec3("fill", d.diffuse_);
+        lightDisplayShader_->setVec3("billboardCenter", d.direction_);
+        lightDisplay_->draw(*(lightDisplayShader_.get()));
+    }
+
+    for(PointLight p: pointLights_)
+    {
+        lightDisplay_->translate_ = p.position_;
+        lightDisplayShader_->setVec3("fill", p.diffuse_);
+        lightDisplayShader_->setVec3("billboardCenter", p.position_);
+        lightDisplay_->draw(*(lightDisplayShader_.get()));
+    }
+
+    for(SpotLight s: spotLights_)
+    {
+        lightDisplay_->translate_ = s.position_;
+        lightDisplayShader_->setVec3("fill", s.diffuse_);
+        lightDisplayShader_->setVec3("billboardCenter", s.position_);
+        lightDisplay_->draw(*(lightDisplayShader_.get()));
+    }
+
 }
 
 void Turtle::displayUi()
@@ -413,6 +418,8 @@ void Turtle::framebufferSizeCallback(GLFWwindow *, int pwidth, int pheight)
     glViewport(0, 0, pwidth, pheight);
     tu.winWidth_ = pwidth;
     tu.winHeight_ = pheight;
+    tu.projMat_ = glm::perspective(
+            glm::radians(45.0f), (float)pwidth / (float)pheight, 0.1f, 1000.0f);
 }
 
 void Turtle::scrollCallback(GLFWwindow *, double xoffset, double yoffset)
