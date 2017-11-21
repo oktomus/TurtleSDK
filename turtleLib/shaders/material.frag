@@ -72,8 +72,20 @@ void main( void )
 {
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 color = vec3(texture(material.texture_diffuse1, TexCoords));
-    vec3 specFactor = vec3(texture(material.texture_specular1, TexCoords));
+
+    vec3 color;
+    vec3 specFactor;
+
+    if(noTexture)
+    {
+       color = vec3(1.0, 0, 0); 
+       specFactor = vec3(1);
+    }
+    else
+    {
+        color = vec3(texture(material.texture_diffuse1, TexCoords));
+        specFactor = vec3(texture(material.texture_specular1, TexCoords));
+    }
 
     // Dir light first
     vec3 result = processDirLight(dirLight, norm, viewDir, color, specFactor);

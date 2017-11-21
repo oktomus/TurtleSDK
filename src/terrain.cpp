@@ -45,7 +45,7 @@ void Terrain::randomize(std::vector<Vertex> &pPoints, unsigned int pSlicing)
 
     for(size_t i = 0; i < pPoints.size(); ++i)
     {
-        pPoints.at(i).Position.y = -5 + 15 *
+        pPoints.at(i).Position.y = -9 + 15 *
                 pn.noise(
                     pPoints.at(i).Position.x / 20,
                     pPoints.at(i).Position.z / 20,

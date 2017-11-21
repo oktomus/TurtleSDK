@@ -94,9 +94,8 @@ void Turtle::init()
     {
         fprintf(stdout, "SHADERS...");
         shaders_["phong"] = std::make_shared<Shader>("turtleLib/shaders/material");
-        shaders_["ground"] = std::make_shared<Shader>("turtleLib/shaders/ground");
         shaders_["solid"] = std::make_shared<Shader>("turtleLib/shaders/solid");
-        lightDisplayShader_ = std::make_shared<Shader>("turtleLib/shaders/flatBillBoardStill.vert",
+        shaders_["light"] = std::make_shared<Shader>("turtleLib/shaders/flatBillBoardStill.vert",
                                                      "turtleLib/shaders/flatBillBoardStill.frag", "");
 
         fprintf(stdout, "OK\n");
@@ -216,13 +215,10 @@ void Turtle::displayFrame()
     // DRAW
     {
 
-        // Drawing model
-        // Camera uniform
         shaders_["phong"]->use();
         shaders_["phong"]->setFloat("material.shininess", 32.0f);
-        // directional light
+
         dirLights_.back().setUniforms(*(shaders_["phong"].get()), "dirLight");
-        // point light 1
         for(size_t i = 0; i < 4; ++i)
         {
             pointLights_.at(i).setUniforms(*(shaders_["phong"].get()), "pointLights[" + std::to_string(i) + "]");
@@ -232,73 +228,51 @@ void Turtle::displayFrame()
         shaders_["phong"]->setMat4("view", ocam_.viewMat());
         shaders_["phong"]->setVec3("viewPos", ocam_.pos);
         shaders_["phong"]->setMat4("projection", projMat_);
+        shaders_["phong"]->setBool("noTexture", false);
 
         for(auto m : models_)
         {
             m->draw(*(shaders_["phong"].get()));
         }
-
-        shaders_["solid"]->use();
-        shaders_["solid"]->setMat4("view", ocam_.viewMat());
-        shaders_["solid"]->setMat4("projection", projMat_);
-        ground_->draw(*(shaders_["solid"].get()));
+        shaders_["phong"]->setBool("noTexture", true);
+        ground_->draw(*(shaders_["phong"].get()));
 
         if(drawLights_) displayLights();
-
-        /*
-        shaders_["ground"]->use();
-        shaders_["ground"]->use();
-        shaders_["ground"]->setFloat("material.shininess", 32.0f);
-        // directional light
-        dirLights_.back().setUniforms(*(shaders_["ground"].get()), "dirLight");
-        // point light 1
-        for(size_t i = 0; i < 4; ++i)
-        {
-            pointLights_.at(i).setUniforms(*(shaders_["ground"].get()), "pointLights[" + std::to_string(i) + "]");
-        }
-        pointLights_.back().setUniforms(*(shaders_["ground"].get()), "spotLight");
-
-        shaders_["ground"]->setVec3("viewPos", ocam_.pos);
-        shaders_["ground"]->setMat4("view", ocam_.viewMat());
-        shaders_["ground"]->setMat4("projection", projection);
-
-        models_["ground"]->draw(*(shaders_["ground"].get()));
-*/
     }
 }
 
 void Turtle::displayLights()
 {
-    lightDisplayShader_->use();
-    lightDisplayShader_->setMat4("view", ocam_.viewMat());
-    lightDisplayShader_->setMat4("projection", projMat_);
+    shaders_["light"]->use();
+    shaders_["light"]->setMat4("view", ocam_.viewMat());
+    shaders_["light"]->setMat4("projection", projMat_);
     glm::vec3 CameraRight_worldspace = {ocam_.viewMat()[0][0], ocam_.viewMat()[1][0], ocam_.viewMat()[2][0]};
     glm::vec3 CameraUp_worldspace = {ocam_.viewMat()[0][1], ocam_.viewMat()[1][1], ocam_.viewMat()[2][1]};
-    lightDisplayShader_->setVec3("camUp", CameraUp_worldspace);
-    lightDisplayShader_->setVec3("camRight", CameraRight_worldspace);
+    shaders_["light"]->setVec3("camUp", CameraUp_worldspace);
+    shaders_["light"]->setVec3("camRight", CameraRight_worldspace);
 
     for(DirectionLight d : dirLights_)
     {
         lightDisplay_->translate_ = d.direction_;
-        lightDisplayShader_->setVec3("fill", d.diffuse_);
-        lightDisplayShader_->setVec3("billboardCenter", d.direction_);
-        lightDisplay_->draw(*(lightDisplayShader_.get()));
+        shaders_["light"]->setVec3("fill", d.diffuse_);
+        shaders_["light"]->setVec3("billboardCenter", d.direction_);
+        lightDisplay_->draw(*(shaders_["light"].get()));
     }
 
     for(PointLight p: pointLights_)
     {
         lightDisplay_->translate_ = p.position_;
-        lightDisplayShader_->setVec3("fill", p.diffuse_);
-        lightDisplayShader_->setVec3("billboardCenter", p.position_);
-        lightDisplay_->draw(*(lightDisplayShader_.get()));
+        shaders_["light"]->setVec3("fill", p.diffuse_);
+        shaders_["light"]->setVec3("billboardCenter", p.position_);
+        lightDisplay_->draw(*(shaders_["light"].get()));
     }
 
     for(SpotLight s: spotLights_)
     {
         lightDisplay_->translate_ = s.position_;
-        lightDisplayShader_->setVec3("fill", s.diffuse_);
-        lightDisplayShader_->setVec3("billboardCenter", s.position_);
-        lightDisplay_->draw(*(lightDisplayShader_.get()));
+        shaders_["light"]->setVec3("fill", s.diffuse_);
+        shaders_["light"]->setVec3("billboardCenter", s.position_);
+        lightDisplay_->draw(*(shaders_["light"].get()));
     }
 
 }

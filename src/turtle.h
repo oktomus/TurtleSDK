@@ -162,11 +162,6 @@ private:
     std::shared_ptr<Model> lightDisplay_;
 
     /**
-     * @brief Shader used to display the light objects in the viewport
-     */
-    std::shared_ptr<Shader> lightDisplayShader_;
-
-    /**
      * @brief Directionnal lights of the scene
      */
     std::vector<DirectionLight> dirLights_;
