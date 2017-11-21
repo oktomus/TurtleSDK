@@ -217,6 +217,11 @@ private:
     bool drawLine_ = false;
 
     /**
+     * @brief Draw lights in the viewport if true
+     */
+    bool drawLights_ = true;
+
+    /**
      * @brief Width of the window
      */
     int winWidth_ = 1280;

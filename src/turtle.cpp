@@ -240,7 +240,7 @@ void Turtle::displayFrame()
         shaders_["solid"]->setMat4("projection", projMat_);
         ground_->draw(*(shaders_["solid"].get()));
 
-        displayLights();
+        if(drawLights_) displayLights();
 
         /*
         shaders_["ground"]->use();
@@ -309,8 +309,6 @@ void Turtle::displayUi()
         {
             if (ImGui::BeginMenu("Turtle"))
             {
-                ImGui::MenuItem("Disable viewport events", "", &disableViewportEvents_);
-                ImGui::MenuItem("Wireframe mode", "", &drawLine_);
                 static bool should_quit = false;
                 ImGui::MenuItem("Quit", "Escape", &should_quit);
                 if(should_quit) glfwSetWindowShouldClose(window_, true);
@@ -329,6 +327,7 @@ void Turtle::displayUi()
         {
             ImGui::Begin("Turtle", &debug_window_);
 
+            ImGui::Checkbox("Disable viewport events", &disableViewportEvents_);
             ImGui::Text("%f ms/frame, ~%d FPS", frameRate_, (long)(1000 / frameRate_));
             ImGui::ColorEdit4("Clear color", glm::value_ptr(clearColor_));
             ImGui::End();
@@ -339,10 +338,25 @@ void Turtle::displayUi()
         {
             ImGui::Begin("Objects", &objects_window_);
 
-            ImGui::Text("Camera Pos (%f, %f, %f)", ocam_.pos.x, ocam_.pos.y, ocam_.pos.z);
-            if (ImGui::Button("Reset Camera"))
+            ImGui::Checkbox("Wireframe mode", &drawLine_);
+            ImGui::Checkbox("Display lights in the viewport", &drawLights_);
+
+            if(ImGui::CollapsingHeader("Terrain"))
             {
-                ocam_.reset();
+                ImGui::Checkbox("Show terrain", &ground_->draw_);
+
+                if(ImGui::Button("Randomize Terrain"))
+                    ground_->randomize();
+            }
+
+
+            if(ImGui::CollapsingHeader("Camera"))
+            {
+                ImGui::Text("Camera Pos (%f, %f, %f)", ocam_.pos.x, ocam_.pos.y, ocam_.pos.z);
+                if (ImGui::Button("Reset Camera"))
+                {
+                    ocam_.reset();
+                }
             }
 
             if(ImGui::CollapsingHeader("Models"))
