@@ -418,31 +418,40 @@ void Turtle::framebufferSizeCallback(GLFWwindow *, int pwidth, int pheight)
 void Turtle::scrollCallback(GLFWwindow *, double xoffset, double yoffset)
 {
     Turtle & tu = Turtle::getInstance();
-    if(!tu.disableViewportEvents_)
-        tu.ocam_.process_scroll(tu.window_, xoffset, yoffset);
-
     ImGui_ImplGlfwGL3_ScrollCallback(tu.window_, xoffset, yoffset);
+
+    if(ImGui::IsAnyWindowHovered()) return;
+
+    if(tu.disableViewportEvents_) return;
+
+    tu.ocam_.process_scroll(tu.window_, xoffset, yoffset);
+
 }
 
 void Turtle::processInput(GLFWwindow *)
 {
-    Turtle & tu = Turtle::getInstance();
-    if(glfwGetKey(tu.window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(tu.window_, true);
+    if(ImGui::IsAnyWindowHovered()) return;
 }
 
 void Turtle::keyCallback(GLFWwindow*, int key, int, int action, int mods)
 {
     ImGui_ImplGlfwGL3_KeyCallback(0, key, 0, action, mods);
+    if(ImGui::IsAnyWindowHovered()) return;
+
+    Turtle & tu = Turtle::getInstance();
+    if(key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(tu.window_, true);
 }
 
 void Turtle::charCallback(GLFWwindow*, unsigned int c)
 {
     ImGui_ImplGlfwGL3_CharCallback(0, c);
+    if(ImGui::IsAnyWindowHovered()) return;
 }
 
 void Turtle::mouseCallback(GLFWwindow*, double xpos, double ypos)
 {
+    if(ImGui::IsAnyWindowHovered()) return;
+
     Turtle & tu = Turtle::getInstance();
     if(!tu.disableViewportEvents_)
         tu.ocam_.process_mouse_move(tu.window_, xpos, ypos);
@@ -451,7 +460,9 @@ void Turtle::mouseCallback(GLFWwindow*, double xpos, double ypos)
 void Turtle::mouseButtonCallback(GLFWwindow*, int button, int action, int mods)
 {
     Turtle & tu = Turtle::getInstance();
+    ImGui_ImplGlfwGL3_MouseButtonCallback(tu.window_, button, action, mods);
+    if(ImGui::IsAnyWindowHovered()) return;
+
     if(!tu.disableViewportEvents_)
         tu.ocam_.process_mouse_action(tu.window_, button, action, mods);
-    ImGui_ImplGlfwGL3_MouseButtonCallback(tu.window_, button, action, mods);
 }

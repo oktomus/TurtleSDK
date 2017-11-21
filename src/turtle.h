@@ -208,7 +208,7 @@ private:
     // Imgui related
 
     bool debug_window_ = true;
-    bool objects_window_ = false;
+    bool objects_window_ = true;
 
 };
 
