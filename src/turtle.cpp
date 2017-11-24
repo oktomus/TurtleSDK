@@ -104,9 +104,10 @@ void Turtle::init()
         fprintf(stdout, "OBJECTS...");
         models_.push_back(std::make_shared<Model>("turtleLib/models/woodenCase/case.obj"));
         objects_.push_back(Object(models_.back()));
+        objects_.back().translate_.y = 10;
         models_.push_back(std::make_shared<Model>("turtleLib/models/light/light.obj"));
         lightDisplay_ = Object(models_.back());
-        ground_ = std::make_shared<Terrain>(GridGenerator::flatGrid(50, 20));
+        ground_ = std::make_shared<Terrain>(GridGenerator::flatGrid(50, 200));
 
         // Lights
         dirLights_.push_back(DirectionLight());

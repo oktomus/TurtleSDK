@@ -36,6 +36,17 @@ public:
      */
     static void randomize(std::vector<Vertex> & pPoints, unsigned int pSlicing);
 
+    /**
+      * @brief Calculate normals for the given set of points and given
+      * set of triangls
+      *
+      * @param      Points
+      * @param      Triangle indices
+      */
+    static void calculateNormals(
+            std::vector<Vertex>&, 
+            const std::vector<unsigned int>&);
+
 private:
 
     /**
