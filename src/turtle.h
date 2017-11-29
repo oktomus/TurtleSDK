@@ -19,7 +19,7 @@
 #include "model.h"
 #include "object.h"
 #include "terrain.h"
-#include "orbitCamera.h"
+#include "camera.h"
 #include "light.h"
 
 /**
@@ -37,6 +37,15 @@ public:
      * @return
      */
     static Turtle &getInstance();
+
+    /**
+      * @biref Returns the delta time of the current frame
+      */
+    float getDeltaTime() const;
+
+    int getWinHeight() const;
+
+    int getWinWidth() const;
 
     /**
      * @brief Init the application
@@ -140,7 +149,7 @@ private:
     /**
      * @brief Camera of the scene
      */
-    OrbitCamera ocam_ = OrbitCamera({0, 30, 30}, {0, 20, 0});
+    std::unique_ptr<Camera> cam_;
 
     /**
      * @brief Shader of the scene
@@ -186,11 +195,6 @@ private:
      * @brief Clear color
      */
     glm::vec4 clearColor_ = glm::vec4(0.1, 0.1, 0.1, 0);
-
-    /**
-      * @brief Projection matrix
-      */
-    glm::mat4 projMat_;
 
     /**
      * @brief Time spent between current and last frame

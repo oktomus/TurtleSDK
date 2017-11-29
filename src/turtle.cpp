@@ -3,6 +3,8 @@
 
 #include "turtle.h"
 #include "grid.h"
+#include "orbitCamera.h"
+#include "fpsCamera.h"
 #include "terrain.h"
 
 Turtle Turtle::instance_;
@@ -10,6 +12,21 @@ Turtle Turtle::instance_;
 Turtle &Turtle::getInstance()
 {
     return Turtle::instance_;
+}
+
+float Turtle::getDeltaTime() const
+{
+    return deltaTime_;
+}
+
+int Turtle::getWinHeight() const
+{
+    return winHeight_;
+}
+
+int Turtle::getWinWidth() const
+{
+    return winWidth_;
 }
 
 void Turtle::init()
@@ -102,6 +119,7 @@ void Turtle::init()
     }
     {
         fprintf(stdout, "OBJECTS...");
+        cam_ = std::make_unique<OrbitCamera>();
         models_.push_back(std::make_shared<Model>("turtleLib/models/woodenCase/case.obj"));
         objects_.push_back(Object(models_.back()));
         objects_.back().translate_.y = 10;
@@ -228,9 +246,9 @@ void Turtle::displayFrame()
         }
         pointLights_.back().setUniforms(*(shaders_["phong"].get()), "spotLight");
 
-        shaders_["phong"]->setMat4("view", ocam_.viewMat());
-        shaders_["phong"]->setVec3("viewPos", ocam_.pos);
-        shaders_["phong"]->setMat4("projection", projMat_);
+        shaders_["phong"]->setMat4("view", cam_->view());
+        shaders_["phong"]->setVec3("viewPos", cam_->pos);
+        shaders_["phong"]->setMat4("projection", cam_->projection());
         shaders_["phong"]->setBool("noTexture", false);
 
         for(auto o : objects_)
@@ -247,10 +265,10 @@ void Turtle::displayFrame()
 void Turtle::displayLights()
 {
     shaders_["light"]->use();
-    shaders_["light"]->setMat4("view", ocam_.viewMat());
-    shaders_["light"]->setMat4("projection", projMat_);
-    glm::vec3 CameraRight_worldspace = {ocam_.viewMat()[0][0], ocam_.viewMat()[1][0], ocam_.viewMat()[2][0]};
-    glm::vec3 CameraUp_worldspace = {ocam_.viewMat()[0][1], ocam_.viewMat()[1][1], ocam_.viewMat()[2][1]};
+    shaders_["light"]->setMat4("view", cam_->view());
+    shaders_["light"]->setMat4("projection", cam_->projection());
+    glm::vec3 CameraRight_worldspace = {cam_->view()[0][0], cam_->view()[1][0], cam_->view()[2][0]};
+    glm::vec3 CameraUp_worldspace = {cam_->view()[0][1], cam_->view()[1][1], cam_->view()[2][1]};
     shaders_["light"]->setVec3("camUp", CameraUp_worldspace);
     shaders_["light"]->setVec3("camRight", CameraRight_worldspace);
 
@@ -332,10 +350,18 @@ void Turtle::displayUi()
 
             if(ImGui::CollapsingHeader("Camera"))
             {
-                ImGui::Text("Camera Pos (%f, %f, %f)", ocam_.pos.x, ocam_.pos.y, ocam_.pos.z);
+                ImGui::Text("Camera Pos (%f, %f, %f)", cam_->pos.x, cam_->pos.y, cam_->pos.z);
                 if (ImGui::Button("Reset Camera"))
                 {
-                    ocam_.reset();
+                    cam_->reset();
+                }
+                if (ImGui::Button("Switch to FPS"))
+                {
+                    cam_ = std::make_unique<FPSCamera>();
+                }
+                if (ImGui::Button("Switch to Orbit"))
+                {
+                    cam_ = std::make_unique<OrbitCamera>();
                 }
             }
 
@@ -403,8 +429,6 @@ void Turtle::framebufferSizeCallback(GLFWwindow *, int pwidth, int pheight)
     glViewport(0, 0, pwidth, pheight);
     tu.winWidth_ = pwidth;
     tu.winHeight_ = pheight;
-    tu.projMat_ = glm::perspective(
-            glm::radians(45.0f), (float)pwidth / (float)pheight, 0.1f, 1000.0f);
 }
 
 void Turtle::scrollCallback(GLFWwindow *, double xoffset, double yoffset)
@@ -416,7 +440,7 @@ void Turtle::scrollCallback(GLFWwindow *, double xoffset, double yoffset)
 
     if(tu.disableViewportEvents_) return;
 
-    tu.ocam_.process_scroll(tu.window_, xoffset, yoffset);
+    tu.cam_->process_scroll(tu.window_, xoffset, yoffset);
 
 }
 
@@ -432,6 +456,9 @@ void Turtle::keyCallback(GLFWwindow*, int key, int, int action, int mods)
 
     Turtle & tu = Turtle::getInstance();
     if(key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(tu.window_, true);
+
+    if(!tu.disableViewportEvents_)
+        tu.cam_->process_key(tu.window_, key, 0, action, mods);
 }
 
 void Turtle::charCallback(GLFWwindow*, unsigned int c)
@@ -442,11 +469,28 @@ void Turtle::charCallback(GLFWwindow*, unsigned int c)
 
 void Turtle::mouseCallback(GLFWwindow*, double xpos, double ypos)
 {
-    if(ImGui::IsAnyWindowHovered()) return;
-
     Turtle & tu = Turtle::getInstance();
+    static bool hidden = false;
+    if(ImGui::IsAnyWindowHovered())
+    {
+        if(hidden)
+        {
+            glfwSetInputMode(tu.window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);  
+            hidden = false;
+        }
+        return;
+    }
+    else
+    {
+        if(!hidden)
+        {
+            glfwSetInputMode(tu.window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+            hidden = true;
+        }
+    }
+
     if(!tu.disableViewportEvents_)
-        tu.ocam_.process_mouse_move(tu.window_, xpos, ypos);
+        tu.cam_->process_mouse_move(tu.window_, xpos, ypos);
 }
 
 void Turtle::mouseButtonCallback(GLFWwindow*, int button, int action, int mods)
@@ -456,5 +500,5 @@ void Turtle::mouseButtonCallback(GLFWwindow*, int button, int action, int mods)
     if(ImGui::IsAnyWindowHovered()) return;
 
     if(!tu.disableViewportEvents_)
-        tu.ocam_.process_mouse_action(tu.window_, button, action, mods);
+        tu.cam_->process_mouse_action(tu.window_, button, action, mods);
 }

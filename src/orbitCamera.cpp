@@ -1,15 +1,12 @@
 #include "orbitCamera.h"
+#include "turtle.h"
 
-OrbitCamera::OrbitCamera(const glm::vec3& initialPos,
-        const glm::vec3& initialTarget) :
-    _initialPos(initialPos),
-    _initialTarget(initialTarget),
-    pos(initialPos),
-    target(initialTarget),
-    _firstMove(true),
+OrbitCamera::OrbitCamera() : Camera(),
     _mouseRotateCamera(false)
 {
-
+    pos = _initialPos = {0, 30, 30};
+    target = _initialTarget = {0, 20, 0};
+    fov = 45.0f;
 }
 
 void OrbitCamera::reset()
@@ -52,7 +49,7 @@ void OrbitCamera::process_scroll(GLFWwindow* window, double xoffset, double yoff
     pos -= cameraDirection * float(yoffset);
 }
 
-glm::mat4 OrbitCamera::viewMat() const
+glm::mat4 OrbitCamera::view() const
 {
     glm::vec3 cameraDirection = glm::normalize(pos - target);
     glm::vec3 up = glm::vec3(0, 1, 0);
