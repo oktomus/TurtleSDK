@@ -1,6 +1,9 @@
 #include <iostream>
 #include <string>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include "turtle.h"
 
 int main( int argc, char** argv )

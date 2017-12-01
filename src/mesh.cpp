@@ -81,18 +81,4 @@ void Mesh::init()
 }
 
 
-template <class T>
-void Mesh::addBuffer(
-        GLuint &idLocation,
-        GLenum bufType,
-        const std::vector<T>& data)
-{
-    // VAO bind could be done here to be sure
-    // But since this is a private method
-    // Nothing to worry about
-    glGenBuffers( 1, &idLocation);
-    glBindBuffer(bufType, idLocation);
-    glBufferData(bufType, data.size() * sizeof(T),
-                 data.data(), GL_STATIC_DRAW);
-}
 

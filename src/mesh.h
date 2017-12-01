@@ -61,6 +61,18 @@ public:
      */
     void updateDataBuffer();
 
+    /**
+     * @brief Generate and allocate a buffer in the VAO
+     * @param idLocation        Where to store the id
+     * @param bufType           The buffer type
+     * @param data              The points to copy in the buffer
+     */
+    template <class T>
+    static void addBuffer(
+            GLuint &idLocation,
+            GLenum bufType,
+            const std::vector<T>& data);
+
 private:
 
     std::vector<Texture> textures_;
@@ -83,23 +95,26 @@ private:
      */
     GLuint _vboId;
 
-    /**
-     * @brief Generate and allocate a buffer in the VAO
-     * @param idLocation        Where to store the id
-     * @param bufType           The buffer type
-     * @param data              The points to copy in the buffer
-     */
-    template <class T>
-    void addBuffer(
-            GLuint &idLocation,
-            GLenum bufType,
-            const std::vector<T>& data);
 
     void init();
 
 
 };
 
+template <class T>
+void Mesh::addBuffer(
+        GLuint &idLocation,
+        GLenum bufType,
+        const std::vector<T>& data)
+{
+    // VAO bind could be done here to be sure
+    // But since this is a private method
+    // Nothing to worry about
+    glGenBuffers( 1, &idLocation);
+    glBindBuffer(bufType, idLocation);
+    glBufferData(bufType, data.size() * sizeof(T),
+                 data.data(), GL_STATIC_DRAW);
+}
 
 
 #endif

@@ -111,6 +111,7 @@ void Turtle::init()
     {
         fprintf(stdout, "SHADERS...");
         shaders_["phong"] = std::make_shared<Shader>("turtleLib/shaders/material");
+        shaders_["sky"] = std::make_shared<Shader>("turtleLib/shaders/sky");
         shaders_["solid"] = std::make_shared<Shader>("turtleLib/shaders/solid");
         shaders_["light"] = std::make_shared<Shader>("turtleLib/shaders/flatBillBoardStill.vert",
                                                      "turtleLib/shaders/flatBillBoardStill.frag", "");
@@ -126,6 +127,8 @@ void Turtle::init()
         models_.push_back(std::make_shared<Model>("turtleLib/models/light/light.obj"));
         lightDisplay_ = Object(models_.back());
         ground_ = std::make_shared<Terrain>(GridGenerator::flatGrid(50, 50));
+
+        skybox_ = std::make_shared<SkyBox>("turtleLib/textures/craterlake", ".tga");
 
         // Lights
         dirLights_.push_back(DirectionLight());
@@ -235,6 +238,13 @@ void Turtle::displayFrame()
 
     // DRAW
     {
+
+        glDepthMask(GL_FALSE);
+        shaders_["sky"]->use();
+        shaders_["phong"]->setMat4("projection", cam_->projection());
+        shaders_["phong"]->setMat4("view", glm::mat4(glm::mat3(cam_->view())));
+        skybox_->draw(*(shaders_["sky"].get()));
+        glDepthMask(GL_TRUE);
 
         shaders_["phong"]->use();
         shaders_["phong"]->setFloat("material.shininess", 32.0f);

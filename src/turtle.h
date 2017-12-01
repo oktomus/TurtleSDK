@@ -21,6 +21,7 @@
 #include "terrain.h"
 #include "camera.h"
 #include "light.h"
+#include "skybox.h"
 
 /**
  * @brief Unique instance of the main turtle application.
@@ -190,6 +191,8 @@ private:
      * @brief Spot lights of the scene
      */
     std::vector<SpotLight> spotLights_;
+
+    std::shared_ptr<SkyBox> skybox_;
 
     /**
      * @brief Clear color
