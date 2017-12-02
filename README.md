@@ -2,6 +2,7 @@
 
 A lightweight and not very usefull SDK created in the will of learning OpenGL 3.3.
 
+![App looks when you open it](images/05.png "TurtleSDK")
 ![App looks when you open it](images/01.png "TurtleSDK")
 ![After implementing normal calculation](images/04.png "TurtleSDK")
 ![App with some tweaks](images/02.png "TurtleSDK")
@@ -20,6 +21,7 @@ A lightweight and not very usefull SDK created in the will of learning OpenGL 3.
 - Object and light transformation
 - Object duplication (instancing)
 - Billboard (light icons in the viewport)
+- Skybox
 
 ## Dependencies
 
