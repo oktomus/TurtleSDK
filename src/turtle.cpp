@@ -241,8 +241,8 @@ void Turtle::displayFrame()
 
         glDepthMask(GL_FALSE);
         shaders_["sky"]->use();
-        shaders_["phong"]->setMat4("projection", cam_->projection());
-        shaders_["phong"]->setMat4("view", glm::mat4(glm::mat3(cam_->view())));
+        shaders_["sky"]->setMat4("projection", cam_->projection());
+        shaders_["sky"]->setMat4("view", glm::mat4(glm::mat3(cam_->view())));
         skybox_->draw(*(shaders_["sky"].get()));
         glDepthMask(GL_TRUE);
 
@@ -348,6 +348,11 @@ void Turtle::displayUi()
 
             ImGui::Checkbox("Wireframe mode", &drawLine_);
             ImGui::Checkbox("Display lights in the viewport", &drawLights_);
+
+            if(ImGui::CollapsingHeader("Skybox"))
+            {
+                ImGui::Checkbox("Show sky", &skybox_->draw_);
+            }
 
             if(ImGui::CollapsingHeader("Terrain"))
             {
