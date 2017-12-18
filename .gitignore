@@ -1,4 +1,7 @@
 TurtleSDK
+vs
+.vs
+CMakeSettings.json
 CMakeDoxy*
 build
 imgui.ini
@@ -110,3 +113,4 @@ Session.vim
 *~
 # Auto-generated tag files
 tags
+/cmake-modules/Findassimp.cmake

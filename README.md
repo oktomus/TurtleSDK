@@ -27,6 +27,7 @@ A lightweight and not very usefull SDK created in the will of learning OpenGL 3.
 
 Every dependency is managed with git and cmake expect these ones:
 - Opengl 3.3 at least
+- Python 2.7 or newer (required by gl3w)
 - [Assimp](http://assimp.org/)
 
 The dependencies managed by git and cmake are the following:

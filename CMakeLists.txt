@@ -1,5 +1,20 @@
-cmake_minimum_required( VERSION 3.0 )
-project( TurtleSDK )
+cmake_minimum_required( VERSION 3.1 )
+project( TurtleSDK)
+
+##################################################################################
+# CMAKE Modules
+##################################################################################
+
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules")
+set(CMAKE_FIND_ASSIMP "${CMAKE_MODULE_PATH}/Findassimp.cmake")
+
+if(NOT EXISTS ${CMAKE_FIND_ASSIMP})
+	file(
+        DOWNLOAD
+        "https://github.com/assimp/assimp/raw/master/cmake-modules/Findassimp.cmakeh"
+        ${CMAKE_FIND_ASSIMP}
+        )
+endif()
 
 ##################################################################################
 # Externals
@@ -24,13 +39,13 @@ if (NOT EXISTS ${GL3W_INC} OR
         NOT EXISTS ${IMGUI_INC}/examples)
         message(STATUS "Updating submodules")
         execute_process(COMMAND git submodule init WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-        execute_process(COMMAND git submodule update WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+        execute_process(COMMAND git submodule update --recursive WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
 if (NOT EXISTS ${WEB_ROOT}/stb_image.h OR
         NOT EXISTS ${WEB_ROOT}/PerlinNoise.h OR
         NOT EXISTS ${WEB_ROOT}/PerlinNoise.cpp)
-    message(STATUS "Downloading required web files")
+    message(STATUS "Downloading required web files") 
     file(
         DOWNLOAD
         "https://raw.githubusercontent.com/nothings/stb/master/stb_image.h"
@@ -50,8 +65,10 @@ endif()
 
 if (NOT EXISTS ${GL3W_SRC})
         message(STATUS "Generating gl3w source files")
+		message("python ${GL3W_ROOT}")
         execute_process(COMMAND python gl3w_gen.py
-                                        WORKING_DIRECTORY ${GL3W_ROOT})
+                                        WORKING_DIRECTORY ${GL3W_ROOT} RESULT_VARIABLE GL3W_CODE OUTPUT_VARIABLE GL3W_LOG ERROR_VARIABLE GL3W_LOG)
+		message("GL3W code generation output:\n${GL3W_CODE}\n${GL3W_LOG}")	
 endif()
 
 if (NOT EXISTS ${IMGUI_ROOT}/imgui_impl_glfw_gl3.cpp OR
@@ -60,7 +77,7 @@ if (NOT EXISTS ${IMGUI_ROOT}/imgui_impl_glfw_gl3.cpp OR
     file(COPY
         ${IMGUI_ROOT}/examples/opengl3_example/imgui_impl_glfw_gl3.cpp
         ${IMGUI_ROOT}/examples/opengl3_example/imgui_impl_glfw_gl3.h
-        DESTINATION ${IMGUI_ROOT})
+        DESTINATION ${IMGUI_ROOT}) 
 endif()
 
 file (GLOB IMGUI_SRC "${IMGUI_ROOT}/*.cpp")
@@ -73,15 +90,19 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(${GLFW_ROOT})
 
 find_package(OpenGL REQUIRED)
+#ASSIMP
+find_package(assimp REQUIRED)
 
 include_directories(
         ${GLFW_INC}
         ${GL3W_INC}
         ${GLM_INC}
         ${OPENGL_INCLUDE_DIR}
+		${assimp_INCLUDE_DIRS}
         ${IMGUI_INC}
         ${WEB_INC}
-)
+		
+		)
 
 ##################################################################################
 # Non source files (shaders, models, textures)
@@ -94,7 +115,7 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/turtleLib" DESTINATION ${CMAKE_CURRENT_BI
 # Turtle LIB
 ##################################################################################
 
-set(TURTLE_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set(TURTLE_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" "C:/Program Files/Assimp/include")
 
 file( GLOB hfiles "${TURTLE_SRC_DIR}/*/*.h" )
 file( GLOB cfiles "${TURTLE_SRC_DIR}/*/*.cpp" )
@@ -121,12 +142,10 @@ add_executable(
     ${WEB_SRC}
     )
 
-target_link_libraries(
-    ${PROJECT_NAME}
-    ${OPENGL_gl_LIBRARY}
-    assimp
-    glfw
-    )
+target_link_libraries(${PROJECT_NAME} ${OPENGL_gl_LIBRARY})
+target_link_libraries(${PROJECT_NAME} ${assimp_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} glfw)
+
 
 target_include_directories(
     ${PROJECT_NAME} PRIVATE

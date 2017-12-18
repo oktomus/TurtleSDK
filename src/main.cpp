@@ -6,7 +6,7 @@
 
 #include "turtle.h"
 
-int main( int argc, char** argv )
+int main()
 {
 
     Turtle & a = Turtle::getInstance();
