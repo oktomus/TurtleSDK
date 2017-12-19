@@ -1,20 +1,7 @@
 cmake_minimum_required( VERSION 3.1 )
 project( TurtleSDK)
 
-##################################################################################
-# CMAKE Modules
-##################################################################################
-
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules")
-set(CMAKE_FIND_ASSIMP "${CMAKE_MODULE_PATH}/Findassimp.cmake")
-
-if(NOT EXISTS ${CMAKE_FIND_ASSIMP})
-	file(
-        DOWNLOAD
-        "https://github.com/assimp/assimp/raw/master/cmake-modules/Findassimp.cmakeh"
-        ${CMAKE_FIND_ASSIMP}
-        )
-endif()
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules")
 
 ##################################################################################
 # Externals
@@ -90,16 +77,16 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(${GLFW_ROOT})
 
 find_package(OpenGL REQUIRED)
-#ASSIMP
 find_package(assimp REQUIRED)
+
 
 include_directories(
         ${GLFW_INC}
         ${GL3W_INC}
         ${GLM_INC}
         ${OPENGL_INCLUDE_DIR}
-		${assimp_INCLUDE_DIRS}
-        ${IMGUI_INC}
+		${ASSIMP_ROOT_DIR}/include
+        ${IMGUI_INC} 
         ${WEB_INC}
 		
 		)
@@ -115,7 +102,7 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/turtleLib" DESTINATION ${CMAKE_CURRENT_BI
 # Turtle LIB
 ##################################################################################
 
-set(TURTLE_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" "C:/Program Files/Assimp/include")
+set(TURTLE_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 file( GLOB hfiles "${TURTLE_SRC_DIR}/*/*.h" )
 file( GLOB cfiles "${TURTLE_SRC_DIR}/*/*.cpp" )
@@ -129,12 +116,12 @@ set( sources ${sources} ${cfiles} )
 
 
 include_directories(
-    ${TURTLE_SRC_DIR}/src
+    ${TURTLE_SRC_DIR}
 )
 
 
 add_executable(
-    ${PROJECT_NAME}
+    TurtleSDK
     ${sources}
     ${headers}
     ${GL3W_SRC}
@@ -142,8 +129,9 @@ add_executable(
     ${WEB_SRC}
     )
 
-target_link_libraries(${PROJECT_NAME} ${OPENGL_gl_LIBRARY})
-target_link_libraries(${PROJECT_NAME} ${assimp_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES})
+#target_link_libraries(${PROJECT_NAME} assimp  ${M_LIB})
+target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARY} assimp)
 target_link_libraries(${PROJECT_NAME} glfw)
 
 

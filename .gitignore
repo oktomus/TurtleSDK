@@ -1,7 +1,7 @@
 TurtleSDK
+CppProperties.json
 vs
 .vs
-CMakeSettings.json
 CMakeDoxy*
 build
 imgui.ini
