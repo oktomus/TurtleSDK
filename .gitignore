@@ -1,7 +1,9 @@
 TurtleSDK
+distant/assimp
 CppProperties.json
 vs
 .vs
+distant/assimp-lib
 CMakeDoxy*
 build
 imgui.ini
@@ -113,4 +115,3 @@ Session.vim
 *~
 # Auto-generated tag files
 tags
-/cmake-modules/Findassimp.cmake

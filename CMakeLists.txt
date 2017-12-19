@@ -6,13 +6,13 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules")
 ##################################################################################
 # Externals
 ##################################################################################
-set(GLFW_ROOT "${CMAKE_SOURCE_DIR}/distant/glfw")
+#set(GLFW_ROOT "${CMAKE_SOURCE_DIR}/distant/glfw")
 set(GL3W_ROOT "${CMAKE_SOURCE_DIR}/distant/gl3w")
 set(GLM_ROOT "${CMAKE_SOURCE_DIR}/distant/glm")
 set(IMGUI_ROOT "${CMAKE_SOURCE_DIR}/distant/imgui")
 set(WEB_ROOT "${CMAKE_SOURCE_DIR}/distant/web")
 
-set(GLFW_INC "${GLFW_ROOT}/include")
+#set(GLFW_INC "${GLFW_ROOT}/include")
 set(GL3W_INC "${GL3W_ROOT}/include")
 set(GLM_INC "${GLM_ROOT}")
 set(IMGUI_INC "${IMGUI_ROOT}")
@@ -21,12 +21,11 @@ set(WEB_INC "${WEB_ROOT}")
 set(GL3W_SRC "${GL3W_ROOT}/src/gl3w.c")
 
 if (NOT EXISTS ${GL3W_INC} OR
-        NOT EXISTS ${GLFW_INC} OR
+       # NOT EXISTS ${GLFW_INC} OR
         NOT EXISTS ${GLM_INC} OR
         NOT EXISTS ${IMGUI_INC}/examples)
         message(STATUS "Updating submodules")
-        execute_process(COMMAND git submodule init WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-        execute_process(COMMAND git submodule update --recursive WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+        execute_process(COMMAND git submodule update --init --recursive WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
 if (NOT EXISTS ${WEB_ROOT}/stb_image.h OR
@@ -71,24 +70,24 @@ file (GLOB IMGUI_SRC "${IMGUI_ROOT}/*.cpp")
 file (GLOB WEB_SRC "${WEB_ROOT}/*.cpp")
 
 # Compile GLFW
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-add_subdirectory(${GLFW_ROOT})
+#set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+#set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+#set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+#add_subdirectory(${GLFW_ROOT})
 
 find_package(OpenGL REQUIRED)
 find_package(assimp REQUIRED)
-
+set(GLFW_LOCATION "${CMAKE_SOURCE_DIR}/distant/glfw")
+find_package(GLFW REQUIRED)
 
 include_directories(
-        ${GLFW_INC}
+        ${GLFW_INCLUDE_DIR}
         ${GL3W_INC}
         ${GLM_INC}
         ${OPENGL_INCLUDE_DIR}
-		${ASSIMP_ROOT_DIR}/include
+		${ASSIMP_INCLUDE_DIR}
         ${IMGUI_INC} 
-        ${WEB_INC}
-		
+        ${WEB_INC}		
 		)
 
 ##################################################################################
@@ -130,9 +129,8 @@ add_executable(
     )
 
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES})
-#target_link_libraries(${PROJECT_NAME} assimp  ${M_LIB})
-target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARY} assimp)
-target_link_libraries(${PROJECT_NAME} glfw)
+target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARY_RELEASE})
+target_link_libraries(${PROJECT_NAME} ${GLFW_glfw_LIBRARY})
 
 
 target_include_directories(
