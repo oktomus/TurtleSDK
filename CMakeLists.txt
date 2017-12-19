@@ -129,8 +129,13 @@ add_executable(
     )
 
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARY_RELEASE})
+target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${GLFW_glfw_LIBRARY})
+
+
+if(CMAKE_DL_LIBS)
+    target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS})
+endif()
 
 
 target_include_directories(
