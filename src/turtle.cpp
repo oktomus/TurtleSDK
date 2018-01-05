@@ -398,7 +398,7 @@ void Turtle::displayUi()
                 }
                 if (ImGui::Button("Create a new random instance"))
                 {
-                    objects_.push_back(objects_.at(currentModel));
+                    objects_.push_back(objects_.at(0));
                     objects_.back().random();
                 }
             }
