@@ -1,7 +1,9 @@
 #ifndef __TURTLE_OBJECT__
 #define __TURTLE_OBJECT__
 
+#include <chrono>
 #include <memory>
+#include <random>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "model.h"
@@ -39,6 +41,11 @@ public:
     void draw(const Shader & shader);
     
     void ui();
+
+    /**
+     * @brief change the object with new random (in range) parameters
+     */
+    void random();
 
 private:
 
