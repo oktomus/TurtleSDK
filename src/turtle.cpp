@@ -480,6 +480,9 @@ void Turtle::keyCallback(GLFWwindow*, int key, int, int action, int mods)
     if(key == GLFW_KEY_R) tu.cam_->reset();
     if(key == GLFW_KEY_F) tu.cam_ = std::make_unique<FPSCamera>();
     if(key == GLFW_KEY_V) tu.cam_ = std::make_unique<OrbitCamera>();
+    if(key == GLFW_KEY_A){
+    tu.objects_.push_back(tu.objects_.at(0));
+    tu.objects_.back().random();}
 
     if(!tu.disableViewportEvents_)
         tu.cam_->process_key(tu.window_, key, 0, action, mods);
