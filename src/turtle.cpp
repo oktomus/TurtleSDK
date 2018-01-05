@@ -490,7 +490,7 @@ void Turtle::mouseCallback(GLFWwindow*, double xpos, double ypos)
     {
         if(hidden)
         {
-            glfwSetInputMode(tu.window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);  
+            glfwSetInputMode(tu.window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             hidden = false;
         }
         return;
@@ -499,7 +499,7 @@ void Turtle::mouseCallback(GLFWwindow*, double xpos, double ypos)
     {
         if(!hidden)
         {
-            glfwSetInputMode(tu.window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+            glfwSetInputMode(tu.window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             hidden = true;
         }
     }
