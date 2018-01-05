@@ -470,7 +470,9 @@ void Turtle::keyCallback(GLFWwindow*, int key, int, int action, int mods)
     if(ImGui::IsAnyWindowHovered()) return;
 
     Turtle & tu = Turtle::getInstance();
+    // keyboard shortcuts
     if(key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(tu.window_, true);
+    if(key == GLFW_KEY_F) tu.cam_ = std::make_unique<FPSCamera>();
 
     if(!tu.disableViewportEvents_)
         tu.cam_->process_key(tu.window_, key, 0, action, mods);
