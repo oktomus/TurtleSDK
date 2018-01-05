@@ -1,0 +1,75 @@
+\hypertarget{classSkyBox}{}\section{Sky\+Box Class Reference}
+\label{classSkyBox}\index{Sky\+Box@{Sky\+Box}}
+
+
+A Cubemap.  
+
+
+
+
+{\ttfamily \#include $<$skybox.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classSkyBox_ad707af7cdeec0647cebcfb46698790d9}{Sky\+Box} (const std\+::string \&, const std\+::string \&)
+\begin{DoxyCompactList}\small\item\em Create a skybox by specifying the file path and the extension ex\+: world, .png, will use world\+\_\+bk.\+png, ... \end{DoxyCompactList}\item 
+void \hyperlink{classSkyBox_a366982874c361360c654015e794b1e22}{draw} (\hyperlink{classShader}{Shader} \&sh)
+\begin{DoxyCompactList}\small\item\em Draw the Skybox. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+G\+Luint \hyperlink{classSkyBox_af762eed644f128a560e22d5003c5d447}{vao}
+\item 
+G\+Luint \hyperlink{classSkyBox_ad62d8584917884e9f154421ea637888b}{cubemap}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A Cubemap. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classSkyBox_ad707af7cdeec0647cebcfb46698790d9}\label{classSkyBox_ad707af7cdeec0647cebcfb46698790d9}} 
+\index{Sky\+Box@{Sky\+Box}!Sky\+Box@{Sky\+Box}}
+\index{Sky\+Box@{Sky\+Box}!Sky\+Box@{Sky\+Box}}
+\subsubsection{\texorpdfstring{Sky\+Box()}{SkyBox()}}
+{\footnotesize\ttfamily Sky\+Box\+::\+Sky\+Box (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{base,  }\item[{const std\+::string \&}]{extension }\end{DoxyParamCaption})}
+
+
+
+Create a skybox by specifying the file path and the extension ex\+: world, .png, will use world\+\_\+bk.\+png, ... 
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classSkyBox_a366982874c361360c654015e794b1e22}\label{classSkyBox_a366982874c361360c654015e794b1e22}} 
+\index{Sky\+Box@{Sky\+Box}!draw@{draw}}
+\index{draw@{draw}!Sky\+Box@{Sky\+Box}}
+\subsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Sky\+Box\+::draw (\begin{DoxyParamCaption}\item[{\hyperlink{classShader}{Shader} \&}]{sh }\end{DoxyParamCaption})}
+
+
+
+Draw the Skybox. 
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classSkyBox_ad62d8584917884e9f154421ea637888b}\label{classSkyBox_ad62d8584917884e9f154421ea637888b}} 
+\index{Sky\+Box@{Sky\+Box}!cubemap@{cubemap}}
+\index{cubemap@{cubemap}!Sky\+Box@{Sky\+Box}}
+\subsubsection{\texorpdfstring{cubemap}{cubemap}}
+{\footnotesize\ttfamily G\+Luint Sky\+Box\+::cubemap\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classSkyBox_af762eed644f128a560e22d5003c5d447}\label{classSkyBox_af762eed644f128a560e22d5003c5d447}} 
+\index{Sky\+Box@{Sky\+Box}!vao@{vao}}
+\index{vao@{vao}!Sky\+Box@{Sky\+Box}}
+\subsubsection{\texorpdfstring{vao}{vao}}
+{\footnotesize\ttfamily G\+Luint Sky\+Box\+::vao\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{skybox_8h}{skybox.\+h}\item 
+src/\hyperlink{skybox_8cpp}{skybox.\+cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,88 @@
+\hypertarget{classMesh}{}\section{Mesh Class Reference}
+\label{classMesh}\index{Mesh@{Mesh}}
+
+
+\hyperlink{classMesh}{Mesh} wrapper.  
+
+
+
+
+{\ttfamily \#include $<$mesh.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMesh_a54bd1b9e629ff006629579fc8fd6d002}{Mesh} (const std\+::vector$<$ \hyperlink{structVertex}{Vertex} $>$ \&vertices, const std\+::vector$<$ G\+Luint $>$ \&indices, const std\+::vector$<$ \hyperlink{structTexture}{Texture} $>$ \&textures)
+\item 
+void \hyperlink{classMesh_ab4a351fe96aa532b80232b2d7b0d55f2}{draw} (const \hyperlink{classShader}{Shader} \&shader, const G\+Lenum \&mode=-\/1) const
+\begin{DoxyCompactList}\small\item\em Draw the model. \end{DoxyCompactList}\item 
+void \hyperlink{classMesh_a66bf5cfb39cc2a96638769ad967be18a}{update\+Data\+Buffer} ()
+\begin{DoxyCompactList}\small\item\em Update the data buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class T $>$ }\\static void \hyperlink{classMesh_a5067620d30ba35b9f83e4dae7fb70cbf}{add\+Buffer} (G\+Luint \&id\+Location, G\+Lenum buf\+Type, const std\+::vector$<$ T $>$ \&data)
+\begin{DoxyCompactList}\small\item\em Generate and allocate a buffer in the V\+AO. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classMesh}{Mesh} wrapper. 
+
+Keep a link on the V\+B\+Os and V\+AO of a model. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classMesh_a54bd1b9e629ff006629579fc8fd6d002}\label{classMesh_a54bd1b9e629ff006629579fc8fd6d002}} 
+\index{Mesh@{Mesh}!Mesh@{Mesh}}
+\index{Mesh@{Mesh}!Mesh@{Mesh}}
+\subsubsection{\texorpdfstring{Mesh()}{Mesh()}}
+{\footnotesize\ttfamily Mesh\+::\+Mesh (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \hyperlink{structVertex}{Vertex} $>$ \&}]{vertices,  }\item[{const std\+::vector$<$ G\+Luint $>$ \&}]{indices,  }\item[{const std\+::vector$<$ \hyperlink{structTexture}{Texture} $>$ \&}]{textures }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classMesh_a5067620d30ba35b9f83e4dae7fb70cbf}\label{classMesh_a5067620d30ba35b9f83e4dae7fb70cbf}} 
+\index{Mesh@{Mesh}!add\+Buffer@{add\+Buffer}}
+\index{add\+Buffer@{add\+Buffer}!Mesh@{Mesh}}
+\subsubsection{\texorpdfstring{add\+Buffer()}{addBuffer()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void Mesh\+::add\+Buffer (\begin{DoxyParamCaption}\item[{G\+Luint \&}]{id\+Location,  }\item[{G\+Lenum}]{buf\+Type,  }\item[{const std\+::vector$<$ T $>$ \&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Generate and allocate a buffer in the V\+AO. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id\+Location} & Where to store the id \\
+\hline
+{\em buf\+Type} & The buffer type \\
+\hline
+{\em data} & The points to copy in the buffer \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classMesh_ab4a351fe96aa532b80232b2d7b0d55f2}\label{classMesh_ab4a351fe96aa532b80232b2d7b0d55f2}} 
+\index{Mesh@{Mesh}!draw@{draw}}
+\index{draw@{draw}!Mesh@{Mesh}}
+\subsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Mesh\+::draw (\begin{DoxyParamCaption}\item[{const \hyperlink{classShader}{Shader} \&}]{shader,  }\item[{const G\+Lenum \&}]{mode = {\ttfamily -\/1} }\end{DoxyParamCaption}) const}
+
+
+
+Draw the model. 
+
+\mbox{\Hypertarget{classMesh_a66bf5cfb39cc2a96638769ad967be18a}\label{classMesh_a66bf5cfb39cc2a96638769ad967be18a}} 
+\index{Mesh@{Mesh}!update\+Data\+Buffer@{update\+Data\+Buffer}}
+\index{update\+Data\+Buffer@{update\+Data\+Buffer}!Mesh@{Mesh}}
+\subsubsection{\texorpdfstring{update\+Data\+Buffer()}{updateDataBuffer()}}
+{\footnotesize\ttfamily void Mesh\+::update\+Data\+Buffer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Update the data buffer. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{mesh_8h}{mesh.\+h}\item 
+src/\hyperlink{mesh_8cpp}{mesh.\+cpp}\end{DoxyCompactItemize}

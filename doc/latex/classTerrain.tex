@@ -1,0 +1,127 @@
+\hypertarget{classTerrain}{}\section{Terrain Class Reference}
+\label{classTerrain}\index{Terrain@{Terrain}}
+
+
+A \hyperlink{classTerrain}{Terrain}.  
+
+
+
+
+{\ttfamily \#include $<$terrain.\+h$>$}
+
+Inheritance diagram for Terrain\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classTerrain}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classTerrain_afafc221c37b67156d8dedeeee5f9f0e5}{Terrain} (const \hyperlink{classGrid}{Grid} \&)
+\begin{DoxyCompactList}\small\item\em Generate a terrain from a grid. \end{DoxyCompactList}\item 
+void \hyperlink{classTerrain_ac3a615c383f37e7fc9894d20cc090da2}{draw} (const \hyperlink{classShader}{Shader} \&shader)
+\begin{DoxyCompactList}\small\item\em Draw the terrain This override set the model mat to nothing. \end{DoxyCompactList}\item 
+void \hyperlink{classTerrain_abc478a72ef7b4b9dae3911d1acee4c71}{randomize} ()
+\begin{DoxyCompactList}\small\item\em Randomize the height of the terrain using a perlin noise. \end{DoxyCompactList}\item 
+void \hyperlink{classTerrain_afff1911e27bd05cf1da59799db595322}{ui} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \hyperlink{classTerrain_a9fa2515b7c84025c74c97af9b3fee30f}{randomize} (std\+::vector$<$ \hyperlink{structVertex}{Vertex} $>$ \&p\+Points, unsigned int p\+Slicing)
+\begin{DoxyCompactList}\small\item\em Randomize a given set of point. \end{DoxyCompactList}\item 
+static void \hyperlink{classTerrain_aa6063c2dfbed2fbba76800687288f24e}{calculate\+Normals} (std\+::vector$<$ \hyperlink{structVertex}{Vertex} $>$ \&, const std\+::vector$<$ unsigned int $>$ \&)
+\begin{DoxyCompactList}\small\item\em Calculate normals for the given set of points and given set of triangls. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+A \hyperlink{classTerrain}{Terrain}. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classTerrain_afafc221c37b67156d8dedeeee5f9f0e5}\label{classTerrain_afafc221c37b67156d8dedeeee5f9f0e5}} 
+\index{Terrain@{Terrain}!Terrain@{Terrain}}
+\index{Terrain@{Terrain}!Terrain@{Terrain}}
+\subsubsection{\texorpdfstring{Terrain()}{Terrain()}}
+{\footnotesize\ttfamily Terrain\+::\+Terrain (\begin{DoxyParamCaption}\item[{const \hyperlink{classGrid}{Grid} \&}]{p\+Grid }\end{DoxyParamCaption})}
+
+
+
+Generate a terrain from a grid. 
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classTerrain_aa6063c2dfbed2fbba76800687288f24e}\label{classTerrain_aa6063c2dfbed2fbba76800687288f24e}} 
+\index{Terrain@{Terrain}!calculate\+Normals@{calculate\+Normals}}
+\index{calculate\+Normals@{calculate\+Normals}!Terrain@{Terrain}}
+\subsubsection{\texorpdfstring{calculate\+Normals()}{calculateNormals()}}
+{\footnotesize\ttfamily void Terrain\+::calculate\+Normals (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \hyperlink{structVertex}{Vertex} $>$ \&}]{p\+Points,  }\item[{const std\+::vector$<$ unsigned int $>$ \&}]{p\+Triangles }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Calculate normals for the given set of points and given set of triangls. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Points} & \\
+\hline
+{\em Triangle} & indices \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classTerrain_ac3a615c383f37e7fc9894d20cc090da2}\label{classTerrain_ac3a615c383f37e7fc9894d20cc090da2}} 
+\index{Terrain@{Terrain}!draw@{draw}}
+\index{draw@{draw}!Terrain@{Terrain}}
+\subsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Terrain\+::draw (\begin{DoxyParamCaption}\item[{const \hyperlink{classShader}{Shader} \&}]{shader }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Draw the terrain This override set the model mat to nothing. 
+
+
+
+Reimplemented from \hyperlink{classModel_a125ff27c588f7f9acfc59c20dcc313b2}{Model}.
+
+\mbox{\Hypertarget{classTerrain_abc478a72ef7b4b9dae3911d1acee4c71}\label{classTerrain_abc478a72ef7b4b9dae3911d1acee4c71}} 
+\index{Terrain@{Terrain}!randomize@{randomize}}
+\index{randomize@{randomize}!Terrain@{Terrain}}
+\subsubsection{\texorpdfstring{randomize()}{randomize()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Terrain\+::randomize (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Randomize the height of the terrain using a perlin noise. 
+
+\mbox{\Hypertarget{classTerrain_a9fa2515b7c84025c74c97af9b3fee30f}\label{classTerrain_a9fa2515b7c84025c74c97af9b3fee30f}} 
+\index{Terrain@{Terrain}!randomize@{randomize}}
+\index{randomize@{randomize}!Terrain@{Terrain}}
+\subsubsection{\texorpdfstring{randomize()}{randomize()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Terrain\+::randomize (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \hyperlink{structVertex}{Vertex} $>$ \&}]{p\+Points,  }\item[{unsigned int}]{p\+Slicing }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Randomize a given set of point. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Points} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classTerrain_afff1911e27bd05cf1da59799db595322}\label{classTerrain_afff1911e27bd05cf1da59799db595322}} 
+\index{Terrain@{Terrain}!ui@{ui}}
+\index{ui@{ui}!Terrain@{Terrain}}
+\subsubsection{\texorpdfstring{ui()}{ui()}}
+{\footnotesize\ttfamily void Terrain\+::ui (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \hyperlink{classModel_a6c1d9003a9cb7699ba70b250c69d8ba4}{Model}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{terrain_8h}{terrain.\+h}\item 
+src/\hyperlink{terrain_8cpp}{terrain.\+cpp}\end{DoxyCompactItemize}

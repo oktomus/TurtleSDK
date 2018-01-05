@@ -1,0 +1,138 @@
+\hypertarget{classOrbitCamera}{}\section{Orbit\+Camera Class Reference}
+\label{classOrbitCamera}\index{Orbit\+Camera@{Orbit\+Camera}}
+
+
+\hyperlink{classCamera}{Camera} used to rotate around a round-\/shaped object.  
+
+
+
+
+{\ttfamily \#include $<$orbit\+Camera.\+h$>$}
+
+Inheritance diagram for Orbit\+Camera\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classOrbitCamera}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classOrbitCamera_ae87a8ab83042c47dac97a41ab4eb9e8c}{Orbit\+Camera} ()
+\begin{DoxyCompactList}\small\item\em Create a camera with a default position and target. \end{DoxyCompactList}\item 
+void \hyperlink{classOrbitCamera_a022751aa06693232844732adb00e7d71}{reset} ()
+\begin{DoxyCompactList}\small\item\em Reset the camera target and position. \end{DoxyCompactList}\item 
+void \hyperlink{classOrbitCamera_a73e280b9244dcbb6b8898a38d0243625}{process\+\_\+mouse\+\_\+move} (G\+L\+F\+Wwindow $\ast$window, double xpos, double ypos)
+\item 
+void \hyperlink{classOrbitCamera_af8cb999454725d091971106c4a7bf715}{process\+\_\+mouse\+\_\+action} (G\+L\+F\+Wwindow $\ast$window, int button, int action, int mods)
+\item 
+void \hyperlink{classOrbitCamera_a879faaab86c47e485e119d247279904f}{process\+\_\+scroll} (G\+L\+F\+Wwindow $\ast$window, double xoffset, double yoffset)
+\item 
+glm\+::mat4 \hyperlink{classOrbitCamera_a07595f9d11666c180934e47ba8abae73}{view} () const
+\item 
+glm\+::vec3 \hyperlink{classOrbitCamera_a1d65d137e3ef3f32c3b8eb31b49047fc}{up} () const
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+glm\+::vec3 \hyperlink{classOrbitCamera_ab6f07eef6c4b0226b7abfc537b698c89}{target}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\hyperlink{classCamera}{Camera} used to rotate around a round-\/shaped object. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classOrbitCamera_ae87a8ab83042c47dac97a41ab4eb9e8c}\label{classOrbitCamera_ae87a8ab83042c47dac97a41ab4eb9e8c}} 
+\index{Orbit\+Camera@{Orbit\+Camera}!Orbit\+Camera@{Orbit\+Camera}}
+\index{Orbit\+Camera@{Orbit\+Camera}!Orbit\+Camera@{Orbit\+Camera}}
+\subsubsection{\texorpdfstring{Orbit\+Camera()}{OrbitCamera()}}
+{\footnotesize\ttfamily Orbit\+Camera\+::\+Orbit\+Camera (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Create a camera with a default position and target. 
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classOrbitCamera_af8cb999454725d091971106c4a7bf715}\label{classOrbitCamera_af8cb999454725d091971106c4a7bf715}} 
+\index{Orbit\+Camera@{Orbit\+Camera}!process\+\_\+mouse\+\_\+action@{process\+\_\+mouse\+\_\+action}}
+\index{process\+\_\+mouse\+\_\+action@{process\+\_\+mouse\+\_\+action}!Orbit\+Camera@{Orbit\+Camera}}
+\subsubsection{\texorpdfstring{process\+\_\+mouse\+\_\+action()}{process\_mouse\_action()}}
+{\footnotesize\ttfamily void Orbit\+Camera\+::process\+\_\+mouse\+\_\+action (\begin{DoxyParamCaption}\item[{G\+L\+F\+Wwindow $\ast$}]{window,  }\item[{int}]{button,  }\item[{int}]{action,  }\item[{int}]{mods }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \hyperlink{classCamera_affd5e8a22d61e945ba56d2a807b98e61}{Camera}.
+
+\mbox{\Hypertarget{classOrbitCamera_a73e280b9244dcbb6b8898a38d0243625}\label{classOrbitCamera_a73e280b9244dcbb6b8898a38d0243625}} 
+\index{Orbit\+Camera@{Orbit\+Camera}!process\+\_\+mouse\+\_\+move@{process\+\_\+mouse\+\_\+move}}
+\index{process\+\_\+mouse\+\_\+move@{process\+\_\+mouse\+\_\+move}!Orbit\+Camera@{Orbit\+Camera}}
+\subsubsection{\texorpdfstring{process\+\_\+mouse\+\_\+move()}{process\_mouse\_move()}}
+{\footnotesize\ttfamily void Orbit\+Camera\+::process\+\_\+mouse\+\_\+move (\begin{DoxyParamCaption}\item[{G\+L\+F\+Wwindow $\ast$}]{window,  }\item[{double}]{xpos,  }\item[{double}]{ypos }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \hyperlink{classCamera_abb67395d3094b766d86ad17cedc054c3}{Camera}.
+
+\mbox{\Hypertarget{classOrbitCamera_a879faaab86c47e485e119d247279904f}\label{classOrbitCamera_a879faaab86c47e485e119d247279904f}} 
+\index{Orbit\+Camera@{Orbit\+Camera}!process\+\_\+scroll@{process\+\_\+scroll}}
+\index{process\+\_\+scroll@{process\+\_\+scroll}!Orbit\+Camera@{Orbit\+Camera}}
+\subsubsection{\texorpdfstring{process\+\_\+scroll()}{process\_scroll()}}
+{\footnotesize\ttfamily void Orbit\+Camera\+::process\+\_\+scroll (\begin{DoxyParamCaption}\item[{G\+L\+F\+Wwindow $\ast$}]{window,  }\item[{double}]{xoffset,  }\item[{double}]{yoffset }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \hyperlink{classCamera_ac13cc5fa7a3a5c40e53d95e987c1ff04}{Camera}.
+
+\mbox{\Hypertarget{classOrbitCamera_a022751aa06693232844732adb00e7d71}\label{classOrbitCamera_a022751aa06693232844732adb00e7d71}} 
+\index{Orbit\+Camera@{Orbit\+Camera}!reset@{reset}}
+\index{reset@{reset}!Orbit\+Camera@{Orbit\+Camera}}
+\subsubsection{\texorpdfstring{reset()}{reset()}}
+{\footnotesize\ttfamily void Orbit\+Camera\+::reset (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reset the camera target and position. 
+
+
+
+Implements \hyperlink{classCamera_aa7695a960438e5571e14f50ed69f6623}{Camera}.
+
+\mbox{\Hypertarget{classOrbitCamera_a1d65d137e3ef3f32c3b8eb31b49047fc}\label{classOrbitCamera_a1d65d137e3ef3f32c3b8eb31b49047fc}} 
+\index{Orbit\+Camera@{Orbit\+Camera}!up@{up}}
+\index{up@{up}!Orbit\+Camera@{Orbit\+Camera}}
+\subsubsection{\texorpdfstring{up()}{up()}}
+{\footnotesize\ttfamily glm\+::vec3 Orbit\+Camera\+::up (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \hyperlink{classCamera_a3ec282533cfc02be93006259d383b6d2}{Camera}.
+
+\mbox{\Hypertarget{classOrbitCamera_a07595f9d11666c180934e47ba8abae73}\label{classOrbitCamera_a07595f9d11666c180934e47ba8abae73}} 
+\index{Orbit\+Camera@{Orbit\+Camera}!view@{view}}
+\index{view@{view}!Orbit\+Camera@{Orbit\+Camera}}
+\subsubsection{\texorpdfstring{view()}{view()}}
+{\footnotesize\ttfamily glm\+::mat4 Orbit\+Camera\+::view (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \hyperlink{classCamera_a279a5a9fdcdb6161bab2c3ff8fce275b}{Camera}.
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classOrbitCamera_ab6f07eef6c4b0226b7abfc537b698c89}\label{classOrbitCamera_ab6f07eef6c4b0226b7abfc537b698c89}} 
+\index{Orbit\+Camera@{Orbit\+Camera}!target@{target}}
+\index{target@{target}!Orbit\+Camera@{Orbit\+Camera}}
+\subsubsection{\texorpdfstring{target}{target}}
+{\footnotesize\ttfamily glm\+::vec3 Orbit\+Camera\+::target}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{orbitCamera_8h}{orbit\+Camera.\+h}\item 
+src/\hyperlink{orbitCamera_8cpp}{orbit\+Camera.\+cpp}\end{DoxyCompactItemize}

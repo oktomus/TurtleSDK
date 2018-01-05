@@ -1,0 +1,97 @@
+\hypertarget{classLight}{}\section{Light Class Reference}
+\label{classLight}\index{Light@{Light}}
+
+
+{\ttfamily \#include $<$light.\+h$>$}
+
+Inheritance diagram for Light\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classLight}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classLight_aa563bb3ddf329e69f3026aafe309bb70}{Light} (const glm\+::vec3 \&pambient, const glm\+::vec3 \&pdiffuse, const glm\+::vec3 \&pspecular)
+\item 
+\hyperlink{classLight_aeb5df09a25a32f19fdffa761268ba24f}{Light} ()
+\item 
+virtual void \hyperlink{classLight_adfffa53d21bbeaa638c0bc5ae5a852cc}{set\+Uniforms} (const \hyperlink{classShader}{Shader} \&shader, const std\+::string \&uname) const
+\item 
+virtual void \hyperlink{classLight_a15770d3a4b173cd517477dfb5d5bcab9}{ui} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+glm\+::vec3 \hyperlink{classLight_ad255e60575bdb0ca5e9e63b738877327}{ambient\+\_\+}
+\item 
+glm\+::vec3 \hyperlink{classLight_ac5934c40340eb38365a9c090473c884f}{diffuse\+\_\+}
+\item 
+glm\+::vec3 \hyperlink{classLight_a9b425b4f0b04ec90da7de4bf77f30d1c}{specular\+\_\+}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classLight_aa563bb3ddf329e69f3026aafe309bb70}\label{classLight_aa563bb3ddf329e69f3026aafe309bb70}} 
+\index{Light@{Light}!Light@{Light}}
+\index{Light@{Light}!Light@{Light}}
+\subsubsection{\texorpdfstring{Light()}{Light()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Light\+::\+Light (\begin{DoxyParamCaption}\item[{const glm\+::vec3 \&}]{pambient,  }\item[{const glm\+::vec3 \&}]{pdiffuse,  }\item[{const glm\+::vec3 \&}]{pspecular }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLight_aeb5df09a25a32f19fdffa761268ba24f}\label{classLight_aeb5df09a25a32f19fdffa761268ba24f}} 
+\index{Light@{Light}!Light@{Light}}
+\index{Light@{Light}!Light@{Light}}
+\subsubsection{\texorpdfstring{Light()}{Light()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Light\+::\+Light (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classLight_adfffa53d21bbeaa638c0bc5ae5a852cc}\label{classLight_adfffa53d21bbeaa638c0bc5ae5a852cc}} 
+\index{Light@{Light}!set\+Uniforms@{set\+Uniforms}}
+\index{set\+Uniforms@{set\+Uniforms}!Light@{Light}}
+\subsubsection{\texorpdfstring{set\+Uniforms()}{setUniforms()}}
+{\footnotesize\ttfamily void Light\+::set\+Uniforms (\begin{DoxyParamCaption}\item[{const \hyperlink{classShader}{Shader} \&}]{shader,  }\item[{const std\+::string \&}]{uname }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \hyperlink{classSpotLight_a4599dbd0a665514ff7066bfa01d04d1e}{Spot\+Light}, \hyperlink{classPointLight_abf6f298a0d04b636e22a3a5903e5b823}{Point\+Light}, and \hyperlink{classDirectionLight_ab10f7b680a8245bd4db3b7340593e485}{Direction\+Light}.
+
+\mbox{\Hypertarget{classLight_a15770d3a4b173cd517477dfb5d5bcab9}\label{classLight_a15770d3a4b173cd517477dfb5d5bcab9}} 
+\index{Light@{Light}!ui@{ui}}
+\index{ui@{ui}!Light@{Light}}
+\subsubsection{\texorpdfstring{ui()}{ui()}}
+{\footnotesize\ttfamily void Light\+::ui (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \hyperlink{classSpotLight_a7ca46a2356ceb4f193704632e1f17bb4}{Spot\+Light}, \hyperlink{classPointLight_a538a42e0d1d713c57e46e492d352b34e}{Point\+Light}, and \hyperlink{classDirectionLight_a85ac86467a3053dea596b0ebf362b68f}{Direction\+Light}.
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classLight_ad255e60575bdb0ca5e9e63b738877327}\label{classLight_ad255e60575bdb0ca5e9e63b738877327}} 
+\index{Light@{Light}!ambient\+\_\+@{ambient\+\_\+}}
+\index{ambient\+\_\+@{ambient\+\_\+}!Light@{Light}}
+\subsubsection{\texorpdfstring{ambient\+\_\+}{ambient\_}}
+{\footnotesize\ttfamily glm\+::vec3 Light\+::ambient\+\_\+}
+
+\mbox{\Hypertarget{classLight_ac5934c40340eb38365a9c090473c884f}\label{classLight_ac5934c40340eb38365a9c090473c884f}} 
+\index{Light@{Light}!diffuse\+\_\+@{diffuse\+\_\+}}
+\index{diffuse\+\_\+@{diffuse\+\_\+}!Light@{Light}}
+\subsubsection{\texorpdfstring{diffuse\+\_\+}{diffuse\_}}
+{\footnotesize\ttfamily glm\+::vec3 Light\+::diffuse\+\_\+}
+
+\mbox{\Hypertarget{classLight_a9b425b4f0b04ec90da7de4bf77f30d1c}\label{classLight_a9b425b4f0b04ec90da7de4bf77f30d1c}} 
+\index{Light@{Light}!specular\+\_\+@{specular\+\_\+}}
+\index{specular\+\_\+@{specular\+\_\+}!Light@{Light}}
+\subsubsection{\texorpdfstring{specular\+\_\+}{specular\_}}
+{\footnotesize\ttfamily glm\+::vec3 Light\+::specular\+\_\+}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{light_8h}{light.\+h}\item 
+src/\hyperlink{light_8cpp}{light.\+cpp}\end{DoxyCompactItemize}
