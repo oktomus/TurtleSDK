@@ -3,6 +3,7 @@
 // INPUT                                     
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
+layout (location = 2) in vec2 aTexCoords;
 
 // UNIFORM                                   
 // - camera                                  
@@ -14,14 +15,18 @@ uniform vec3 lightPos;
 // OUTPUT                                    
 out vec3 Normal;
 out vec3 FragPos;
-out vec3 LightPos;
+out vec2 TexCoords;
+out float hauteur;
 
 // MAIN                                      
 void main( void )                             
 {
+    hauteur = aPos.y;
     gl_PointSize = 20.0; 
-    gl_Position = projection * view * model * vec4( aPos, 1.0 );
-    FragPos = vec3(view * model * vec4(aPos, 1.0));
-    Normal =  mat3(transpose(inverse(view * model))) * aNormal;  
-    LightPos = vec3(view * vec4(lightPos, 1.0)); // Transform world-space light position to view-space light position
+
+    TexCoords = aTexCoords;
+    FragPos = vec3(model * vec4(aPos, 1.0));
+    Normal =  mat3(transpose(inverse(model))) * aNormal;  
+
+    gl_Position = projection * view * vec4( FragPos, 1.0 );
 }                                                                                     
